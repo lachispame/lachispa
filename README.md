@@ -1,6 +1,6 @@
 # LaChispa ⚡
 
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://github.com/lachispame/lachispa)   
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/lachispame/lachispa)   
   *Ask questions about this project using DeepWiki AI*
 
 <div align="center">
