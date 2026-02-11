@@ -1,5 +1,8 @@
 # LaChispa ⚡
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://github.com/lachispame/lachispa)   
+  *Ask questions about this project using DeepWiki AI*
+
 <div align="center">
   <img src="assets/images/chispabordesredondos.png" alt="LaChispa Logo" width="120" height="120">
   
