@@ -204,6 +204,7 @@
   "sending_button": "Enviando...",
   "invoice_expired_error": "La factura ha expirado y no se puede pagar",
   "amountless_invoice_error": "Factura sin monto no soportada. Solicite una factura con un monto específico.",
+  "payment_sent_status": "Pago enviado - Estado: {status}",
   "confirm_no_session_error": "Sin sesión activa",
   "confirm_no_wallet_error": "No hay wallet principal disponible",
   "payment_pending_hold": "Pago pendiente - Factura Hold detectada",

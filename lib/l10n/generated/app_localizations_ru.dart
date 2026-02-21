@@ -536,6 +536,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get amountless_invoice_error => 'Счет без суммы не поддерживается. Запросите счет с указанной суммой.';
 
   @override
+  String payment_sent_status(Object status) {
+    return 'Платеж отправлен - Статус: $status';
+  }
+
+  @override
   String get confirm_no_session_error => 'Нет активной сессии';
 
   @override

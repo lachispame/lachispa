@@ -150,6 +150,7 @@
   "sending_button": "Sende...",
   "invoice_expired_error": "Die Rechnung ist abgelaufen und kann nicht bezahlt werden",
   "amountless_invoice_error": "Rechnung ohne Betrag wird nicht unterstützt. Bitte fordern Sie eine Rechnung mit einem bestimmten Betrag an.",
+  "payment_sent_status": "Zahlung gesendet - Status: {status}",
   "confirm_no_session_error": "Keine aktive Sitzung",
   "confirm_no_wallet_error": "Keine primäre Wallet verfügbar",
   "payment_pending_hold": "Zahlung ausstehend - Hold-Rechnung erkannt",

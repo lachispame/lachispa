@@ -536,6 +536,11 @@ class AppLocalizationsPt extends AppLocalizations {
   String get amountless_invoice_error => 'Fatura sem valor não suportada. Solicite uma fatura com um valor específico.';
 
   @override
+  String payment_sent_status(Object status) {
+    return 'Pagamento enviado - Estado: $status';
+  }
+
+  @override
   String get confirm_no_session_error => 'Sem sessão ativa';
 
   @override

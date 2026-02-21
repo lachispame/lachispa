@@ -536,6 +536,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get amountless_invoice_error => 'Facture sans montant non prise en charge. Veuillez demander une facture avec un montant spécifique.';
 
   @override
+  String payment_sent_status(Object status) {
+    return 'Paiement envoyé - Statut : $status';
+  }
+
+  @override
   String get confirm_no_session_error => 'Aucune session active';
 
   @override

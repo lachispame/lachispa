@@ -364,7 +364,9 @@ class _AmountScreenState extends State<AmountScreen> {
   }
 
   Future<void> _processBolt11Payment(int satsAmount) async {
-    if (widget.decodedInvoice == null) return;
+    if (widget.decodedInvoice == null) {
+      throw Exception('Missing decodedInvoice for bolt11 payment');
+    }
 
     if (mounted) {
       Navigator.push(

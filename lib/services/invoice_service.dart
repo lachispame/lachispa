@@ -690,14 +690,6 @@ class InvoiceService {
           {
             'url': '$baseUrl/api/v1/payments',
             'data': {
-              'out': true,
-              'bolt11': bolt11,
-              if (amount != null) 'amount': amount,
-            }
-          },
-          {
-            'url': '$baseUrl/api/v1/payments',
-            'data': {
               'bolt11': bolt11,
               if (amountMsat != null) 'amount': amountMsat,
             }
@@ -759,15 +751,6 @@ class InvoiceService {
               'out': true,
               'bolt11': bolt11,
               if (amountMsat != null) 'amount': amountMsat,
-            }
-          },
-          // Fallback: try with satoshis
-          {
-            'url': '$baseUrl/api/v1/payments',
-            'data': {
-              'out': true,
-              'bolt11': bolt11,
-              if (amount != null) 'amount': amount,
             }
           },
           {
@@ -845,7 +828,8 @@ class InvoiceService {
             responseBody = e.response!.data.toString().toLowerCase();
           }
 
-          if (responseBody.contains('amountless invoices not supported')) {
+          if (responseBody.contains('amountless') ||
+              (e is DioException && e.response?.statusCode == 520 && responseBody.contains('amountless'))) {
             _debugLog('[INVOICE_SERVICE] 520 - Server does not support amountless invoices');
             throw Exception('AMOUNTLESS_INVOICE_NOT_SUPPORTED');
           }

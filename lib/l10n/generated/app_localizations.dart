@@ -1155,6 +1155,12 @@ abstract class AppLocalizations {
   /// **'Factura sin monto no soportada. Solicite una factura con un monto específico.'**
   String get amountless_invoice_error;
 
+  /// No description provided for @payment_sent_status.
+  ///
+  /// In es, this message translates to:
+  /// **'Pago enviado - Estado: {status}'**
+  String payment_sent_status(Object status);
+
   /// No description provided for @confirm_no_session_error.
   ///
   /// In es, this message translates to:

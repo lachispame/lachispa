@@ -536,6 +536,11 @@ class AppLocalizationsIt extends AppLocalizations {
   String get amountless_invoice_error => 'Fattura senza importo non supportata. Richiedere una fattura con un importo specifico.';
 
   @override
+  String payment_sent_status(Object status) {
+    return 'Pagamento inviato - Stato: $status';
+  }
+
+  @override
   String get confirm_no_session_error => 'Nessuna sessione attiva';
 
   @override

@@ -536,6 +536,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get amountless_invoice_error => 'Rechnung ohne Betrag wird nicht unterstützt. Bitte fordern Sie eine Rechnung mit einem bestimmten Betrag an.';
 
   @override
+  String payment_sent_status(Object status) {
+    return 'Zahlung gesendet - Status: $status';
+  }
+
+  @override
   String get confirm_no_session_error => 'Keine aktive Sitzung';
 
   @override

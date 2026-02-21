@@ -92,7 +92,7 @@ class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
       } else if (isSuccess) {
         _showSuccessSnackBar(AppLocalizations.of(context)!.payment_success);
       } else {
-        _showSuccessSnackBar('Pago enviado - Estado: $paymentStatus');
+        _showSuccessSnackBar(AppLocalizations.of(context)!.payment_sent_status(paymentStatus));
       }
 
       // Return to previous screen after brief delay for user feedback

@@ -536,6 +536,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get amountless_invoice_error => 'Factura sin monto no soportada. Solicite una factura con un monto específico.';
 
   @override
+  String payment_sent_status(Object status) {
+    return 'Pago enviado - Estado: $status';
+  }
+
+  @override
   String get confirm_no_session_error => 'Sin sesión activa';
 
   @override

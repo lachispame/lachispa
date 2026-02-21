@@ -536,6 +536,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get amountless_invoice_error => 'Invoice without amount not supported. Please request an invoice with a specific amount.';
 
   @override
+  String payment_sent_status(Object status) {
+    return 'Payment sent - Status: $status';
+  }
+
+  @override
   String get confirm_no_session_error => 'No active session';
 
   @override
