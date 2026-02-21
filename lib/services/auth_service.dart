@@ -521,8 +521,10 @@ class AuthService {
           _debugLog('[AUTH_SERVICE] Session rejected by server: $statusCode');
           return false;
         }
+        _debugLog('[AUTH_SERVICE] Session validation server error: $statusCode - ${e.message}');
+        return null;
       }
-      _debugLog('[AUTH_SERVICE] Session validation unreachable: ${e.type} - ${e.message}');
+      _debugLog('[AUTH_SERVICE] Session validation network error: ${e.type} - ${e.message}');
       return null;
     } catch (e) {
       _debugLog('[AUTH_SERVICE] Session validation unknown error: $e');
