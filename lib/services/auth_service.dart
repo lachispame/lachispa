@@ -491,7 +491,7 @@ class AuthService {
   }
 
   /// Validate session token with server
-  /// Returns true if valid, false if explicitly rejected (401/422), null if unreachable
+  /// Returns true if valid, false if explicitly rejected (401/403/422), null if unreachable
   Future<bool?> validateSession(String token, String serverUrl) async {
     try {
       String baseUrl = serverUrl;
@@ -511,14 +511,13 @@ class AuthService {
         ),
       );
 
-      final isValid = response.statusCode == 200;
-      _debugLog('[AUTH_SERVICE] Session validation result: $isValid');
-      return isValid;
+      _debugLog('[AUTH_SERVICE] Session validation result: true (${response.statusCode})');
+      return true;
 
     } on DioException catch (e) {
       if (e.type == DioExceptionType.badResponse) {
         final statusCode = e.response?.statusCode;
-        if (statusCode == 401 || statusCode == 422) {
+        if (statusCode == 401 || statusCode == 403 || statusCode == 422) {
           _debugLog('[AUTH_SERVICE] Session rejected by server: $statusCode');
           return false;
         }

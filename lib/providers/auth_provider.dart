@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
@@ -29,7 +30,7 @@ class AuthProvider with ChangeNotifier {
         print('[AUTH_PROVIDER] Session found, validating with server...');
         
         // Validate session with server
-        // Returns: true = valid, false = rejected (401/422), null = unreachable
+        // Returns: true = valid, false = rejected (401/403/422), null = unreachable
         final validationResult = await _authService.validateSession(
           session.token,
           session.serverUrl
@@ -46,9 +47,9 @@ class AuthProvider with ChangeNotifier {
           _sessionData = session;
           _isLoggedIn = true;
           if (validationResult == null) {
-            print('[AUTH_PROVIDER] Server unreachable, keeping local session for ${session.username} ⚠️');
+            if (kDebugMode) print('[AUTH_PROVIDER] Server unreachable, keeping local session for ${session.username}');
           } else {
-            print('[AUTH_PROVIDER] Session restored and validated for ${session.username} ✅');
+            if (kDebugMode) print('[AUTH_PROVIDER] Session restored and validated for ${session.username}');
           }
         }
       } else {
