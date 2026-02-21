@@ -491,15 +491,16 @@ class AuthService {
   }
 
   /// Validate session token with server
-  Future<bool> validateSession(String token, String serverUrl) async {
+  /// Returns true if valid, false if explicitly rejected (401/422), null if unreachable
+  Future<bool?> validateSession(String token, String serverUrl) async {
     try {
       String baseUrl = serverUrl;
       if (!baseUrl.startsWith('http')) {
         baseUrl = 'https://$baseUrl';
       }
-      
+
       _debugLog('[AUTH_SERVICE] Validating session with server: $baseUrl');
-      
+
       final response = await _dio.get(
         '$baseUrl/api/v1/auth',
         options: Options(
@@ -509,14 +510,24 @@ class AuthService {
           },
         ),
       );
-      
+
       final isValid = response.statusCode == 200;
       _debugLog('[AUTH_SERVICE] Session validation result: $isValid');
       return isValid;
-      
+
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.badResponse) {
+        final statusCode = e.response?.statusCode;
+        if (statusCode == 401 || statusCode == 422) {
+          _debugLog('[AUTH_SERVICE] Session rejected by server: $statusCode');
+          return false;
+        }
+      }
+      _debugLog('[AUTH_SERVICE] Session validation unreachable: ${e.type} - ${e.message}');
+      return null;
     } catch (e) {
-      _debugLog('[AUTH_SERVICE] Session validation failed: $e');
-      return false;
+      _debugLog('[AUTH_SERVICE] Session validation unknown error: $e');
+      return null;
     }
   }
 }
