@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
@@ -29,20 +30,27 @@ class AuthProvider with ChangeNotifier {
         print('[AUTH_PROVIDER] Session found, validating with server...');
         
         // Validate session with server
-        final isValidSession = await _authService.validateSession(
-          session.token, 
+        // Returns: true = valid, false = rejected (401/403/422), null = unreachable
+        final validationResult = await _authService.validateSession(
+          session.token,
           session.serverUrl
         );
-        
-        if (isValidSession) {
-          _sessionData = session;
-          _isLoggedIn = true;
-          print('[AUTH_PROVIDER] Session restored and validated for ${session.username} ✅');
-        } else {
-          print('[AUTH_PROVIDER] Session invalid on server, clearing local session ❌');
+
+        if (validationResult == false) {
+          // Server explicitly rejected the token — clear session
+          print('[AUTH_PROVIDER] Session rejected by server, clearing local session ❌');
           await _authService.logout();
           _sessionData = null;
           _isLoggedIn = false;
+        } else {
+          // true = validated, null = network unreachable — keep session
+          _sessionData = session;
+          _isLoggedIn = true;
+          if (validationResult == null) {
+            if (kDebugMode) print('[AUTH_PROVIDER] Server unreachable, keeping local session for ${session.username}');
+          } else {
+            if (kDebugMode) print('[AUTH_PROVIDER] Session restored and validated for ${session.username}');
+          }
         }
       } else {
         print('[AUTH_PROVIDER] No session found in storage');
