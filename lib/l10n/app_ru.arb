@@ -149,6 +149,7 @@
   "expired_button_text": "Истек",
   "sending_button": "Отправка...",
   "invoice_expired_error": "Счет истек и не может быть оплачен",
+  "amountless_invoice_error": "Счет без суммы не поддерживается. Запросите счет с указанной суммой.",
   "confirm_no_session_error": "Нет активной сессии",
   "confirm_no_wallet_error": "Нет доступного основного кошелька",
   "payment_pending_hold": "Платеж ожидает - Обнаружен счет-холд",

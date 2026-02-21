@@ -149,6 +149,7 @@
   "expired_button_text": "Scaduto",
   "sending_button": "Invio...",
   "invoice_expired_error": "La fattura è scaduta e non può essere pagata",
+  "amountless_invoice_error": "Fattura senza importo non supportata. Richiedere una fattura con un importo specifico.",
   "confirm_no_session_error": "Nessuna sessione attiva",
   "confirm_no_wallet_error": "Nessun portafoglio principale disponibile",
   "payment_pending_hold": "Pagamento in attesa - Fattura di blocco rilevata",

@@ -3,19 +3,23 @@ import 'package:provider/provider.dart';
 import 'dart:async';
 import '../services/yadio_service.dart';
 import '../services/invoice_service.dart';
+import '../models/decoded_invoice.dart';
 import '../providers/auth_provider.dart';
 import '../providers/wallet_provider.dart';
 import '../providers/currency_settings_provider.dart';
 import '../l10n/generated/app_localizations.dart';
+import '12invoice_confirm_screen.dart';
 
 class AmountScreen extends StatefulWidget {
   final String destination;
-  final String destinationType; // 'lnurl' or 'lightning_address'
+  final String destinationType; // 'lnurl', 'lightning_address', or 'bolt11'
+  final DecodedInvoice? decodedInvoice;
 
   const AmountScreen({
     super.key,
     required this.destination,
     required this.destinationType,
+    this.decodedInvoice,
   });
 
   @override
@@ -343,7 +347,9 @@ class _AmountScreenState extends State<AmountScreen> {
       // Process payment based on destination type (LNURL vs Lightning Address)
       print('[AMOUNT_SCREEN] Processing payment with $satsAmount sats');
       
-      if (widget.destinationType == 'lnurl') {
+      if (widget.destinationType == 'bolt11') {
+        await _processBolt11Payment(satsAmount);
+      } else if (widget.destinationType == 'lnurl') {
         await _processLNURLPayment(satsAmount);
       } else if (widget.destinationType == 'lightning_address') {
         await _processLightningAddressPayment(satsAmount);
@@ -354,6 +360,22 @@ class _AmountScreenState extends State<AmountScreen> {
       setState(() {
         _isProcessingPayment = false;
       });
+    }
+  }
+
+  Future<void> _processBolt11Payment(int satsAmount) async {
+    if (widget.decodedInvoice == null) return;
+
+    if (mounted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => InvoiceConfirmScreen(
+            decodedInvoice: widget.decodedInvoice!,
+            overrideAmountSats: satsAmount,
+          ),
+        ),
+      );
     }
   }
 
@@ -880,8 +902,9 @@ class _AmountScreenState extends State<AmountScreen> {
                           ),
                           
                           const SizedBox(height: 16),
-                          
-                          // Comment field
+
+                          // Comment field (hidden for bolt11 - invoice has its own description)
+                          if (widget.destinationType != 'bolt11')
                           Container(
                             width: double.infinity,
                             decoration: BoxDecoration(
