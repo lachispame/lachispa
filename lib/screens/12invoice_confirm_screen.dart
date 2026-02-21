@@ -8,10 +8,12 @@ import '../l10n/generated/app_localizations.dart';
 
 class InvoiceConfirmScreen extends StatefulWidget {
   final DecodedInvoice decodedInvoice;
+  final int? overrideAmountSats;
 
   const InvoiceConfirmScreen({
     super.key,
     required this.decodedInvoice,
+    this.overrideAmountSats,
   });
 
   @override
@@ -21,6 +23,13 @@ class InvoiceConfirmScreen extends StatefulWidget {
 class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
   final InvoiceService _invoiceService = InvoiceService();
   bool _isProcessing = false;
+
+  String get _displayAmount {
+    if (widget.overrideAmountSats != null) {
+      return '${widget.overrideAmountSats} sats';
+    }
+    return widget.decodedInvoice.formattedAmount;
+  }
 
   @override
   void dispose() {
@@ -63,6 +72,7 @@ class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
         serverUrl: session.serverUrl,
         adminKey: wallet.adminKey, // Use wallet's admin key
         bolt11: widget.decodedInvoice.originalInvoice,
+        amount: widget.overrideAmountSats,
       );
 
       print('[INVOICE_CONFIRM] Payment made: $paymentResult');
@@ -82,20 +92,23 @@ class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
       } else if (isSuccess) {
         _showSuccessSnackBar(AppLocalizations.of(context)!.payment_success);
       } else {
-        _showSuccessSnackBar('Pago enviado - Estado: $paymentStatus');
+        _showSuccessSnackBar(AppLocalizations.of(context)!.payment_sent_status(paymentStatus));
       }
 
       // Return to previous screen after brief delay for user feedback
       await Future.delayed(const Duration(seconds: 2));
       
       if (mounted) {
-        Navigator.of(context).pop();
-        Navigator.of(context).pop(); // Return to HomeScreen
+        Navigator.of(context).popUntil((route) => route.isFirst);
       }
 
     } catch (e) {
       print('[INVOICE_CONFIRM] Error sending payment: $e');
-      _showErrorSnackBar('${AppLocalizations.of(context)!.send_error_prefix}$e');
+      if (e.toString().contains('AMOUNTLESS_INVOICE_NOT_SUPPORTED')) {
+        _showErrorSnackBar(AppLocalizations.of(context)!.amountless_invoice_error);
+      } else {
+        _showErrorSnackBar('${AppLocalizations.of(context)!.send_error_prefix}$e');
+      }
     } finally {
       if (mounted) {
         setState(() {
@@ -269,7 +282,7 @@ class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
                                     child: Column(
                                       children: [
                                         Text(
-                                          widget.decodedInvoice.formattedAmount,
+                                          _displayAmount,
                                           style: TextStyle(
                                             fontFamily: 'Inter',
                                             fontSize: isMobile ? 36 : 48,

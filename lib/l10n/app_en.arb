@@ -203,6 +203,13 @@
   "expired_button_text": "Expired",
   "sending_button": "Sending...",
   "invoice_expired_error": "The invoice has expired and cannot be paid",
+  "amountless_invoice_error": "Invoice without amount not supported. Please request an invoice with a specific amount.",
+  "payment_sent_status": "Payment sent - Status: {status}",
+  "@payment_sent_status": {
+    "placeholders": {
+      "status": { "type": "String" }
+    }
+  },
   "confirm_no_session_error": "No active session",
   "confirm_no_wallet_error": "No primary wallet available",
   "payment_pending_hold": "Payment pending - Hold invoice detected",

@@ -649,6 +649,7 @@ class InvoiceService {
     required String serverUrl,
     required String adminKey,
     required String bolt11,
+    int? amount,
   }) async {
     try {
       // Asegurar que la URL tenga HTTPS
@@ -666,10 +667,15 @@ class InvoiceService {
       };
 
       final isAndroid = !kIsWeb && Platform.isAndroid;
-      
+
+      // For amountless invoices, convert sats to millisatoshis for LNBits API
+      final int? amountMsat = amount != null ? amount * 1000 : null;
+
+      _debugLog('[INVOICE_SERVICE] Payment amount: ${amount != null ? "$amount sats ($amountMsat msat)" : "from invoice"}');
+
       // Platform-optimized endpoints for payment processing
       List<Map<String, dynamic>> endpoints;
-      
+
       if (isAndroid) {
         // Android-optimized payment endpoints tested
         endpoints = [
@@ -678,18 +684,21 @@ class InvoiceService {
             'data': {
               'out': true,
               'bolt11': bolt11,
+              if (amountMsat != null) 'amount': amountMsat,
             }
           },
           {
             'url': '$baseUrl/api/v1/payments',
             'data': {
               'bolt11': bolt11,
+              if (amountMsat != null) 'amount': amountMsat,
             }
           },
           {
             'url': '$baseUrl/api/v1/pay',
             'data': {
               'bolt11': bolt11,
+              if (amountMsat != null) 'amount': amountMsat,
             }
           },
           {
@@ -697,12 +706,14 @@ class InvoiceService {
             'data': {
               'out': true,
               'bolt11': bolt11,
+              if (amountMsat != null) 'amount': amountMsat,
             }
           },
           {
             'url': '$baseUrl/pay',
             'data': {
               'bolt11': bolt11,
+              if (amountMsat != null) 'amount': amountMsat,
             }
           },
           {
@@ -710,6 +721,7 @@ class InvoiceService {
             'data': {
               'out': true,
               'bolt11': bolt11,
+              if (amountMsat != null) 'amount': amountMsat,
             }
           },
           // Hold invoice endpoints for special invoices (RoboSats, P2P bots, etc.)
@@ -717,6 +729,7 @@ class InvoiceService {
             'url': '$baseUrl/hodlvoice/api/v1/pay',
             'data': {
               'bolt11': bolt11,
+              if (amountMsat != null) 'amount': amountMsat,
             }
           },
           {
@@ -724,17 +737,20 @@ class InvoiceService {
             'data': {
               'out': true,
               'bolt11': bolt11,
+              if (amountMsat != null) 'amount': amountMsat,
             }
           },
         ];
       } else {
         // Web/Desktop-optimized payment endpoints
         endpoints = [
+          // Try with millisatoshis first (LNBits standard)
           {
             'url': '$baseUrl/api/v1/payments',
             'data': {
               'out': true,
               'bolt11': bolt11,
+              if (amountMsat != null) 'amount': amountMsat,
             }
           },
           {
@@ -742,6 +758,7 @@ class InvoiceService {
             'data': {
               'out': true,
               'bolt11': bolt11,
+              if (amountMsat != null) 'amount': amountMsat,
             }
           },
           // Hold invoice endpoints
@@ -749,6 +766,7 @@ class InvoiceService {
             'url': '$baseUrl/hodlvoice/api/v1/pay',
             'data': {
               'bolt11': bolt11,
+              if (amountMsat != null) 'amount': amountMsat,
             }
           },
           {
@@ -756,6 +774,7 @@ class InvoiceService {
             'data': {
               'out': true,
               'bolt11': bolt11,
+              if (amountMsat != null) 'amount': amountMsat,
             }
           },
           {
@@ -763,6 +782,7 @@ class InvoiceService {
             'data': {
               'bolt11': bolt11,
               'action': 'pay',
+              if (amountMsat != null) 'amount': amountMsat,
             }
           },
         ];
@@ -801,22 +821,34 @@ class InvoiceService {
         } catch (e) {
           _debugLog('[INVOICE_SERVICE] ❌ Failed $url: $e');
           lastException = e is Exception ? e : Exception(e.toString());
-          
+
+          // Check response body for definitive errors (stop trying other endpoints)
+          String responseBody = '';
+          if (e is DioException && e.response?.data != null) {
+            responseBody = e.response!.data.toString().toLowerCase();
+          }
+
+          if (responseBody.contains('amountless') ||
+              (e is DioException && e.response?.statusCode == 520 && responseBody.contains('amountless'))) {
+            _debugLog('[INVOICE_SERVICE] 520 - Server does not support amountless invoices');
+            throw Exception('AMOUNTLESS_INVOICE_NOT_SUPPORTED');
+          }
+
           if (e.toString().contains('404')) {
             _debugLog('[INVOICE_SERVICE] 404 - Endpoint not available: $url');
             continue;
           }
-          
+
           if (e.toString().contains('402')) {
             _debugLog('[INVOICE_SERVICE] 402 - Insufficient funds');
             throw Exception('Insufficient funds to make payment.');
           }
-          
+
           if (e.toString().contains('401')) {
             _debugLog('[INVOICE_SERVICE] 401 - Authentication error');
             throw Exception('Authentication error. Verify credentials.');
           }
-          
+
           continue;
         }
       }
@@ -842,6 +874,10 @@ class InvoiceService {
       } else if (e.response?.statusCode == 422) {
         throw Exception('Payment error: ${e.response?.data}');
       } else if (e.response?.statusCode == 520) {
+        final detail = e.response?.data?.toString() ?? '';
+        if (detail.toLowerCase().contains('amountless')) {
+          throw Exception('AMOUNTLESS_INVOICE_NOT_SUPPORTED');
+        }
         throw Exception('Lightning server error. Try again in a few moments.');
       } else {
         throw Exception('Error sending payment (${e.response?.statusCode ?? 'unknown'}): ${e.message}');

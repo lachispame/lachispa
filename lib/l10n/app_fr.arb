@@ -149,6 +149,8 @@
   "expired_button_text": "Expiré",
   "sending_button": "Envoi...",
   "invoice_expired_error": "La facture a expiré et ne peut pas être payée",
+  "amountless_invoice_error": "Facture sans montant non prise en charge. Veuillez demander une facture avec un montant spécifique.",
+  "payment_sent_status": "Paiement envoyé - Statut : {status}",
   "confirm_no_session_error": "Aucune session active",
   "confirm_no_wallet_error": "Aucun portefeuille principal disponible",
   "payment_pending_hold": "Paiement en attente - Facture de retenue détectée",

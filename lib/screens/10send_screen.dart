@@ -192,16 +192,32 @@ class _SendScreenState extends State<SendScreen> {
         bolt11: cleanBolt11,
       );
 
-      // Navigate to confirmation screen
       if (mounted) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => InvoiceConfirmScreen(
-              decodedInvoice: decodedInvoice,
+        if (decodedInvoice.amountSats == 0) {
+          // Amountless invoice — route through AmountScreen for user input
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AmountScreen(
+                destination: decodedInvoice.description.isNotEmpty
+                    ? decodedInvoice.description
+                    : decodedInvoice.shortPaymentHash,
+                destinationType: 'bolt11',
+                decodedInvoice: decodedInvoice,
+              ),
             ),
-          ),
-        );
+          );
+        } else {
+          // Normal invoice with amount — go directly to confirmation
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => InvoiceConfirmScreen(
+                decodedInvoice: decodedInvoice,
+              ),
+            ),
+          );
+        }
       }
 
     } catch (e) {

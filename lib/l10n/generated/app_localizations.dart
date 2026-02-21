@@ -67,8 +67,7 @@ import 'app_localizations_ru.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -76,8 +75,7 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -89,8 +87,7 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
-      <LocalizationsDelegate<dynamic>>[
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
     delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
@@ -678,6 +675,234 @@ abstract class AppLocalizations {
   /// **'Escanear'**
   String get scan_button;
 
+  /// No description provided for @voucher_scan_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Escanear Voucher'**
+  String get voucher_scan_title;
+
+  /// No description provided for @voucher_scan_instructions.
+  ///
+  /// In es, this message translates to:
+  /// **'Apunta tu cámara al código QR del voucher LNURL-withdraw'**
+  String get voucher_scan_instructions;
+
+  /// No description provided for @voucher_scan_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'La aplicación detectará automáticamente el voucher y te permitirá cobrarlo'**
+  String get voucher_scan_subtitle;
+
+  /// No description provided for @voucher_scan_button.
+  ///
+  /// In es, this message translates to:
+  /// **'Escanear QR'**
+  String get voucher_scan_button;
+
+  /// No description provided for @voucher_tap_to_scan.
+  ///
+  /// In es, this message translates to:
+  /// **'Toca para abrir la cámara'**
+  String get voucher_tap_to_scan;
+
+  /// No description provided for @voucher_manual_input.
+  ///
+  /// In es, this message translates to:
+  /// **'Introducir código manualmente'**
+  String get voucher_manual_input;
+
+  /// No description provided for @voucher_processing.
+  ///
+  /// In es, this message translates to:
+  /// **'Procesando...'**
+  String get voucher_processing;
+
+  /// No description provided for @voucher_manual_input_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'Pega el código LNURL-withdraw del voucher:'**
+  String get voucher_manual_input_hint;
+
+  /// No description provided for @voucher_manual_input_placeholder.
+  ///
+  /// In es, this message translates to:
+  /// **'lnurl1...'**
+  String get voucher_manual_input_placeholder;
+
+  /// No description provided for @process_button.
+  ///
+  /// In es, this message translates to:
+  /// **'Procesar'**
+  String get process_button;
+
+  /// No description provided for @voucher_detected_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Voucher Detectado'**
+  String get voucher_detected_title;
+
+  /// No description provided for @voucher_fixed_amount.
+  ///
+  /// In es, this message translates to:
+  /// **'Cantidad fija:'**
+  String get voucher_fixed_amount;
+
+  /// No description provided for @voucher_amount_range.
+  ///
+  /// In es, this message translates to:
+  /// **'Rango disponible:'**
+  String get voucher_amount_range;
+
+  /// No description provided for @voucher_amount_to_claim.
+  ///
+  /// In es, this message translates to:
+  /// **'Cantidad a cobrar:'**
+  String get voucher_amount_to_claim;
+
+  /// No description provided for @voucher_min_max_hint.
+  ///
+  /// In es, this message translates to:
+  /// **'Mínimo: {min} sats • Máximo: {max} sats'**
+  String voucher_min_max_hint(int min, int max);
+
+  /// No description provided for @voucher_claim_button.
+  ///
+  /// In es, this message translates to:
+  /// **'Cobrar Voucher'**
+  String get voucher_claim_button;
+
+  /// No description provided for @voucher_amount_invalid.
+  ///
+  /// In es, this message translates to:
+  /// **'Cantidad inválida. Debe estar entre {min} y {max} sats'**
+  String voucher_amount_invalid(int min, int max);
+
+  /// No description provided for @voucher_claimed_title.
+  ///
+  /// In es, this message translates to:
+  /// **'¡Voucher cobrado!'**
+  String get voucher_claimed_title;
+
+  /// No description provided for @voucher_claimed_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Los fondos aparecerán en tu wallet en unos momentos.'**
+  String get voucher_claimed_subtitle;
+
+  /// No description provided for @voucher_invalid_code.
+  ///
+  /// In es, this message translates to:
+  /// **'Código no válido'**
+  String get voucher_invalid_code;
+
+  /// No description provided for @voucher_not_valid_lnurl.
+  ///
+  /// In es, this message translates to:
+  /// **'El código escaneado no es un voucher LNURL-withdraw válido.'**
+  String get voucher_not_valid_lnurl;
+
+  /// No description provided for @voucher_processing_error.
+  ///
+  /// In es, this message translates to:
+  /// **'Error procesando el voucher'**
+  String get voucher_processing_error;
+
+  /// No description provided for @voucher_already_claimed.
+  ///
+  /// In es, this message translates to:
+  /// **'Voucher ya cobrado'**
+  String get voucher_already_claimed;
+
+  /// No description provided for @voucher_already_claimed_desc.
+  ///
+  /// In es, this message translates to:
+  /// **'Este voucher ya fue usado y no puede ser cobrado nuevamente.'**
+  String get voucher_already_claimed_desc;
+
+  /// No description provided for @voucher_expired.
+  ///
+  /// In es, this message translates to:
+  /// **'Voucher expirado'**
+  String get voucher_expired;
+
+  /// No description provided for @voucher_expired_desc.
+  ///
+  /// In es, this message translates to:
+  /// **'Este voucher ha expirado y ya no es válido.'**
+  String get voucher_expired_desc;
+
+  /// No description provided for @voucher_not_found.
+  ///
+  /// In es, this message translates to:
+  /// **'Voucher no encontrado'**
+  String get voucher_not_found;
+
+  /// No description provided for @voucher_not_found_desc.
+  ///
+  /// In es, this message translates to:
+  /// **'Este voucher no pudo ser encontrado o puede haber sido eliminado.'**
+  String get voucher_not_found_desc;
+
+  /// No description provided for @voucher_server_error.
+  ///
+  /// In es, this message translates to:
+  /// **'Error del servidor'**
+  String get voucher_server_error;
+
+  /// No description provided for @voucher_server_error_desc.
+  ///
+  /// In es, this message translates to:
+  /// **'Hubo un problema con el servidor del voucher. Inténtalo de nuevo más tarde.'**
+  String get voucher_server_error_desc;
+
+  /// No description provided for @voucher_connection_error.
+  ///
+  /// In es, this message translates to:
+  /// **'Error de conexión'**
+  String get voucher_connection_error;
+
+  /// No description provided for @voucher_connection_error_desc.
+  ///
+  /// In es, this message translates to:
+  /// **'Verifica tu conexión a internet e inténtalo de nuevo.'**
+  String get voucher_connection_error_desc;
+
+  /// No description provided for @voucher_invalid_amount.
+  ///
+  /// In es, this message translates to:
+  /// **'Cantidad inválida'**
+  String get voucher_invalid_amount;
+
+  /// No description provided for @voucher_invalid_amount_desc.
+  ///
+  /// In es, this message translates to:
+  /// **'La cantidad del voucher no es válida o se ha corrompido.'**
+  String get voucher_invalid_amount_desc;
+
+  /// No description provided for @voucher_insufficient_funds.
+  ///
+  /// In es, this message translates to:
+  /// **'Fondos insuficientes'**
+  String get voucher_insufficient_funds;
+
+  /// No description provided for @voucher_insufficient_funds_desc.
+  ///
+  /// In es, this message translates to:
+  /// **'El voucher no tiene suficientes fondos disponibles.'**
+  String get voucher_insufficient_funds_desc;
+
+  /// No description provided for @voucher_generic_error.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo procesar el voucher'**
+  String get voucher_generic_error;
+
+  /// No description provided for @voucher_generic_error_desc.
+  ///
+  /// In es, this message translates to:
+  /// **'Hubo un error inesperado procesando este voucher. Inténtalo de nuevo o contacta soporte.'**
+  String get voucher_generic_error_desc;
+
   /// No description provided for @pay_button.
   ///
   /// In es, this message translates to:
@@ -923,6 +1148,18 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'La factura ha expirado y no se puede pagar'**
   String get invoice_expired_error;
+
+  /// No description provided for @amountless_invoice_error.
+  ///
+  /// In es, this message translates to:
+  /// **'Factura sin monto no soportada. Solicite una factura con un monto específico.'**
+  String get amountless_invoice_error;
+
+  /// No description provided for @payment_sent_status.
+  ///
+  /// In es, this message translates to:
+  /// **'Pago enviado - Estado: {status}'**
+  String payment_sent_status(Object status);
 
   /// No description provided for @confirm_no_session_error.
   ///
@@ -1403,10 +1640,21 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Error verificando {currency}: {error}'**
   String error_checking_currency(Object currency, Object error);
+
+  /// No description provided for @deep_link_login_required_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Inicio de sesión requerido'**
+  String get deep_link_login_required_title;
+
+  /// No description provided for @deep_link_login_required_message.
+  ///
+  /// In es, this message translates to:
+  /// **'Debes iniciar sesión en tu cuenta LaChispa para procesar este pago.'**
+  String get deep_link_login_required_message;
 }
 
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -1415,42 +1663,30 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) => <String>[
-        'de',
-        'en',
-        'es',
-        'fr',
-        'it',
-        'pt',
-        'ru'
-      ].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['de', 'en', 'es', 'fr', 'it', 'pt', 'ru'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+
+
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'de':
-      return AppLocalizationsDe();
-    case 'en':
-      return AppLocalizationsEn();
-    case 'es':
-      return AppLocalizationsEs();
-    case 'fr':
-      return AppLocalizationsFr();
-    case 'it':
-      return AppLocalizationsIt();
-    case 'pt':
-      return AppLocalizationsPt();
-    case 'ru':
-      return AppLocalizationsRu();
+    case 'de': return AppLocalizationsDe();
+    case 'en': return AppLocalizationsEn();
+    case 'es': return AppLocalizationsEs();
+    case 'fr': return AppLocalizationsFr();
+    case 'it': return AppLocalizationsIt();
+    case 'pt': return AppLocalizationsPt();
+    case 'ru': return AppLocalizationsRu();
   }
 
   throw FlutterError(
-      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-      'an issue with the localizations generation tool. Please file an issue '
-      'on GitHub with a reproducible sample app and the gen-l10n configuration '
-      'that was used.');
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.'
+  );
 }

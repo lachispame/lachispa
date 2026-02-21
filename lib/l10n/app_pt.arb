@@ -149,6 +149,8 @@
   "expired_button_text": "Expirada",
   "sending_button": "Enviando...",
   "invoice_expired_error": "A fatura expirou e não pode ser paga",
+  "amountless_invoice_error": "Fatura sem valor não suportada. Solicite uma fatura com um valor específico.",
+  "payment_sent_status": "Pagamento enviado - Estado: {status}",
   "confirm_no_session_error": "Sem sessão ativa",
   "confirm_no_wallet_error": "Sem carteira principal disponível",
   "payment_pending_hold": "Pagamento pendente - Fatura Hold detetada",

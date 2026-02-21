@@ -1,5 +1,3 @@
-// ignore: unused_import
-import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -21,8 +19,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get tap_to_start_hint => 'Просто как зажечь искру';
 
   @override
-  String get choose_option_title =>
-      'Подключитесь к вашему любимому серверу LNBits';
+  String get choose_option_title => 'Подключитесь к вашему любимому серверу LNBits';
 
   @override
   String get create_new_wallet_title => 'Создать новый кошелек';
@@ -34,8 +31,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get use_existing_wallet_title => 'Использовать существующий кошелек';
 
   @override
-  String get use_existing_wallet_subtitle =>
-      'Подключитесь к Lightning кошельку';
+  String get use_existing_wallet_subtitle => 'Подключитесь к Lightning кошельку';
 
   @override
   String get server_settings_title => 'Текущий сервер';
@@ -188,8 +184,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get failed_label => 'Не удалось';
 
   @override
-  String get loading_transactions_error_prefix =>
-      'Ошибка загрузки транзакций: ';
+  String get loading_transactions_error_prefix => 'Ошибка загрузки транзакций: ';
 
   @override
   String get lightning_address_title => 'Lightning адрес';
@@ -213,8 +208,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get address_copied_message => 'Адрес скопирован в буфер обмена';
 
   @override
-  String get loading_address_error_prefix =>
-      'Ошибка загрузки Lightning адреса: ';
+  String get loading_address_error_prefix => 'Ошибка загрузки Lightning адреса: ';
 
   @override
   String get settings_title => 'Информация';
@@ -298,14 +292,131 @@ class AppLocalizationsRu extends AppLocalizations {
   String get scan_button => 'Сканировать';
 
   @override
+  String get voucher_scan_title => 'Сканировать ваучер';
+
+  @override
+  String get voucher_scan_instructions => 'Наведите камеру на QR-код ваучера LNURL-withdraw';
+
+  @override
+  String get voucher_scan_subtitle => 'Приложение автоматически обнаружит ваучер и позволит вам его активировать';
+
+  @override
+  String get voucher_scan_button => 'Сканировать QR';
+
+  @override
+  String get voucher_tap_to_scan => 'Нажмите, чтобы открыть камеру';
+
+  @override
+  String get voucher_manual_input => 'Ввести код вручную';
+
+  @override
+  String get voucher_processing => 'Обработка...';
+
+  @override
+  String get voucher_manual_input_hint => 'Вставьте код ваучера LNURL-withdraw:';
+
+  @override
+  String get voucher_manual_input_placeholder => 'lnurl1...';
+
+  @override
+  String get process_button => 'Обработать';
+
+  @override
+  String get voucher_detected_title => 'Ваучер обнаружен';
+
+  @override
+  String get voucher_fixed_amount => 'Фиксированная сумма:';
+
+  @override
+  String get voucher_amount_range => 'Доступный диапазон:';
+
+  @override
+  String get voucher_amount_to_claim => 'Сумма к получению:';
+
+  @override
+  String voucher_min_max_hint(int min, int max) {
+    return 'Мин: $min сатоши • Макс: $max сатоши';
+  }
+
+  @override
+  String get voucher_claim_button => 'Активировать ваучер';
+
+  @override
+  String voucher_amount_invalid(int min, int max) {
+    return 'Неверная сумма. Должна быть между $min и $max сатоши';
+  }
+
+  @override
+  String get voucher_claimed_title => 'Ваучер активирован!';
+
+  @override
+  String get voucher_claimed_subtitle => 'Средства вскоре появятся в вашем кошельке.';
+
+  @override
+  String get voucher_invalid_code => 'Неверный код';
+
+  @override
+  String get voucher_not_valid_lnurl => 'Отсканированный код не является действительным ваучером LNURL-withdraw.';
+
+  @override
+  String get voucher_processing_error => 'Ошибка обработки ваучера';
+
+  @override
+  String get voucher_already_claimed => 'Ваучер уже активирован';
+
+  @override
+  String get voucher_already_claimed_desc => 'Этот ваучер уже был использован и не может быть активирован повторно.';
+
+  @override
+  String get voucher_expired => 'Ваучер истек';
+
+  @override
+  String get voucher_expired_desc => 'Этот ваучер истек и больше не действителен.';
+
+  @override
+  String get voucher_not_found => 'Ваучер не найден';
+
+  @override
+  String get voucher_not_found_desc => 'Этот ваучер не найден или мог быть удален.';
+
+  @override
+  String get voucher_server_error => 'Ошибка сервера';
+
+  @override
+  String get voucher_server_error_desc => 'Возникла проблема с сервером ваучеров. Попробуйте еще раз позже.';
+
+  @override
+  String get voucher_connection_error => 'Ошибка соединения';
+
+  @override
+  String get voucher_connection_error_desc => 'Проверьте подключение к интернету и попробуйте еще раз.';
+
+  @override
+  String get voucher_invalid_amount => 'Неверная сумма';
+
+  @override
+  String get voucher_invalid_amount_desc => 'Сумма ваучера недействительна или была повреждена.';
+
+  @override
+  String get voucher_insufficient_funds => 'Недостаточно средств';
+
+  @override
+  String get voucher_insufficient_funds_desc => 'У ваучера недостаточно доступных средств.';
+
+  @override
+  String get voucher_generic_error => 'Не удается обработать ваучер';
+
+  @override
+  String get voucher_generic_error_desc => 'Произошла неожиданная ошибка при обработке этого ваучера. Попробуйте еще раз или обратитесь в поддержку.';
+
+  @override
   String get pay_button => 'ОПЛАТИТЬ';
 
   @override
   String get processing_button => 'ОБРАБОТКА...';
 
   @override
-  String get payment_instruction_text =>
-      'Вставьте Lightning счет, LNURL или адрес';
+  String get payment_instruction_text => 'Вставьте Lightning счет, LNURL или адрес';
 
   @override
   String get payment_processing_error_prefix => 'Ошибка обработки платежа: ';
@@ -359,27 +470,22 @@ class AppLocalizationsRu extends AppLocalizations {
   String get sending_lnurl_payment => 'Отправка LNURL платежа...';
 
   @override
-  String get sending_lightning_payment =>
-      'Отправка Lightning Address платежа...';
+  String get sending_lightning_payment => 'Отправка Lightning Address платежа...';
 
   @override
-  String get lnurl_payment_pending =>
-      'LNURL платеж ожидает - Обнаружен счет-холд';
+  String get lnurl_payment_pending => 'LNURL платеж ожидает - Обнаружен счет-холд';
 
   @override
   String get lnurl_payment_success => 'LNURL платеж успешно завершен!';
 
   @override
-  String get lightning_payment_pending =>
-      'Lightning Address платеж ожидает - Обнаружен счет-холд';
+  String get lightning_payment_pending => 'Lightning Address платеж ожидает - Обнаружен счет-холд';
 
   @override
-  String get lightning_payment_success =>
-      'Lightning Address платеж успешно завершен!';
+  String get lightning_payment_success => 'Lightning Address платеж успешно завершен!';
 
   @override
-  String get insufficient_balance_error =>
-      'Недостаточно средств для совершения платежа';
+  String get insufficient_balance_error => 'Недостаточно средств для совершения платежа';
 
   @override
   String get confirm_payment_title => 'Подтвердить платеж';
@@ -425,6 +531,14 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get invoice_expired_error => 'Счет истек и не может быть оплачен';
+
+  @override
+  String get amountless_invoice_error => 'Счет без суммы не поддерживается. Запросите счет с указанной суммой.';
+
+  @override
+  String payment_sent_status(Object status) {
+    return 'Платеж отправлен - Статус: $status';
+  }
 
   @override
   String get confirm_no_session_error => 'Нет активной сессии';
@@ -487,8 +601,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get favorite_server_feature => 'С вашим любимым сервером';
 
   @override
-  String get receive_info_text =>
-      '• Поделитесь своим Lightning адресом для получения платежей любой суммы\\n\\n• QR-код автоматически разрешается в LNURL для максимальной совместимости\\n\\n• Платежи поступают непосредственно в этот кошелек';
+  String get receive_info_text => '• Поделитесь своим Lightning адресом для получения платежей любой суммы\\n\\n• QR-код автоматически разрешается в LNURL для максимальной совместимости\\n\\n• Платежи поступают непосредственно в этот кошелек';
 
   @override
   String get payment_description_example => 'Например: Оплата услуг';
@@ -500,22 +613,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String get server_prefix => 'Сервер: ';
 
   @override
-  String get login_subtitle =>
-      'Введите ваши учетные данные для доступа к кошельку';
+  String get login_subtitle => 'Введите ваши учетные данные для доступа к кошельку';
 
   @override
   String get username_required_error => 'Требуется имя пользователя';
 
   @override
-  String get username_length_error =>
-      'Имя пользователя должно содержать не менее 3 символов';
+  String get username_length_error => 'Имя пользователя должно содержать не менее 3 символов';
 
   @override
   String get password_required_error => 'Требуется пароль';
 
   @override
-  String get password_length_error =>
-      'Пароль должен содержать не менее 6 символов';
+  String get password_length_error => 'Пароль должен содержать не менее 6 символов';
 
   @override
   String get saved_users_header => 'Сохраненные пользователи';
@@ -527,8 +637,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get delete_credentials_title => 'Удалить учетные данные';
 
   @override
-  String get delete_credentials_message =>
-      'Сняв этот флажок, сохраненные учетные данные для этого пользователя будут удалены.\\\\n\\\\nВы уверены, что хотите продолжить?';
+  String get delete_credentials_message => 'Сняв этот флажок, сохраненные учетные данные для этого пользователя будут удалены.\\\\n\\\\nВы уверены, что хотите продолжить?';
 
   @override
   String get delete_credentials_cancel => 'Отмена';
@@ -540,8 +649,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get close_dialog => 'Закрыть';
 
   @override
-  String get credentials_found_message =>
-      'Учетные данные найдены - пароль будет запомнен';
+  String get credentials_found_message => 'Учетные данные найдены - пароль будет запомнен';
 
   @override
   String get password_will_be_remembered => 'Пароль будет запомнен после входа';
@@ -556,8 +664,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get about_app_subtitle => 'Lightning кошелек';
 
   @override
-  String get about_app_description =>
-      'Мобильное приложение для управления Bitcoin через Lightning Network с использованием LNBits в качестве бэкенда.';
+  String get about_app_description => 'Мобильное приложение для управления Bitcoin через Lightning Network с использованием LNBits в качестве бэкенда.';
 
   @override
   String get lightning_address_copy => 'Копировать';
@@ -578,23 +685,19 @@ class AppLocalizationsRu extends AppLocalizations {
   String get create_new_wallet_help => 'Создать новый кошелек';
 
   @override
-  String get create_wallet_short_description =>
-      'Чтобы создать новый кошелек, войдите в панель LNBits через браузер и используйте опцию \\\"Создать кошелек\\\".';
+  String get create_wallet_short_description => 'Чтобы создать новый кошелек, войдите в панель LNBits через браузер и используйте опцию \\\"Создать кошелек\\\".';
 
   @override
-  String get create_wallet_detailed_instructions =>
-      'Чтобы создать новый кошелек:\\\\n\\\\n1. Откройте веб-браузер\\\\n2. Войдите на ваш сервер LNBits\\\\n3. Войдите в свой аккаунт\\\\n4. Найдите кнопку \\\"Создать кошелек\\\"\\\\n5. Дайте имя вашему новому кошельку\\\\n6. Вернитесь в LaChispa и обновите ваши кошельки\\\\n\\\\nНовый кошелек автоматически появится в вашем списке.';
+  String get create_wallet_detailed_instructions => 'Чтобы создать новый кошелек:\\\\n\\\\n1. Откройте веб-браузер\\\\n2. Войдите на ваш сервер LNBits\\\\n3. Войдите в свой аккаунт\\\\n4. Найдите кнопку \\\"Создать кошелек\\\"\\\\n5. Дайте имя вашему новому кошельку\\\\n6. Вернитесь в LaChispa и обновите ваши кошельки\\\\n\\\\nНовый кошелек автоматически появится в вашем списке.';
 
   @override
   String get fixed_float_loading => 'Загрузка Fixed Float...';
 
   @override
-  String get fixed_float_description =>
-      'Обменивайте криптовалюты по\\nфиксированным курсам без регистрации';
+  String get fixed_float_description => 'Обменивайте криптовалюты по\\nфиксированным курсам без регистрации';
 
   @override
-  String get fixed_float_webview_error =>
-      'WebView недоступен на этой платформе.\\\\nОткроется во внешнем браузере.';
+  String get fixed_float_webview_error => 'WebView недоступен на этой платформе.\\\\nОткроется во внешнем браузере.';
 
   @override
   String get fixed_float_open_button => 'Открыть Fixed Float';
@@ -605,8 +708,7 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get fixed_float_external_browser =>
-      'Откроет Fixed Float во внешнем браузере';
+  String get fixed_float_external_browser => 'Откроет Fixed Float во внешнем браузере';
 
   @override
   String get fixed_float_within_app => 'Открывает Fixed Float в приложении';
@@ -615,12 +717,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get boltz_loading => 'Загрузка Boltz...';
 
   @override
-  String get boltz_description =>
-      'Атомные свопы Bitcoin и Lightning\\nбез доверия';
+  String get boltz_description => 'Атомные свопы Bitcoin и Lightning\\nбез доверия';
 
   @override
-  String get boltz_webview_error =>
-      'WebView недоступен на этой платформе.\\\\nОткроется во внешнем браузере.';
+  String get boltz_webview_error => 'WebView недоступен на этой платформе.\\\\nОткроется во внешнем браузере.';
 
   @override
   String get boltz_open_button => 'Открыть Boltz';
@@ -643,8 +743,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get currency_settings_title => 'Выбор валют';
 
   @override
-  String get currency_settings_subtitle =>
-      'Выберите ваши предпочитаемые валюты';
+  String get currency_settings_subtitle => 'Выберите ваши предпочитаемые валюты';
 
   @override
   String get available_currencies => 'Доступные валюты';
@@ -671,27 +770,31 @@ class AppLocalizationsRu extends AppLocalizations {
   String get about_title => 'Информация';
 
   @override
-  String get currency_validation_info =>
-      'Al seleccionar una moneda, se verificará si está disponible en este servidor';
+  String get currency_validation_info => 'При выборе валюты будет проверено, доступна ли она на этом сервере';
 
   @override
   String checking_currency_availability(Object currency) {
-    return 'Verificando disponibilidad de $currency...';
+    return 'Проверка доступности $currency...';
   }
 
   @override
   String currency_added_successfully(Object currency) {
-    return '$currency agregado correctamente';
+    return '$currency успешно добавлен';
   }
 
   @override
-  String currency_not_available_on_server(
-      Object currency, Object currencyName) {
-    return '$currencyName ($currency) no está disponible en este servidor';
+  String currency_not_available_on_server(Object currency, Object currencyName) {
+    return '$currencyName ($currency) недоступна на этом сервере';
   }
 
   @override
   String error_checking_currency(Object currency, Object error) {
-    return 'Error verificando $currency: $error';
+    return 'Ошибка при проверке $currency: $error';
   }
+
+  @override
+  String get deep_link_login_required_title => 'Требуется вход в систему';
+
+  @override
+  String get deep_link_login_required_message => 'Вы должны войти в свою учетную запись LaChispa для обработки этого платежа.';
 }
