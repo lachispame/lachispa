@@ -1,3 +1,5 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -169,7 +171,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get no_transactions_text => 'No transactions';
 
   @override
-  String get no_transactions_description => 'You haven\'t made any transactions yet.';
+  String get no_transactions_description =>
+      'You haven\'t made any transactions yet.';
 
   @override
   String get sent_label => 'Sent';
@@ -184,7 +187,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get failed_label => 'Failed';
 
   @override
-  String get loading_transactions_error_prefix => 'Error loading transactions: ';
+  String get loading_transactions_error_prefix =>
+      'Error loading transactions: ';
 
   @override
   String get lightning_address_title => 'Lightning Address';
@@ -208,7 +212,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get address_copied_message => 'Address copied to clipboard';
 
   @override
-  String get loading_address_error_prefix => 'Error loading Lightning address: ';
+  String get loading_address_error_prefix =>
+      'Error loading Lightning address: ';
 
   @override
   String get settings_title => 'About';
@@ -295,10 +300,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get voucher_scan_title => 'Scan Voucher';
 
   @override
-  String get voucher_scan_instructions => 'Point your camera at the LNURL-withdraw voucher QR code';
+  String get voucher_scan_instructions =>
+      'Point your camera at the LNURL-withdraw voucher QR code';
 
   @override
-  String get voucher_scan_subtitle => 'The app will automatically detect the voucher and allow you to claim it';
+  String get voucher_scan_subtitle =>
+      'The app will automatically detect the voucher and allow you to claim it';
 
   @override
   String get voucher_scan_button => 'Scan QR';
@@ -313,7 +320,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get voucher_processing => 'Processing...';
 
   @override
-  String get voucher_manual_input_hint => 'Paste the LNURL-withdraw voucher code:';
+  String get voucher_manual_input_hint =>
+      'Paste the LNURL-withdraw voucher code:';
 
   @override
   String get voucher_manual_input_placeholder => 'lnurl1...';
@@ -350,13 +358,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get voucher_claimed_title => 'Voucher claimed!';
 
   @override
-  String get voucher_claimed_subtitle => 'The funds will appear in your wallet shortly.';
+  String get voucher_claimed_subtitle =>
+      'The funds will appear in your wallet shortly.';
 
   @override
   String get voucher_invalid_code => 'Invalid code';
 
   @override
-  String get voucher_not_valid_lnurl => 'The scanned code is not a valid LNURL-withdraw voucher.';
+  String get voucher_not_valid_lnurl =>
+      'The scanned code is not a valid LNURL-withdraw voucher.';
 
   @override
   String get voucher_processing_error => 'Error processing voucher';
@@ -365,49 +375,57 @@ class AppLocalizationsEn extends AppLocalizations {
   String get voucher_already_claimed => 'Voucher already claimed';
 
   @override
-  String get voucher_already_claimed_desc => 'This voucher has already been used and cannot be claimed again.';
+  String get voucher_already_claimed_desc =>
+      'This voucher has already been used and cannot be claimed again.';
 
   @override
   String get voucher_expired => 'Voucher expired';
 
   @override
-  String get voucher_expired_desc => 'This voucher has expired and is no longer valid.';
+  String get voucher_expired_desc =>
+      'This voucher has expired and is no longer valid.';
 
   @override
   String get voucher_not_found => 'Voucher not found';
 
   @override
-  String get voucher_not_found_desc => 'This voucher could not be found or may have been removed.';
+  String get voucher_not_found_desc =>
+      'This voucher could not be found or may have been removed.';
 
   @override
   String get voucher_server_error => 'Server error';
 
   @override
-  String get voucher_server_error_desc => 'There was a problem with the voucher server. Please try again later.';
+  String get voucher_server_error_desc =>
+      'There was a problem with the voucher server. Please try again later.';
 
   @override
   String get voucher_connection_error => 'Connection error';
 
   @override
-  String get voucher_connection_error_desc => 'Please check your internet connection and try again.';
+  String get voucher_connection_error_desc =>
+      'Please check your internet connection and try again.';
 
   @override
   String get voucher_invalid_amount => 'Invalid amount';
 
   @override
-  String get voucher_invalid_amount_desc => 'The voucher amount is not valid or has been corrupted.';
+  String get voucher_invalid_amount_desc =>
+      'The voucher amount is not valid or has been corrupted.';
 
   @override
   String get voucher_insufficient_funds => 'Insufficient funds';
 
   @override
-  String get voucher_insufficient_funds_desc => 'The voucher does not have enough funds available.';
+  String get voucher_insufficient_funds_desc =>
+      'The voucher does not have enough funds available.';
 
   @override
   String get voucher_generic_error => 'Unable to process voucher';
 
   @override
-  String get voucher_generic_error_desc => 'There was an unexpected error processing this voucher. Please try again or contact support.';
+  String get voucher_generic_error_desc =>
+      'There was an unexpected error processing this voucher. Please try again or contact support.';
 
   @override
   String get pay_button => 'PAY';
@@ -416,7 +434,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get processing_button => 'PROCESSING...';
 
   @override
-  String get payment_instruction_text => 'Paste a Lightning invoice, LNURL or address';
+  String get payment_instruction_text =>
+      'Paste a Lightning invoice, LNURL or address';
 
   @override
   String get payment_processing_error_prefix => 'Error processing payment: ';
@@ -470,22 +489,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sending_lnurl_payment => 'Sending LNURL payment...';
 
   @override
-  String get sending_lightning_payment => 'Sending Lightning Address payment...';
+  String get sending_lightning_payment =>
+      'Sending Lightning Address payment...';
 
   @override
-  String get lnurl_payment_pending => 'LNURL payment pending - Hold invoice detected';
+  String get lnurl_payment_pending =>
+      'LNURL payment pending - Hold invoice detected';
 
   @override
   String get lnurl_payment_success => 'LNURL payment completed successfully!';
 
   @override
-  String get lightning_payment_pending => 'Lightning Address payment pending - Hold invoice detected';
+  String get lightning_payment_pending =>
+      'Lightning Address payment pending - Hold invoice detected';
 
   @override
-  String get lightning_payment_success => 'Lightning Address payment completed successfully!';
+  String get lightning_payment_success =>
+      'Lightning Address payment completed successfully!';
 
   @override
-  String get insufficient_balance_error => 'Insufficient balance to make payment';
+  String get insufficient_balance_error =>
+      'Insufficient balance to make payment';
 
   @override
   String get confirm_payment_title => 'Confirm Payment';
@@ -530,15 +554,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get sending_button => 'Sending...';
 
   @override
-  String get invoice_expired_error => 'The invoice has expired and cannot be paid';
-
-  @override
-  String get amountless_invoice_error => 'Invoice without amount not supported. Please request an invoice with a specific amount.';
-
-  @override
-  String payment_sent_status(Object status) {
-    return 'Payment sent - Status: $status';
-  }
+  String get invoice_expired_error =>
+      'The invoice has expired and cannot be paid';
 
   @override
   String get confirm_no_session_error => 'No active session';
@@ -601,7 +618,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get favorite_server_feature => 'With your favorite server';
 
   @override
-  String get receive_info_text => '• Share your Lightning Address to receive payments of any amount\n\n• QR code automatically resolves to LNURL for maximum compatibility\n\n• Payments are received directly in this wallet';
+  String get receive_info_text =>
+      '• Share your Lightning Address to receive payments of any amount\n\n• QR code automatically resolves to LNURL for maximum compatibility\n\n• Payments are received directly in this wallet';
 
   @override
   String get payment_description_example => 'Ex: Payment for services';
@@ -637,7 +655,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get delete_credentials_title => 'Delete credentials';
 
   @override
-  String get delete_credentials_message => 'By unchecking this option, saved credentials for this user will be deleted.\\n\\nAre you sure you want to continue?';
+  String get delete_credentials_message =>
+      'By unchecking this option, saved credentials for this user will be deleted.\\n\\nAre you sure you want to continue?';
 
   @override
   String get delete_credentials_cancel => 'Cancel';
@@ -649,10 +668,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get close_dialog => 'Close';
 
   @override
-  String get credentials_found_message => 'Credentials found - password will be remembered';
+  String get credentials_found_message =>
+      'Credentials found - password will be remembered';
 
   @override
-  String get password_will_be_remembered => 'Password will be remembered after login';
+  String get password_will_be_remembered =>
+      'Password will be remembered after login';
 
   @override
   String get password_saved_successfully => 'Password saved successfully';
@@ -664,7 +685,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get about_app_subtitle => 'Lightning Wallet';
 
   @override
-  String get about_app_description => 'A mobile application to manage Bitcoin through Lightning Network using LNBits as backend.';
+  String get about_app_description =>
+      'A mobile application to manage Bitcoin through Lightning Network using LNBits as backend.';
 
   @override
   String get lightning_address_copy => 'Copy';
@@ -685,19 +707,23 @@ class AppLocalizationsEn extends AppLocalizations {
   String get create_new_wallet_help => 'Create new wallet';
 
   @override
-  String get create_wallet_short_description => 'To create a new wallet, access your LNBits panel from the browser and use the \"Create wallet\" option.';
+  String get create_wallet_short_description =>
+      'To create a new wallet, access your LNBits panel from the browser and use the \"Create wallet\" option.';
 
   @override
-  String get create_wallet_detailed_instructions => 'To create a new wallet:\\n\\n1. Open your web browser\\n2. Access your LNBits server\\n3. Log in with your account\\n4. Look for the \"Create wallet\" button\\n5. Assign a name to your new wallet\\n6. Return to LaChispa and refresh your wallets\\n\\nThe new wallet will appear automatically in your list.';
+  String get create_wallet_detailed_instructions =>
+      'To create a new wallet:\\n\\n1. Open your web browser\\n2. Access your LNBits server\\n3. Log in with your account\\n4. Look for the \"Create wallet\" button\\n5. Assign a name to your new wallet\\n6. Return to LaChispa and refresh your wallets\\n\\nThe new wallet will appear automatically in your list.';
 
   @override
   String get fixed_float_loading => 'Loading Fixed Float...';
 
   @override
-  String get fixed_float_description => 'Exchange cryptocurrencies with\nfixed rates and no registration';
+  String get fixed_float_description =>
+      'Exchange cryptocurrencies with\nfixed rates and no registration';
 
   @override
-  String get fixed_float_webview_error => 'WebView not available on this platform.\nWill open in external browser.';
+  String get fixed_float_webview_error =>
+      'WebView not available on this platform.\nWill open in external browser.';
 
   @override
   String get fixed_float_open_button => 'Open Fixed Float';
@@ -708,7 +734,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get fixed_float_external_browser => 'Will open Fixed Float in external browser';
+  String get fixed_float_external_browser =>
+      'Will open Fixed Float in external browser';
 
   @override
   String get fixed_float_within_app => 'Opens Fixed Float within the app';
@@ -717,10 +744,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get boltz_loading => 'Loading Boltz...';
 
   @override
-  String get boltz_description => 'Trustless Bitcoin and Lightning\natomic swaps';
+  String get boltz_description =>
+      'Trustless Bitcoin and Lightning\natomic swaps';
 
   @override
-  String get boltz_webview_error => 'WebView not available on this platform.\nWill open in external browser.';
+  String get boltz_webview_error =>
+      'WebView not available on this platform.\nWill open in external browser.';
 
   @override
   String get boltz_open_button => 'Open Boltz';
@@ -770,7 +799,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get about_title => 'About';
 
   @override
-  String get currency_validation_info => 'When selecting a currency, it will be verified if it\'s available on this server';
+  String get currency_validation_info =>
+      'When selecting a currency, it will be verified if it\'s available on this server';
 
   @override
   String checking_currency_availability(Object currency) {
@@ -783,7 +813,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String currency_not_available_on_server(Object currency, Object currencyName) {
+  String currency_not_available_on_server(
+      Object currency, Object currencyName) {
     return '$currencyName ($currency) is not available on this server';
   }
 
@@ -796,5 +827,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get deep_link_login_required_title => 'Login Required';
 
   @override
-  String get deep_link_login_required_message => 'You must log in to your LaChispa account to process this payment.';
+  String get deep_link_login_required_message =>
+      'You must log in to your LaChispa account to process this payment.';
 }
