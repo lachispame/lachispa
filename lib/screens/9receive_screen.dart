@@ -50,6 +50,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
   // Timer to verify invoice payment
   Timer? _invoicePaymentTimer;
 
+  // Timer for invoice payment monitoring timeout (10 minutes)
+  Timer? _invoicePaymentTimeoutTimer;
+
   @override
   void initState() {
     super.initState();
@@ -59,42 +62,54 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     });
   }
 
-  void _initializeCurrencies() async {
+  Future<void> _initializeCurrencies() async {
     final currencyProvider = context.read<CurrencySettingsProvider>();
     final authProvider = context.read<AuthProvider>();
 
-    print('[RECEIVE_SCREEN] Initializing currencies...');
-    print('[RECEIVE_SCREEN] Server URL: ${authProvider.currentServer}');
+    try {
+      print('[RECEIVE_SCREEN] Initializing currencies...');
+      print('[RECEIVE_SCREEN] Server URL: ${authProvider.currentServer}');
 
-    // Ensure provider has server URL configured
-    if (authProvider.currentServer != null) {
-      await currencyProvider.updateServerUrl(authProvider.currentServer);
+      // Ensure provider has server URL configured
+      if (authProvider.currentServer != null) {
+        await currencyProvider.updateServerUrl(authProvider.currentServer);
 
-      // Force load exchange rates to ensure they're available
-      await currencyProvider.loadExchangeRates(forceRefresh: true);
+        // Force load exchange rates to ensure they're available
+        await currencyProvider.loadExchangeRates(forceRefresh: true);
 
-      print(
-        '[RECEIVE_SCREEN] Available currencies: ${currencyProvider.availableCurrencies}',
-      );
-      print(
-        '[RECEIVE_SCREEN] Exchange rates loaded: ${currencyProvider.availableCurrencies.isNotEmpty}',
-      );
+        print(
+          '[RECEIVE_SCREEN] Available currencies: ${currencyProvider.availableCurrencies}',
+        );
+        print(
+          '[RECEIVE_SCREEN] Exchange rates loaded: ${currencyProvider.availableCurrencies.isNotEmpty}',
+        );
+      }
+
+      final displaySequence = currencyProvider.displaySequence;
+
+      if (mounted) {
+        setState(() {
+          _currencies = displaySequence.isNotEmpty ? displaySequence : ['sats'];
+          // Ensure selected currency is valid
+          if (!_currencies.contains(_selectedCurrency)) {
+            _selectedCurrency = _currencies.first;
+          }
+        });
+      }
+
+      print('[RECEIVE_SCREEN] Final currencies: $_currencies');
+      print('[RECEIVE_SCREEN] Selected currency: $_selectedCurrency');
+    } catch (e) {
+      print('[RECEIVE_SCREEN] Error initializing currencies: $e');
+
+      // Ensure UI remains stable with safe fallback
+      if (mounted) {
+        setState(() {
+          _currencies = ['sats'];
+          _selectedCurrency = 'sats';
+        });
+      }
     }
-
-    final displaySequence = currencyProvider.displaySequence;
-
-    if (mounted) {
-      setState(() {
-        _currencies = displaySequence.isNotEmpty ? displaySequence : ['sats'];
-        // Ensure selected currency is valid
-        if (!_currencies.contains(_selectedCurrency)) {
-          _selectedCurrency = _currencies.first;
-        }
-      });
-    }
-
-    print('[RECEIVE_SCREEN] Final currencies: $_currencies');
-    print('[RECEIVE_SCREEN] Selected currency: $_selectedCurrency');
   }
 
   /// Convert fiat amount to sats using inverse conversion (same method as amount_screen)
@@ -178,6 +193,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     _invoiceService.dispose();
     _yadioService.dispose();
     _invoicePaymentTimer?.cancel();
+    _invoicePaymentTimeoutTimer?.cancel();
     super.dispose();
   }
 
@@ -1290,7 +1306,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                   Icon(Icons.refresh, color: Colors.white, size: 20),
                   SizedBox(width: 12),
                   Text(
-                    AppLocalizations.of(context)!.lightning_address_title,
+                    AppLocalizations.of(context)!.invoice_cleared_message,
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w500,
@@ -1320,7 +1336,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         ),
         icon: const Icon(Icons.refresh, size: 20),
         label: Text(
-          AppLocalizations.of(context)!.receive_title,
+          AppLocalizations.of(context)!.clear_invoice_button,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -1732,6 +1748,13 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
 
       // ALWAYS use fresh conversion with consistent rates
       final amountInSats = await _getAmountInSats(amount, _selectedCurrency);
+
+      // Check if widget was disposed during async operation
+      if (!mounted) {
+        print('[RECEIVE_SCREEN] Widget disposed, aborting invoice generation');
+        return;
+      }
+
       final conversionMessage = _selectedCurrency == 'sats'
           ? 'Factura: $amountInSats sats'
           : '$amount $_selectedCurrency / $amountInSats sats';
@@ -1793,6 +1816,12 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             : null,
       );
 
+      // Check if widget was disposed during async operation
+      if (!mounted) {
+        print('[RECEIVE_SCREEN] Widget disposed, aborting invoice generation');
+        return;
+      }
+
       // Update state
       setState(() {
         _generatedInvoice = invoice;
@@ -1843,6 +1872,12 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       _startInvoicePaymentMonitoring(invoice, wallet, serverUrl);
     } catch (e) {
       print('[RECEIVE_SCREEN] Error generando factura: $e');
+
+      // Check if widget was disposed before updating state
+      if (!mounted) {
+        print('[RECEIVE_SCREEN] Widget disposed, skipping error handling');
+        return;
+      }
 
       setState(() {
         _isGeneratingInvoice = false;
@@ -2030,7 +2065,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     });
 
     // Auto-cancel after 10 minutes to avoid infinite monitoring
-    Timer(const Duration(minutes: 10), () {
+    _invoicePaymentTimeoutTimer?.cancel();
+    _invoicePaymentTimeoutTimer = Timer(const Duration(minutes: 10), () {
       _invoicePaymentTimer?.cancel();
       print('[RECEIVE_SCREEN] Timeout: Deteniendo monitoreo de factura');
     });
