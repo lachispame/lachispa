@@ -518,7 +518,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           ),
           const SizedBox(height: 12),
           Text(
-            AppLocalizations.of(context)!.lightningAddressDescription,
+            AppLocalizations.of(context)!.invoice_receive_description,
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.8),
               fontSize: 16,
@@ -570,7 +570,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            AppLocalizations.of(context)!.orCreateLnaddress,
+            AppLocalizations.of(context)!.or_create_lnaddress,
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.6),
               fontSize: 14,
@@ -736,7 +736,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
 
           // Option to create LNAddress
           Text(
-            AppLocalizations.of(context)!.orCreateLnaddressFull,
+            AppLocalizations.of(context)!.or_create_lnaddress_full,
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.6),
               fontSize: 14,
@@ -841,7 +841,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  AppLocalizations.of(context)!.invoiceCopied,
+                  AppLocalizations.of(context)!.invoice_copied,
                   style: const TextStyle(
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w500,
