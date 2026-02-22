@@ -576,6 +576,14 @@ class AppLocalizationsEs extends AppLocalizations {
   String get payment_sent_status_prefix => 'Pago enviado - Estado: ';
 
   @override
+  String payment_sent_status(Object status) {
+    return 'Pago enviado - Estado: $status';
+  }
+
+  @override
+  String get amountless_invoice_error => 'Factura sin monto no soportada';
+
+  @override
   String get payment_sending_error_prefix => 'Error enviando pago: ';
 
   @override
@@ -854,4 +862,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get invoice_copied => 'Factura copiada';
+
+  @override
+  String get invoice_cleared_message => 'Factura cleared';
+
+  @override
+  String get clear_invoice_button => 'Limpiar factura';
 }

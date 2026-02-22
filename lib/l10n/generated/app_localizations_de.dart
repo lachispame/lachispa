@@ -585,7 +585,22 @@ class AppLocalizationsDe extends AppLocalizations {
   String get payment_sent_status_prefix => 'Zahlung gesendet - Status: ';
 
   @override
+  String payment_sent_status(Object status) {
+    return 'Zahlung gesendet - Status: $status';
+  }
+
+  @override
+  String get amountless_invoice_error =>
+      'Rechnung ohne Betrag nicht unterstützt';
+
+  @override
   String get payment_sending_error_prefix => 'Fehler beim Senden der Zahlung: ';
+
+  @override
+  String get invoice_cleared_message => 'Rechnung gelöscht';
+
+  @override
+  String get clear_invoice_button => 'Rechnung löschen';
 
   @override
   String get language_selector_title => 'Sprache';

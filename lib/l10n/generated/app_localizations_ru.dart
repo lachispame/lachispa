@@ -573,7 +573,21 @@ class AppLocalizationsRu extends AppLocalizations {
   String get payment_sent_status_prefix => 'Платеж отправлен - Статус: ';
 
   @override
+  String payment_sent_status(Object status) {
+    return 'Платеж отправлен - Статус: $status';
+  }
+
+  @override
+  String get amountless_invoice_error => 'Счет без суммы не поддерживается';
+
+  @override
   String get payment_sending_error_prefix => 'Ошибка отправки платежа: ';
+
+  @override
+  String get invoice_cleared_message => 'Счет очищен';
+
+  @override
+  String get clear_invoice_button => 'Очистить счет';
 
   @override
   String get language_selector_title => 'Язык';

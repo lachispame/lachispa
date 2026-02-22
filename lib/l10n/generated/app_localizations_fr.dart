@@ -588,8 +588,23 @@ class AppLocalizationsFr extends AppLocalizations {
   String get payment_sent_status_prefix => 'Paiement envoyé - Statut : ';
 
   @override
+  String payment_sent_status(Object status) {
+    return 'Paiement envoyé - Statut : $status';
+  }
+
+  @override
+  String get amountless_invoice_error =>
+      'Facture sans montant non prise en charge';
+
+  @override
   String get payment_sending_error_prefix =>
       'Erreur lors de l\'envoi du paiement : ';
+
+  @override
+  String get invoice_cleared_message => 'Facture effacée';
+
+  @override
+  String get clear_invoice_button => 'Effacer la facture';
 
   @override
   String get language_selector_title => 'Langue';

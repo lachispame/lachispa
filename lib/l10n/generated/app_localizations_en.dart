@@ -573,7 +573,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get payment_sent_status_prefix => 'Payment sent - Status: ';
 
   @override
+  String payment_sent_status(Object status) {
+    return 'Payment sent - Status: $status';
+  }
+
+  @override
+  String get amountless_invoice_error => 'Amountless invoice not supported';
+
+  @override
   String get payment_sending_error_prefix => 'Error sending payment: ';
+
+  @override
+  String get invoice_cleared_message => 'Invoice cleared';
+
+  @override
+  String get clear_invoice_button => 'Clear invoice';
 
   @override
   String get language_selector_title => 'Language';

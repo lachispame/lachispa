@@ -576,7 +576,21 @@ class AppLocalizationsPt extends AppLocalizations {
   String get payment_sent_status_prefix => 'Pagamento enviado - Estado: ';
 
   @override
+  String payment_sent_status(Object status) {
+    return 'Pagamento enviado - Estado: $status';
+  }
+
+  @override
+  String get amountless_invoice_error => 'Fatura sem valor não suportada';
+
+  @override
   String get payment_sending_error_prefix => 'Erro ao enviar pagamento: ';
+
+  @override
+  String get invoice_cleared_message => 'Fatura limpa';
+
+  @override
+  String get clear_invoice_button => 'Limpar fatura';
 
   @override
   String get language_selector_title => 'Idioma';
