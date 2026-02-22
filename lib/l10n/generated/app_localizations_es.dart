@@ -847,24 +847,4 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get deep_link_login_required_message =>
       'Debes iniciar sesión en tu cuenta LaChispa para procesar este pago.';
-
-  @override
-  String get invoice_receive_description =>
-      'Crea una factura para recibir pagos directamente en tu wallet';
-
-  @override
-  String get or_create_lnaddress => 'o también puedes crear una:';
-
-  @override
-  String get or_create_lnaddress_full =>
-      'o también puedes crear una Lightning Address:';
-
-  @override
-  String get invoice_copied => 'Factura copiada';
-
-  @override
-  String get invoice_cleared_message => 'Factura cleared';
-
-  @override
-  String get clear_invoice_button => 'Limpiar factura';
 }

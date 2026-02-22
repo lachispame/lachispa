@@ -846,24 +846,4 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get deep_link_login_required_message =>
       'Você deve fazer login em sua conta LaChispa para processar este pagamento.';
-
-  @override
-  String get invoice_receive_description =>
-      'Crie uma fatura para receber pagamentos diretamente na sua carteira';
-
-  @override
-  String get or_create_lnaddress => 'ou você também pode criar um:';
-
-  @override
-  String get or_create_lnaddress_full =>
-      'ou você também pode criar um Lightning Address:';
-
-  @override
-  String get invoice_copied => 'Fatura copiada';
-
-  @override
-  String get invoice_cleared_message => 'Fatura limpa';
-
-  @override
-  String get clear_invoice_button => 'Limpar fatura';
 }

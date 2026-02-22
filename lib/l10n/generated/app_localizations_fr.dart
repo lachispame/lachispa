@@ -866,24 +866,4 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get deep_link_login_required_message =>
       'Vous devez vous connecter à votre compte LaChispa pour traiter ce paiement.';
-
-  @override
-  String get invoice_receive_description =>
-      'Créez une facture pour recevoir des paiements directement dans votre portefeuille';
-
-  @override
-  String get or_create_lnaddress => 'ou vous pouvez également créer un:';
-
-  @override
-  String get or_create_lnaddress_full =>
-      'ou vous pouvez également créer une Lightning Address:';
-
-  @override
-  String get invoice_copied => 'Facture copiée';
-
-  @override
-  String get invoice_cleared_message => 'Facture effacée';
-
-  @override
-  String get clear_invoice_button => 'Effacer la facture';
 }

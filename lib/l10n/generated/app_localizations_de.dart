@@ -858,24 +858,4 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get deep_link_login_required_message =>
       'Sie müssen sich in Ihr LaChispa-Konto einloggen, um diese Zahlung zu verarbeiten.';
-
-  @override
-  String get invoice_receive_description =>
-      'Erstellen Sie eine Rechnung, um Zahlungen direkt in Ihr Wallet zu erhalten';
-
-  @override
-  String get or_create_lnaddress => 'oder Sie können auch eine erstellen:';
-
-  @override
-  String get or_create_lnaddress_full =>
-      'oder Sie können auch eine Lightning-Adresse erstellen:';
-
-  @override
-  String get invoice_copied => 'Rechnung kopiert';
-
-  @override
-  String get invoice_cleared_message => 'Rechnung gelöscht';
-
-  @override
-  String get clear_invoice_button => 'Rechnung löschen';
 }
