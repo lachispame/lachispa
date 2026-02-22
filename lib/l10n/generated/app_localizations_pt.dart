@@ -560,6 +560,15 @@ class AppLocalizationsPt extends AppLocalizations {
   String get invoice_expired_error => 'A fatura expirou e não pode ser paga';
 
   @override
+  String get amountless_invoice_error =>
+      'Fatura sem valor não suportada. Solicite uma fatura com um valor específico.';
+
+  @override
+  String payment_sent_status(String status) {
+    return 'Pagamento enviado - Estado: $status';
+  }
+
+  @override
   String get confirm_no_session_error => 'Sem sessão ativa';
 
   @override
@@ -576,21 +585,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get payment_sent_status_prefix => 'Pagamento enviado - Estado: ';
 
   @override
-  String payment_sent_status(Object status) {
-    return 'Pagamento enviado - Estado: $status';
-  }
-
-  @override
-  String get amountless_invoice_error => 'Fatura sem valor não suportada';
-
-  @override
   String get payment_sending_error_prefix => 'Erro ao enviar pagamento: ';
-
-  @override
-  String get invoice_cleared_message => 'Fatura limpa';
-
-  @override
-  String get clear_invoice_button => 'Limpar fatura';
 
   @override
   String get language_selector_title => 'Idioma';
@@ -836,9 +831,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String currency_not_available_on_server(
-    Object currency,
-    Object currencyName,
-  ) {
+      Object currency, Object currencyName) {
     return '$currencyName ($currency) não está disponível neste servidor';
   }
 
@@ -867,4 +860,10 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get invoice_copied => 'Fatura copiada';
+
+  @override
+  String get invoice_cleared_message => 'Fatura limpa';
+
+  @override
+  String get clear_invoice_button => 'Limpar fatura';
 }

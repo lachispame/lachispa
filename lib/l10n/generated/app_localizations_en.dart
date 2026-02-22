@@ -558,6 +558,15 @@ class AppLocalizationsEn extends AppLocalizations {
       'The invoice has expired and cannot be paid';
 
   @override
+  String get amountless_invoice_error =>
+      'Invoice without amount not supported. Please request an invoice with a specific amount.';
+
+  @override
+  String payment_sent_status(String status) {
+    return 'Payment sent - Status: $status';
+  }
+
+  @override
   String get confirm_no_session_error => 'No active session';
 
   @override
@@ -573,21 +582,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get payment_sent_status_prefix => 'Payment sent - Status: ';
 
   @override
-  String payment_sent_status(Object status) {
-    return 'Payment sent - Status: $status';
-  }
-
-  @override
-  String get amountless_invoice_error => 'Amountless invoice not supported';
-
-  @override
   String get payment_sending_error_prefix => 'Error sending payment: ';
-
-  @override
-  String get invoice_cleared_message => 'Invoice cleared';
-
-  @override
-  String get clear_invoice_button => 'Clear invoice';
 
   @override
   String get language_selector_title => 'Language';
@@ -828,9 +823,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String currency_not_available_on_server(
-    Object currency,
-    Object currencyName,
-  ) {
+      Object currency, Object currencyName) {
     return '$currencyName ($currency) is not available on this server';
   }
 
@@ -859,4 +852,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get invoice_copied => 'Invoice copied';
+
+  @override
+  String get invoice_cleared_message => 'Invoice cleared';
+
+  @override
+  String get clear_invoice_button => 'Clear invoice';
 }

@@ -571,6 +571,15 @@ class AppLocalizationsIt extends AppLocalizations {
       'La fattura è scaduta e non può essere pagata';
 
   @override
+  String get amountless_invoice_error =>
+      'Fattura senza importo non supportata. Richiedere una fattura con un importo specifico.';
+
+  @override
+  String payment_sent_status(String status) {
+    return 'Pagamento inviato - Stato: $status';
+  }
+
+  @override
   String get confirm_no_session_error => 'Nessuna sessione attiva';
 
   @override
@@ -588,22 +597,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get payment_sent_status_prefix => 'Pagamento inviato - Stato: ';
 
   @override
-  String payment_sent_status(Object status) {
-    return 'Pagamento inviato - Stato: $status';
-  }
-
-  @override
-  String get amountless_invoice_error => 'Fattura senza importo non supportata';
-
-  @override
   String get payment_sending_error_prefix =>
       'Errore nell\'invio del pagamento: ';
-
-  @override
-  String get invoice_cleared_message => 'Fattura cancellata';
-
-  @override
-  String get clear_invoice_button => 'Cancella fattura';
 
   @override
   String get language_selector_title => 'Lingua';
@@ -851,9 +846,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String currency_not_available_on_server(
-    Object currency,
-    Object currencyName,
-  ) {
+      Object currency, Object currencyName) {
     return '$currencyName ($currency) non è disponibile su questo server';
   }
 
@@ -882,4 +875,10 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get invoice_copied => 'Fattura copiata';
+
+  @override
+  String get invoice_cleared_message => 'Fattura cancellata';
+
+  @override
+  String get clear_invoice_button => 'Cancella fattura';
 }

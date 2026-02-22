@@ -558,6 +558,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get invoice_expired_error => 'Счет истек и не может быть оплачен';
 
   @override
+  String get amountless_invoice_error =>
+      'Счет без суммы не поддерживается. Запросите счет с указанной суммой.';
+
+  @override
+  String payment_sent_status(String status) {
+    return 'Платеж отправлен - Статус: $status';
+  }
+
+  @override
   String get confirm_no_session_error => 'Нет активной сессии';
 
   @override
@@ -573,21 +582,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get payment_sent_status_prefix => 'Платеж отправлен - Статус: ';
 
   @override
-  String payment_sent_status(Object status) {
-    return 'Платеж отправлен - Статус: $status';
-  }
-
-  @override
-  String get amountless_invoice_error => 'Счет без суммы не поддерживается';
-
-  @override
   String get payment_sending_error_prefix => 'Ошибка отправки платежа: ';
-
-  @override
-  String get invoice_cleared_message => 'Счет очищен';
-
-  @override
-  String get clear_invoice_button => 'Очистить счет';
 
   @override
   String get language_selector_title => 'Язык';
@@ -831,9 +826,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String currency_not_available_on_server(
-    Object currency,
-    Object currencyName,
-  ) {
+      Object currency, Object currencyName) {
     return '$currencyName ($currency) недоступна на этом сервере';
   }
 
@@ -862,4 +855,10 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get invoice_copied => 'Счет скопирован';
+
+  @override
+  String get invoice_cleared_message => 'Счет очищен';
+
+  @override
+  String get clear_invoice_button => 'Очистить счет';
 }

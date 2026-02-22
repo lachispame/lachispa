@@ -571,6 +571,15 @@ class AppLocalizationsFr extends AppLocalizations {
       'La facture a expiré et ne peut pas être payée';
 
   @override
+  String get amountless_invoice_error =>
+      'Facture sans montant non prise en charge. Veuillez demander une facture avec un montant spécifique.';
+
+  @override
+  String payment_sent_status(String status) {
+    return 'Paiement envoyé - Statut : $status';
+  }
+
+  @override
   String get confirm_no_session_error => 'Aucune session active';
 
   @override
@@ -588,23 +597,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get payment_sent_status_prefix => 'Paiement envoyé - Statut : ';
 
   @override
-  String payment_sent_status(Object status) {
-    return 'Paiement envoyé - Statut : $status';
-  }
-
-  @override
-  String get amountless_invoice_error =>
-      'Facture sans montant non prise en charge';
-
-  @override
   String get payment_sending_error_prefix =>
       'Erreur lors de l\'envoi du paiement : ';
-
-  @override
-  String get invoice_cleared_message => 'Facture effacée';
-
-  @override
-  String get clear_invoice_button => 'Effacer la facture';
 
   @override
   String get language_selector_title => 'Langue';
@@ -857,9 +851,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String currency_not_available_on_server(
-    Object currency,
-    Object currencyName,
-  ) {
+      Object currency, Object currencyName) {
     return '$currencyName ($currency) n\'est pas disponible sur ce serveur';
   }
 
@@ -888,4 +880,10 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get invoice_copied => 'Facture copiée';
+
+  @override
+  String get invoice_cleared_message => 'Facture effacée';
+
+  @override
+  String get clear_invoice_button => 'Effacer la facture';
 }

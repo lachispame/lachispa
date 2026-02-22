@@ -561,6 +561,15 @@ class AppLocalizationsEs extends AppLocalizations {
       'La factura ha expirado y no se puede pagar';
 
   @override
+  String get amountless_invoice_error =>
+      'Factura sin monto no soportada. Solicite una factura con un monto específico.';
+
+  @override
+  String payment_sent_status(String status) {
+    return 'Pago enviado - Estado: $status';
+  }
+
+  @override
   String get confirm_no_session_error => 'Sin sesión activa';
 
   @override
@@ -574,14 +583,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get payment_sent_status_prefix => 'Pago enviado - Estado: ';
-
-  @override
-  String payment_sent_status(Object status) {
-    return 'Pago enviado - Estado: $status';
-  }
-
-  @override
-  String get amountless_invoice_error => 'Factura sin monto no soportada';
 
   @override
   String get payment_sending_error_prefix => 'Error enviando pago: ';
@@ -831,9 +832,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String currency_not_available_on_server(
-    Object currency,
-    Object currencyName,
-  ) {
+      Object currency, Object currencyName) {
     return '$currencyName ($currency) no está disponible en este servidor';
   }
 
