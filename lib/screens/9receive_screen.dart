@@ -74,9 +74,11 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       await currencyProvider.loadExchangeRates(forceRefresh: true);
 
       print(
-          '[RECEIVE_SCREEN] Available currencies: ${currencyProvider.availableCurrencies}');
+        '[RECEIVE_SCREEN] Available currencies: ${currencyProvider.availableCurrencies}',
+      );
       print(
-          '[RECEIVE_SCREEN] Exchange rates loaded: ${currencyProvider.availableCurrencies.isNotEmpty}');
+        '[RECEIVE_SCREEN] Exchange rates loaded: ${currencyProvider.availableCurrencies.isNotEmpty}',
+      );
     }
 
     final displaySequence = currencyProvider.displaySequence;
@@ -112,15 +114,20 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
 
       // Step 1: Get rate by converting 1 BTC (100M sats) to fiat
       const oneBtcInSats = 100000000; // 1 BTC = 100M sats
-      final oneBtcInFiat =
-          await currencyProvider.convertSatsToFiat(oneBtcInSats, currency);
+      final oneBtcInFiat = await currencyProvider.convertSatsToFiat(
+        oneBtcInSats,
+        currency,
+      );
 
       print(
-          '[RECEIVE_SCREEN] Rate check: $oneBtcInSats sats = $oneBtcInFiat $currency');
+        '[RECEIVE_SCREEN] Rate check: $oneBtcInSats sats = $oneBtcInFiat $currency',
+      );
 
       // Step 2: Parse the result to get numeric rate
       final fiatString = oneBtcInFiat.replaceAll(
-          RegExp(r'[^\d.]'), ''); // Remove non-numeric chars
+        RegExp(r'[^\d.]'),
+        '',
+      ); // Remove non-numeric chars
       final oneBtcRate = double.tryParse(fiatString);
 
       if (oneBtcRate == null || oneBtcRate <= 0) {
@@ -136,9 +143,11 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       final satsAmount = (btcAmount * 100000000).round();
 
       print(
-          '[RECEIVE_SCREEN] Conversion successful: $amount $currency = $satsAmount sats');
+        '[RECEIVE_SCREEN] Conversion successful: $amount $currency = $satsAmount sats',
+      );
       print(
-          '[RECEIVE_SCREEN] Math: ($amount / $oneBtcRate) * 100000000 = $satsAmount');
+        '[RECEIVE_SCREEN] Math: ($amount / $oneBtcRate) * 100000000 = $satsAmount',
+      );
 
       return satsAmount;
     } catch (e) {
@@ -152,7 +161,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           currency: currency,
         );
         print(
-            '[RECEIVE_SCREEN] YadioService conversion: $amount $currency = $sats sats');
+          '[RECEIVE_SCREEN] YadioService conversion: $amount $currency = $sats sats',
+        );
         return sats;
       } catch (fallbackError) {
         print('[RECEIVE_SCREEN] All conversion methods failed: $fallbackError');
@@ -199,11 +209,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF0F1419),
-              Color(0xFF1A1D47),
-              Color(0xFF2D3FE7),
-            ],
+            colors: [Color(0xFF0F1419), Color(0xFF1A1D47), Color(0xFF2D3FE7)],
             stops: [0.0, 0.5, 1.0],
           ),
         ),
@@ -217,26 +223,39 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
 
                 // Main content
                 Expanded(
-                  child: Consumer3<LNAddressProvider, WalletProvider,
-                      AuthProvider>(
-                    builder: (context, lnAddressProvider, walletProvider,
-                        authProvider, child) {
-                      final isMobile = MediaQuery.of(context).size.width < 768;
-                      return SingleChildScrollView(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: isMobile ? 24.0 : 32.0,
-                          vertical: 16.0,
-                        ),
-                        child: Column(
-                          children: [
-                            SizedBox(height: isMobile ? 8 : 12),
-                            _buildMainContent(
-                                lnAddressProvider, walletProvider),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+                  child:
+                      Consumer3<
+                        LNAddressProvider,
+                        WalletProvider,
+                        AuthProvider
+                      >(
+                        builder:
+                            (
+                              context,
+                              lnAddressProvider,
+                              walletProvider,
+                              authProvider,
+                              child,
+                            ) {
+                              final isMobile =
+                                  MediaQuery.of(context).size.width < 768;
+                              return SingleChildScrollView(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: isMobile ? 24.0 : 32.0,
+                                  vertical: 16.0,
+                                ),
+                                child: Column(
+                                  children: [
+                                    SizedBox(height: isMobile ? 8 : 12),
+                                    _buildMainContent(
+                                      lnAddressProvider,
+                                      walletProvider,
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                      ),
                 ),
               ],
             ),
@@ -344,7 +363,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
   }
 
   Widget _buildMainContent(
-      LNAddressProvider lnAddressProvider, WalletProvider walletProvider) {
+    LNAddressProvider lnAddressProvider,
+    WalletProvider walletProvider,
+  ) {
     final defaultAddress = lnAddressProvider.defaultAddress;
 
     if (lnAddressProvider.isLoading) {
@@ -497,7 +518,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           ),
           const SizedBox(height: 12),
           Text(
-            'Crea una factura para recibir pagos directamente en tu wallet',
+            AppLocalizations.of(context)!.lightningAddressDescription,
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.8),
               fontSize: 16,
@@ -549,7 +570,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            'o también puedes crear una:',
+            AppLocalizations.of(context)!.orCreateLnaddress,
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.6),
               fontSize: 14,
@@ -596,7 +617,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
   }
 
   Widget _buildLightningAddressCard(
-      LNAddress defaultAddress, WalletProvider walletProvider) {
+    LNAddress defaultAddress,
+    WalletProvider walletProvider,
+  ) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -657,9 +680,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // QR Code for invoice
-          Center(
-            child: _buildInvoiceQR(invoice),
-          ),
+          Center(child: _buildInvoiceQR(invoice)),
 
           const SizedBox(height: 16),
 
@@ -673,11 +694,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.bolt,
-                  color: Colors.amber,
-                  size: 24,
-                ),
+                Icon(Icons.bolt, color: Colors.amber, size: 24),
                 const SizedBox(width: 8),
                 Text(
                   invoice.formattedAmount,
@@ -719,7 +736,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
 
           // Option to create LNAddress
           Text(
-            'o también puedes crear una Lightning Address:',
+            AppLocalizations.of(context)!.orCreateLnaddressFull,
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.6),
               fontSize: 14,
@@ -824,7 +841,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  'Factura copiada',
+                  AppLocalizations.of(context)!.invoiceCopied,
                   style: const TextStyle(
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w500,
@@ -853,9 +870,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
-        ),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
       child: Row(
         children: [
@@ -909,9 +924,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
-        ),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -946,9 +959,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(6), // More square: from 16 to 6
-          border: Border.all(
-            color: Colors.white.withValues(alpha: 0.2),
-          ),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
         ),
         child: _buildQRCodeWithLNURL(defaultAddress),
       ),
@@ -959,7 +970,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     // If there's a generated invoice, show its QR
     if (_generatedInvoice != null) {
       print(
-          '[RECEIVE_SCREEN] Mostrando QR de factura: ${_generatedInvoice!.paymentRequest.substring(0, 20)}...');
+        '[RECEIVE_SCREEN] Mostrando QR de factura: ${_generatedInvoice!.paymentRequest.substring(0, 20)}...',
+      );
       return _buildInvoiceQR(_generatedInvoice!);
     }
 
@@ -968,12 +980,15 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
 
     if (lnurl != null && lnurl.isNotEmpty) {
       print(
-          '[RECEIVE_SCREEN] Usando LNURL de LNBits: ${lnurl.substring(0, 20)}...${lnurl.substring(lnurl.length - 10)}');
+        '[RECEIVE_SCREEN] Usando LNURL de LNBits: ${lnurl.substring(0, 20)}...${lnurl.substring(lnurl.length - 10)}',
+      );
       return _buildSuccessQR(lnurl);
     } else {
       print('[RECEIVE_SCREEN] No hay LNURL en el modelo, usando fallback');
       return _buildFallbackQR(
-          defaultAddress.fullAddress, 'LNURL no disponible en LNBits');
+        defaultAddress.fullAddress,
+        'LNURL no disponible en LNBits',
+      );
     }
   }
 
@@ -1412,8 +1427,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                   Text(
                                     AppLocalizations.of(context)!.amount_label,
                                     style: TextStyle(
-                                      color:
-                                          Colors.white.withValues(alpha: 0.8),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.8,
+                                      ),
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
                                       fontFamily: 'Inter',
@@ -1431,24 +1447,28 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                     decoration: InputDecoration(
                                       hintText: '0',
                                       hintStyle: TextStyle(
-                                        color:
-                                            Colors.white.withValues(alpha: 0.5),
+                                        color: Colors.white.withValues(
+                                          alpha: 0.5,
+                                        ),
                                       ),
                                       filled: true,
-                                      fillColor:
-                                          Colors.white.withValues(alpha: 0.05),
+                                      fillColor: Colors.white.withValues(
+                                        alpha: 0.05,
+                                      ),
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
                                         borderSide: BorderSide(
-                                          color: Colors.white
-                                              .withValues(alpha: 0.1),
+                                          color: Colors.white.withValues(
+                                            alpha: 0.1,
+                                          ),
                                         ),
                                       ),
                                       enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
                                         borderSide: BorderSide(
-                                          color: Colors.white
-                                              .withValues(alpha: 0.1),
+                                          color: Colors.white.withValues(
+                                            alpha: 0.1,
+                                          ),
                                         ),
                                       ),
                                       focusedBorder: OutlineInputBorder(
@@ -1459,9 +1479,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                       ),
                                       contentPadding:
                                           const EdgeInsets.symmetric(
-                                        horizontal: 16,
-                                        vertical: 16,
-                                      ),
+                                            horizontal: 16,
+                                            vertical: 16,
+                                          ),
                                     ),
                                   ),
                                 ],
@@ -1496,7 +1516,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                         setModalState(() {
                                           final currentIndex = _currencies
                                               .indexOf(_selectedCurrency);
-                                          final nextIndex = (currentIndex + 1) %
+                                          final nextIndex =
+                                              (currentIndex + 1) %
                                               _currencies.length;
                                           _selectedCurrency =
                                               _currencies[nextIndex];
@@ -1504,11 +1525,13 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                       },
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
                                           border: Border.all(
-                                            color: Colors.white
-                                                .withValues(alpha: 0.1),
+                                            color: Colors.white.withValues(
+                                              alpha: 0.1,
+                                            ),
                                           ),
                                         ),
                                         child: Center(
@@ -1538,8 +1561,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              AppLocalizations.of(context)!
-                                  .optional_description_label,
+                              AppLocalizations.of(
+                                context,
+                              )!.optional_description_label,
                               style: TextStyle(
                                 color: Colors.white.withValues(alpha: 0.8),
                                 fontSize: 14,
@@ -1556,8 +1580,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                 fontFamily: 'Inter',
                               ),
                               decoration: InputDecoration(
-                                hintText: AppLocalizations.of(context)!
-                                    .payment_description_example,
+                                hintText: AppLocalizations.of(
+                                  context,
+                                )!.payment_description_example,
                                 hintStyle: TextStyle(
                                   color: Colors.white.withValues(alpha: 0.5),
                                 ),
@@ -1604,11 +1629,13 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                   style: OutlinedButton.styleFrom(
                                     foregroundColor: Colors.white,
                                     side: BorderSide(
-                                      color:
-                                          Colors.white.withValues(alpha: 0.3),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.3,
+                                      ),
                                     ),
                                     padding: const EdgeInsets.symmetric(
-                                        vertical: 16),
+                                      vertical: 16,
+                                    ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
@@ -1631,15 +1658,17 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                     backgroundColor: const Color(0xFF2D3FE7),
                                     foregroundColor: Colors.white,
                                     padding: const EdgeInsets.symmetric(
-                                        vertical: 16),
+                                      vertical: 16,
+                                    ),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     elevation: 0,
                                   ),
                                   child: Text(
-                                    AppLocalizations.of(context)!
-                                        .confirm_button,
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.confirm_button,
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
@@ -1723,7 +1752,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       if (amountInSats > 100000000000) {
         // 1000 BTC as practical limit
         print(
-            '[RECEIVE_SCREEN] ⚠️ WARNING: Very large amount ($amountInSats sats = ${(amountInSats / 100000000).toStringAsFixed(2)} BTC)');
+          '[RECEIVE_SCREEN] ⚠️ WARNING: Very large amount ($amountInSats sats = ${(amountInSats / 100000000).toStringAsFixed(2)} BTC)',
+        );
       }
 
       print('[RECEIVE_SCREEN] Generando factura: $amountInSats sats');
@@ -1732,7 +1762,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       print('[RECEIVE_SCREEN] Original currency: $_selectedCurrency');
       print('[RECEIVE_SCREEN] Original amount: $amount');
       print(
-          '[RECEIVE_SCREEN] Original rate: ${_selectedCurrency != 'sats' ? (amountInSats / amount) : 'N/A'}');
+        '[RECEIVE_SCREEN] Original rate: ${_selectedCurrency != 'sats' ? (amountInSats / amount) : 'N/A'}',
+      );
 
       // Prepare memo with fiat info as fallback for LNBits limitations
       String? finalMemo;
@@ -1753,11 +1784,13 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         comment: _noteController.text.trim().isNotEmpty
             ? _noteController.text.trim()
             : null,
-        originalFiatCurrency:
-            _selectedCurrency != 'sats' ? _selectedCurrency : null,
+        originalFiatCurrency: _selectedCurrency != 'sats'
+            ? _selectedCurrency
+            : null,
         originalFiatAmount: _selectedCurrency != 'sats' ? amount : null,
-        originalFiatRate:
-            _selectedCurrency != 'sats' ? (amountInSats / amount) : null,
+        originalFiatRate: _selectedCurrency != 'sats'
+            ? (amountInSats / amount)
+            : null,
       );
 
       // Update state
@@ -1803,7 +1836,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       );
 
       print(
-          '[RECEIVE_SCREEN] Factura generada exitosamente: ${invoice.paymentHash}');
+        '[RECEIVE_SCREEN] Factura generada exitosamente: ${invoice.paymentHash}',
+      );
 
       // Start automatic verification of invoice payment
       _startInvoicePaymentMonitoring(invoice, wallet, serverUrl);
@@ -1840,9 +1874,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         ),
         backgroundColor: Colors.red,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         duration: const Duration(seconds: 3),
       ),
     );
@@ -1866,9 +1898,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         ),
         backgroundColor: const Color(0xFF4C63F7),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         duration: const Duration(seconds: 2),
       ),
     );
@@ -1917,16 +1947,21 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
   }
 
   void _startInvoicePaymentMonitoring(
-      LightningInvoice invoice, WalletInfo wallet, String serverUrl) {
+    LightningInvoice invoice,
+    WalletInfo wallet,
+    String serverUrl,
+  ) {
     print(
-        '[RECEIVE_SCREEN] Iniciando monitoreo de pago para factura: ${invoice.paymentHash}');
+      '[RECEIVE_SCREEN] Iniciando monitoreo de pago para factura: ${invoice.paymentHash}',
+    );
 
     // Cancel previous timer if it exists
     _invoicePaymentTimer?.cancel();
 
     // Check every 2 seconds if the invoice was paid
-    _invoicePaymentTimer =
-        Timer.periodic(const Duration(seconds: 2), (timer) async {
+    _invoicePaymentTimer = Timer.periodic(const Duration(seconds: 2), (
+      timer,
+    ) async {
       if (!mounted) {
         timer.cancel();
         return;
@@ -1947,7 +1982,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           if (mounted) {
             // 1. FIRST: Activate spark effect
             print(
-                '[RECEIVE_SCREEN] 🎆 Activando efecto chispa por pago recibido');
+              '[RECEIVE_SCREEN] 🎆 Activando efecto chispa por pago recibido',
+            );
             _transactionDetector.triggerEventSpark('invoice_paid');
 
             // 2. AFTER: Navigate to HomeScreen to show spark effect
@@ -1960,8 +1996,11 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                   SnackBar(
                     content: Row(
                       children: [
-                        const Icon(Icons.check_circle,
-                            color: Colors.white, size: 20),
+                        const Icon(
+                          Icons.check_circle,
+                          color: Colors.white,
+                          size: 20,
+                        ),
                         const SizedBox(width: 12),
                         Text(
                           '${AppLocalizations.of(context)!.received_label}! ${invoice.formattedAmount}',
@@ -2117,9 +2156,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
   void _navigateToVoucherScreen() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => const VoucherScanScreen(),
-      ),
+      MaterialPageRoute(builder: (context) => const VoucherScanScreen()),
     );
   }
 }

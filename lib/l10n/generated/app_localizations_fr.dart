@@ -842,7 +842,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String currency_not_available_on_server(
-      Object currency, Object currencyName) {
+    Object currency,
+    Object currencyName,
+  ) {
     return '$currencyName ($currency) n\'est pas disponible sur ce serveur';
   }
 
@@ -857,4 +859,18 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get deep_link_login_required_message =>
       'Vous devez vous connecter à votre compte LaChispa pour traiter ce paiement.';
+
+  @override
+  String get invoice_receive_description =>
+      'Créez une facture pour recevoir des paiements directement dans votre portefeuille';
+
+  @override
+  String get or_create_lnaddress => 'ou vous pouvez également créer un:';
+
+  @override
+  String get or_create_lnaddress_full =>
+      'ou vous pouvez également créer une Lightning Address:';
+
+  @override
+  String get invoice_copied => 'Facture copiée';
 }
