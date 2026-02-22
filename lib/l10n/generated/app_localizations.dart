@@ -1655,42 +1655,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You must log in to your LaChispa account to process this payment.'**
   String get deep_link_login_required_message;
-
-  /// No description provided for @invoice_receive_description.
-  ///
-  /// In en, this message translates to:
-  /// **'Create an invoice to receive payments directly to your wallet'**
-  String get invoice_receive_description;
-
-  /// No description provided for @or_create_lnaddress.
-  ///
-  /// In en, this message translates to:
-  /// **'or you can also create a:'**
-  String get or_create_lnaddress;
-
-  /// No description provided for @or_create_lnaddress_full.
-  ///
-  /// In en, this message translates to:
-  /// **'or you can also create a Lightning Address:'**
-  String get or_create_lnaddress_full;
-
-  /// No description provided for @invoice_copied.
-  ///
-  /// In en, this message translates to:
-  /// **'Invoice copied'**
-  String get invoice_copied;
-
-  /// No description provided for @invoice_cleared_message.
-  ///
-  /// In en, this message translates to:
-  /// **'Invoice cleared'**
-  String get invoice_cleared_message;
-
-  /// No description provided for @clear_invoice_button.
-  ///
-  /// In en, this message translates to:
-  /// **'Clear invoice'**
-  String get clear_invoice_button;
 }
 
 class _AppLocalizationsDelegate
