@@ -30,23 +30,23 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
   String? _cachedLightningAddress;
   String? _cachedLNURL;
   Future<String?>? _lnurlFuture;
-  
+
   // State for information panel
   bool _isInfoExpanded = false;
-  
+
   // State for request amount modal
   final _amountController = TextEditingController();
   final _noteController = TextEditingController();
   String _selectedCurrency = 'sats';
   List<String> _currencies = ['sats'];
-  
+
   // State for generated invoice
   LightningInvoice? _generatedInvoice;
   final InvoiceService _invoiceService = InvoiceService();
   final YadioService _yadioService = YadioService();
   final TransactionDetector _transactionDetector = TransactionDetector();
   bool _isGeneratingInvoice = false;
-  
+
   // Timer to verify invoice payment
   Timer? _invoicePaymentTimer;
 
@@ -58,27 +58,29 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       _initializeCurrencies();
     });
   }
-  
+
   void _initializeCurrencies() async {
     final currencyProvider = context.read<CurrencySettingsProvider>();
     final authProvider = context.read<AuthProvider>();
-    
+
     print('[RECEIVE_SCREEN] Initializing currencies...');
     print('[RECEIVE_SCREEN] Server URL: ${authProvider.currentServer}');
-    
+
     // Ensure provider has server URL configured
     if (authProvider.currentServer != null) {
       await currencyProvider.updateServerUrl(authProvider.currentServer);
-      
+
       // Force load exchange rates to ensure they're available
       await currencyProvider.loadExchangeRates(forceRefresh: true);
-      
-      print('[RECEIVE_SCREEN] Available currencies: ${currencyProvider.availableCurrencies}');
-      print('[RECEIVE_SCREEN] Exchange rates loaded: ${currencyProvider.availableCurrencies.isNotEmpty}');
+
+      print(
+          '[RECEIVE_SCREEN] Available currencies: ${currencyProvider.availableCurrencies}');
+      print(
+          '[RECEIVE_SCREEN] Exchange rates loaded: ${currencyProvider.availableCurrencies.isNotEmpty}');
     }
-    
+
     final displaySequence = currencyProvider.displaySequence;
-    
+
     if (mounted) {
       setState(() {
         _currencies = displaySequence.isNotEmpty ? displaySequence : ['sats'];
@@ -88,56 +90,60 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         }
       });
     }
-    
+
     print('[RECEIVE_SCREEN] Final currencies: $_currencies');
     print('[RECEIVE_SCREEN] Selected currency: $_selectedCurrency');
   }
-  
+
   /// Convert fiat amount to sats using inverse conversion (same method as amount_screen)
   Future<int> _getAmountInSats(double amount, String currency) async {
     print('[RECEIVE_SCREEN] Converting $amount $currency to sats');
-    
+
     if (currency == 'sats') {
       return amount.round();
     }
-    
+
     // Use INVERSE conversion from the working convertSatsToFiat method
     // This ensures we use exactly the same rates as home_screen
     try {
       final currencyProvider = context.read<CurrencySettingsProvider>();
-      
+
       print('[RECEIVE_SCREEN] Using inverse conversion method for consistency');
-      
+
       // Step 1: Get rate by converting 1 BTC (100M sats) to fiat
       const oneBtcInSats = 100000000; // 1 BTC = 100M sats
-      final oneBtcInFiat = await currencyProvider.convertSatsToFiat(oneBtcInSats, currency);
-      
-      print('[RECEIVE_SCREEN] Rate check: $oneBtcInSats sats = $oneBtcInFiat $currency');
-      
+      final oneBtcInFiat =
+          await currencyProvider.convertSatsToFiat(oneBtcInSats, currency);
+
+      print(
+          '[RECEIVE_SCREEN] Rate check: $oneBtcInSats sats = $oneBtcInFiat $currency');
+
       // Step 2: Parse the result to get numeric rate
-      final fiatString = oneBtcInFiat.replaceAll(RegExp(r'[^\d.]'), ''); // Remove non-numeric chars
+      final fiatString = oneBtcInFiat.replaceAll(
+          RegExp(r'[^\d.]'), ''); // Remove non-numeric chars
       final oneBtcRate = double.tryParse(fiatString);
-      
+
       if (oneBtcRate == null || oneBtcRate <= 0) {
         throw Exception('Invalid rate obtained: $oneBtcInFiat');
       }
-      
+
       print('[RECEIVE_SCREEN] Parsed rate: 1 BTC = $oneBtcRate $currency');
-      
+
       // Step 3: Calculate sats using inverse proportion
       // If 1 BTC = oneBtcRate fiat, then amount fiat = ? sats
       // sats = (amount / oneBtcRate) * 100000000
       final btcAmount = amount / oneBtcRate;
       final satsAmount = (btcAmount * 100000000).round();
-      
-      print('[RECEIVE_SCREEN] Conversion successful: $amount $currency = $satsAmount sats');
-      print('[RECEIVE_SCREEN] Math: ($amount / $oneBtcRate) * 100000000 = $satsAmount');
-      
+
+      print(
+          '[RECEIVE_SCREEN] Conversion successful: $amount $currency = $satsAmount sats');
+      print(
+          '[RECEIVE_SCREEN] Math: ($amount / $oneBtcRate) * 100000000 = $satsAmount');
+
       return satsAmount;
-      
     } catch (e) {
       print('[RECEIVE_SCREEN] Error with inverse conversion: $e');
-      
+
       // Fallback to YadioService as last resort
       try {
         print('[RECEIVE_SCREEN] Trying YadioService fallback');
@@ -145,7 +151,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           amount: amount,
           currency: currency,
         );
-        print('[RECEIVE_SCREEN] YadioService conversion: $amount $currency = $sats sats');
+        print(
+            '[RECEIVE_SCREEN] YadioService conversion: $amount $currency = $sats sats');
         return sats;
       } catch (fallbackError) {
         print('[RECEIVE_SCREEN] All conversion methods failed: $fallbackError');
@@ -177,7 +184,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     }
 
     // Only load addresses if they are not already loaded
-    if (lnAddressProvider.currentWalletAddresses.isEmpty && !lnAddressProvider.isLoading) {
+    if (lnAddressProvider.currentWalletAddresses.isEmpty &&
+        !lnAddressProvider.isLoading) {
       lnAddressProvider.loadAllAddresses();
     }
   }
@@ -206,11 +214,13 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               children: [
                 // Header with navigation
                 _buildHeader(),
-                
+
                 // Main content
                 Expanded(
-                  child: Consumer3<LNAddressProvider, WalletProvider, AuthProvider>(
-                    builder: (context, lnAddressProvider, walletProvider, authProvider, child) {
+                  child: Consumer3<LNAddressProvider, WalletProvider,
+                      AuthProvider>(
+                    builder: (context, lnAddressProvider, walletProvider,
+                        authProvider, child) {
                       final isMobile = MediaQuery.of(context).size.width < 768;
                       return SingleChildScrollView(
                         padding: EdgeInsets.symmetric(
@@ -220,7 +230,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                         child: Column(
                           children: [
                             SizedBox(height: isMobile ? 8 : 12),
-                            _buildMainContent(lnAddressProvider, walletProvider),
+                            _buildMainContent(
+                                lnAddressProvider, walletProvider),
                           ],
                         ),
                       );
@@ -238,7 +249,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
 
   Widget _buildHeader() {
     final isMobile = MediaQuery.of(context).size.width < 768;
-    
+
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
       child: Column(
@@ -277,9 +288,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                   padding: EdgeInsets.zero,
                 ),
               ),
-              
+
               const Spacer(),
-              
+
               // QR Scan button for vouchers
               Container(
                 width: 40,
@@ -312,9 +323,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               ),
             ],
           ),
-          
+
           SizedBox(height: isMobile ? 0 : 4),
-          
+
           // Centered title
           Text(
             AppLocalizations.of(context)!.receive_title,
@@ -332,23 +343,25 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     );
   }
 
-  Widget _buildMainContent(LNAddressProvider lnAddressProvider, WalletProvider walletProvider) {
+  Widget _buildMainContent(
+      LNAddressProvider lnAddressProvider, WalletProvider walletProvider) {
     final defaultAddress = lnAddressProvider.defaultAddress;
-    
+
     if (lnAddressProvider.isLoading) {
       return _buildLoadingState();
     }
-    
+
     if (lnAddressProvider.error != null) {
       return _buildErrorState(lnAddressProvider.error!);
     }
-    
-    if (defaultAddress == null) {
-      return _buildNoAddressState();
+
+    // Show Lightning Address with QR if available
+    if (defaultAddress != null) {
+      return _buildLightningAddressCard(defaultAddress, walletProvider);
     }
-    
-    // Show Lightning Address with QR
-    return _buildLightningAddressCard(defaultAddress, walletProvider);
+
+    // No Lightning Address - allow creating invoice directly
+    return _buildNoAddressState(walletProvider);
   }
 
   Widget _buildLoadingState() {
@@ -449,7 +462,11 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     );
   }
 
-  Widget _buildNoAddressState() {
+  Widget _buildNoAddressState(WalletProvider walletProvider) {
+    if (_generatedInvoice != null) {
+      return _buildInvoiceOnlyCard(walletProvider);
+    }
+
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -464,13 +481,13 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            Icons.alternate_email,
+            Icons.qr_code_2,
             color: Colors.white.withValues(alpha: 0.6),
             size: 64,
           ),
           const SizedBox(height: 24),
           Text(
-            AppLocalizations.of(context)!.not_available_text,
+            AppLocalizations.of(context)!.receive_title,
             style: TextStyle(
               color: Colors.white,
               fontSize: 20,
@@ -480,7 +497,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           ),
           const SizedBox(height: 12),
           Text(
-            AppLocalizations.of(context)!.lightning_address_description,
+            'Crea una factura para recibir pagos directamente en tu wallet',
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.8),
               fontSize: 16,
@@ -508,14 +525,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                 ],
               ),
               child: ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LNAddressScreen(),
-                    ),
-                  );
-                },
+                onPressed: _showRequestAmountModal,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
                   shadowColor: Colors.transparent,
@@ -524,9 +534,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
-                icon: const Icon(Icons.add, color: Colors.white),
+                icon: const Icon(Icons.request_quote, color: Colors.white),
                 label: Text(
-                  AppLocalizations.of(context)!.lightning_address_title,
+                  AppLocalizations.of(context)!.amount_sats_label,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -537,12 +547,56 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               ),
             ),
           ),
+          const SizedBox(height: 16),
+          Text(
+            'o también puedes crear una:',
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.6),
+              fontSize: 14,
+              fontFamily: 'Inter',
+            ),
+          ),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LNAddressScreen(),
+                  ),
+                );
+              },
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.white,
+                side: BorderSide(
+                  color: Colors.white.withValues(alpha: 0.3),
+                  width: 1.5,
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+              icon: const Icon(Icons.add, size: 20),
+              label: Text(
+                AppLocalizations.of(context)!.lightning_address_title,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Inter',
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildLightningAddressCard(LNAddress defaultAddress, WalletProvider walletProvider) {
+  Widget _buildLightningAddressCard(
+      LNAddress defaultAddress, WalletProvider walletProvider) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -565,14 +619,14 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         children: [
           // QR Code with LNURL
           _buildQRSection(defaultAddress),
-          
+
           const SizedBox(height: 16),
-          
+
           // Lightning Address and copy button together
           _buildAddressWithCopySection(defaultAddress),
-          
+
           const SizedBox(height: 16),
-          
+
           // Collapsible contextual information
           _buildCollapsibleInfoSection(),
         ],
@@ -580,10 +634,220 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     );
   }
 
+  Widget _buildInvoiceOnlyCard(WalletProvider walletProvider) {
+    final invoice = _generatedInvoice!;
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.1),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // QR Code for invoice
+          Center(
+            child: _buildInvoiceQR(invoice),
+          ),
+
+          const SizedBox(height: 16),
+
+          // Invoice amount display
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.05),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.bolt,
+                  color: Colors.amber,
+                  size: 24,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  invoice.formattedAmount,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Inter',
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          if (invoice.memo.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(
+              invoice.memo,
+              style: TextStyle(
+                color: Colors.white.withValues(alpha: 0.7),
+                fontSize: 14,
+                fontFamily: 'Inter',
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+
+          const SizedBox(height: 16),
+
+          // Copy invoice button
+          _buildCopyInvoiceButton(),
+
+          const SizedBox(height: 12),
+
+          // Clear invoice / Create new button
+          _buildClearInvoiceButton(),
+
+          const SizedBox(height: 16),
+
+          // Option to create LNAddress
+          Text(
+            'o también puedes crear una Lightning Address:',
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.6),
+              fontSize: 14,
+              fontFamily: 'Inter',
+            ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LNAddressScreen(),
+                  ),
+                );
+              },
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.white,
+                side: BorderSide(
+                  color: Colors.white.withValues(alpha: 0.3),
+                  width: 1.5,
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+              icon: const Icon(Icons.add, size: 20),
+              label: Text(
+                AppLocalizations.of(context)!.lightning_address_title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Inter',
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCopyInvoiceButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            colors: [Color(0xFF2D3FE7), Color(0xFF4C63F7)],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF2D3FE7).withValues(alpha: 0.3),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: ElevatedButton.icon(
+          onPressed: _copyInvoicePaymentRequest,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
+          icon: const Icon(Icons.copy, color: Colors.white, size: 20),
+          label: Text(
+            AppLocalizations.of(context)!.copy_button,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              fontFamily: 'Inter',
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _copyInvoicePaymentRequest() async {
+    final invoice = _generatedInvoice;
+    if (invoice == null) return;
+
+    await Clipboard.setData(ClipboardData(text: invoice.paymentRequest));
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.check_circle, color: Colors.white, size: 20),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  'Factura copiada',
+                  style: const TextStyle(
+                    fontFamily: 'Inter',
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.green,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
   Widget _buildWalletInfo(WalletProvider walletProvider) {
     final wallet = walletProvider.primaryWallet;
     if (wallet == null) return const SizedBox.shrink();
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -674,7 +938,6 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     );
   }
 
-
   Widget _buildQRSection(LNAddress defaultAddress) {
     return Center(
       child: Container(
@@ -695,26 +958,29 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
   Widget _buildQRCodeWithLNURL(LNAddress defaultAddress) {
     // If there's a generated invoice, show its QR
     if (_generatedInvoice != null) {
-      print('[RECEIVE_SCREEN] Mostrando QR de factura: ${_generatedInvoice!.paymentRequest.substring(0, 20)}...');
+      print(
+          '[RECEIVE_SCREEN] Mostrando QR de factura: ${_generatedInvoice!.paymentRequest.substring(0, 20)}...');
       return _buildInvoiceQR(_generatedInvoice!);
     }
-    
+
     // If there's no invoice, show Lightning Address
     final lnurl = defaultAddress.lnurl;
-    
+
     if (lnurl != null && lnurl.isNotEmpty) {
-      print('[RECEIVE_SCREEN] Usando LNURL de LNBits: ${lnurl.substring(0, 20)}...${lnurl.substring(lnurl.length - 10)}');
+      print(
+          '[RECEIVE_SCREEN] Usando LNURL de LNBits: ${lnurl.substring(0, 20)}...${lnurl.substring(lnurl.length - 10)}');
       return _buildSuccessQR(lnurl);
     } else {
       print('[RECEIVE_SCREEN] No hay LNURL en el modelo, usando fallback');
-      return _buildFallbackQR(defaultAddress.fullAddress, 'LNURL no disponible en LNBits');
+      return _buildFallbackQR(
+          defaultAddress.fullAddress, 'LNURL no disponible en LNBits');
     }
   }
 
   Widget _buildLoadingQR() {
     return SizedBox(
       height: 220, // Reduced from 280 to 220
-      width: 220,  // Reduced from 280 to 220
+      width: 220, // Reduced from 280 to 220
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -837,7 +1103,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           ),
           icon: const Icon(Icons.copy, color: Colors.white, size: 20),
           label: Text(
-            _generatedInvoice != null ? AppLocalizations.of(context)!.copy_button : AppLocalizations.of(context)!.copy_lightning_address,
+            _generatedInvoice != null
+                ? AppLocalizations.of(context)!.copy_button
+                : AppLocalizations.of(context)!.copy_lightning_address,
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -856,23 +1124,23 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       children: [
         // Lightning Address display
         _buildAddressDisplay(defaultAddress),
-        
+
         const SizedBox(height: 12),
-        
+
         // Copy button right below
         _buildCopyButton(defaultAddress),
-        
+
         const SizedBox(height: 12),
-        
+
         // LNURL copy button
         _buildCopyLNURLButton(defaultAddress),
-        
+
         const SizedBox(height: 12),
-        
+
         // Request amount button or clear invoice button
-        _generatedInvoice != null 
-          ? _buildClearInvoiceButton()
-          : _buildRequestAmountButton(),
+        _generatedInvoice != null
+            ? _buildClearInvoiceButton()
+            : _buildRequestAmountButton(),
       ],
     );
   }
@@ -929,7 +1197,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               ),
             ),
           ),
-          
+
           // Expandable content
           if (_isInfoExpanded)
             Container(
@@ -996,7 +1264,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         onPressed: () {
           // Cancel monitoring of current invoice
           _invoicePaymentTimer?.cancel();
-          
+
           setState(() {
             _generatedInvoice = null;
           });
@@ -1091,7 +1359,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
-                  
+
                   // Header
                   Container(
                     padding: const EdgeInsets.all(24),
@@ -1124,7 +1392,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                       ],
                     ),
                   ),
-                  
+
                   // Modal content
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -1144,7 +1412,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                   Text(
                                     AppLocalizations.of(context)!.amount_label,
                                     style: TextStyle(
-                                      color: Colors.white.withValues(alpha: 0.8),
+                                      color:
+                                          Colors.white.withValues(alpha: 0.8),
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
                                       fontFamily: 'Inter',
@@ -1162,20 +1431,24 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                     decoration: InputDecoration(
                                       hintText: '0',
                                       hintStyle: TextStyle(
-                                        color: Colors.white.withValues(alpha: 0.5),
+                                        color:
+                                            Colors.white.withValues(alpha: 0.5),
                                       ),
                                       filled: true,
-                                      fillColor: Colors.white.withValues(alpha: 0.05),
+                                      fillColor:
+                                          Colors.white.withValues(alpha: 0.05),
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
                                         borderSide: BorderSide(
-                                          color: Colors.white.withValues(alpha: 0.1),
+                                          color: Colors.white
+                                              .withValues(alpha: 0.1),
                                         ),
                                       ),
                                       enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
                                         borderSide: BorderSide(
-                                          color: Colors.white.withValues(alpha: 0.1),
+                                          color: Colors.white
+                                              .withValues(alpha: 0.1),
                                         ),
                                       ),
                                       focusedBorder: OutlineInputBorder(
@@ -1184,7 +1457,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                           color: Color(0xFF4C63F7),
                                         ),
                                       ),
-                                      contentPadding: const EdgeInsets.symmetric(
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
                                         horizontal: 16,
                                         vertical: 16,
                                       ),
@@ -1193,9 +1467,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                 ],
                               ),
                             ),
-                            
+
                             const SizedBox(width: 12),
-                            
+
                             // Currency selector
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1220,16 +1494,21 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                       borderRadius: BorderRadius.circular(12),
                                       onTap: () {
                                         setModalState(() {
-                                          final currentIndex = _currencies.indexOf(_selectedCurrency);
-                                          final nextIndex = (currentIndex + 1) % _currencies.length;
-                                          _selectedCurrency = _currencies[nextIndex];
+                                          final currentIndex = _currencies
+                                              .indexOf(_selectedCurrency);
+                                          final nextIndex = (currentIndex + 1) %
+                                              _currencies.length;
+                                          _selectedCurrency =
+                                              _currencies[nextIndex];
                                         });
                                       },
                                       child: Container(
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
                                           border: Border.all(
-                                            color: Colors.white.withValues(alpha: 0.1),
+                                            color: Colors.white
+                                                .withValues(alpha: 0.1),
                                           ),
                                         ),
                                         child: Center(
@@ -1251,15 +1530,16 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                             ),
                           ],
                         ),
-                        
+
                         const SizedBox(height: 16),
-                        
+
                         // Note input
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              AppLocalizations.of(context)!.optional_description_label,
+                              AppLocalizations.of(context)!
+                                  .optional_description_label,
                               style: TextStyle(
                                 color: Colors.white.withValues(alpha: 0.8),
                                 fontSize: 14,
@@ -1276,7 +1556,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                 fontFamily: 'Inter',
                               ),
                               decoration: InputDecoration(
-                                hintText: AppLocalizations.of(context)!.payment_description_example,
+                                hintText: AppLocalizations.of(context)!
+                                    .payment_description_example,
                                 hintStyle: TextStyle(
                                   color: Colors.white.withValues(alpha: 0.5),
                                 ),
@@ -1309,9 +1590,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                             ),
                           ],
                         ),
-                        
+
                         const SizedBox(height: 24),
-                        
+
                         // Buttons
                         Padding(
                           padding: const EdgeInsets.only(bottom: 24),
@@ -1323,9 +1604,11 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                   style: OutlinedButton.styleFrom(
                                     foregroundColor: Colors.white,
                                     side: BorderSide(
-                                      color: Colors.white.withValues(alpha: 0.3),
+                                      color:
+                                          Colors.white.withValues(alpha: 0.3),
                                     ),
-                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
@@ -1347,14 +1630,16 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFF2D3FE7),
                                     foregroundColor: Colors.white,
-                                    padding: const EdgeInsets.symmetric(vertical: 16),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 16),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     elevation: 0,
                                   ),
                                   child: Text(
-                                    AppLocalizations.of(context)!.confirm_button,
+                                    AppLocalizations.of(context)!
+                                        .confirm_button,
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
@@ -1404,10 +1689,10 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       // Get necessary data
       final walletProvider = context.read<WalletProvider>();
       final authProvider = context.read<AuthProvider>();
-      
+
       final wallet = walletProvider.primaryWallet;
       final serverUrl = authProvider.sessionData?.serverUrl;
-      
+
       if (wallet == null || serverUrl == null) {
         throw Exception(AppLocalizations.of(context)!.no_wallet_error);
       }
@@ -1415,27 +1700,30 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       // CURRENCY CONVERSION TO SATOSHIS
       print('[RECEIVE_SCREEN] === STARTING CURRENCY CONVERSION ===');
       print('[RECEIVE_SCREEN] Amount: $amount $_selectedCurrency');
-      
+
       // ALWAYS use fresh conversion with consistent rates
       final amountInSats = await _getAmountInSats(amount, _selectedCurrency);
-      final conversionMessage = _selectedCurrency == 'sats' 
+      final conversionMessage = _selectedCurrency == 'sats'
           ? 'Factura: $amountInSats sats'
           : '$amount $_selectedCurrency / $amountInSats sats';
-      
+
       print('[RECEIVE_SCREEN] Final conversion result: $conversionMessage');
-      
+
       // Basic validations
       if (amountInSats < 1) {
         throw Exception('Monto convertido muy pequeño (mínimo 1 sat)');
       }
-        
+
       // Validate extremely large amounts that can cause server problems
-      if (amountInSats > 2100000000000000) { // 21M BTC en sats
+      if (amountInSats > 2100000000000000) {
+        // 21M BTC en sats
         throw Exception('Monto muy grande. Máximo: 21M BTC');
       }
-      
-      if (amountInSats > 100000000000) { // 1000 BTC as practical limit
-        print('[RECEIVE_SCREEN] ⚠️ WARNING: Very large amount ($amountInSats sats = ${(amountInSats/100000000).toStringAsFixed(2)} BTC)');
+
+      if (amountInSats > 100000000000) {
+        // 1000 BTC as practical limit
+        print(
+            '[RECEIVE_SCREEN] ⚠️ WARNING: Very large amount ($amountInSats sats = ${(amountInSats / 100000000).toStringAsFixed(2)} BTC)');
       }
 
       print('[RECEIVE_SCREEN] Generando factura: $amountInSats sats');
@@ -1443,7 +1731,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       print('[RECEIVE_SCREEN] Wallet: ${wallet.name}');
       print('[RECEIVE_SCREEN] Original currency: $_selectedCurrency');
       print('[RECEIVE_SCREEN] Original amount: $amount');
-      print('[RECEIVE_SCREEN] Original rate: ${_selectedCurrency != 'sats' ? (amountInSats / amount) : 'N/A'}');
+      print(
+          '[RECEIVE_SCREEN] Original rate: ${_selectedCurrency != 'sats' ? (amountInSats / amount) : 'N/A'}');
 
       // Prepare memo with fiat info as fallback for LNBits limitations
       String? finalMemo;
@@ -1451,7 +1740,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         finalMemo = _noteController.text.trim();
       } else if (_selectedCurrency != 'sats') {
         // Use fiat amount as memo when no custom note (fallback for LNBits)
-        finalMemo = '${amount.toStringAsFixed(amount.truncateToDouble() == amount ? 0 : 2)} $_selectedCurrency';
+        finalMemo =
+            '${amount.toStringAsFixed(amount.truncateToDouble() == amount ? 0 : 2)} $_selectedCurrency';
       }
 
       // Generate invoice with amount in satoshis and original fiat information
@@ -1460,10 +1750,14 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         adminKey: wallet.adminKey,
         amount: amountInSats,
         memo: finalMemo,
-        comment: _noteController.text.trim().isNotEmpty ? _noteController.text.trim() : null,
-        originalFiatCurrency: _selectedCurrency != 'sats' ? _selectedCurrency : null,
+        comment: _noteController.text.trim().isNotEmpty
+            ? _noteController.text.trim()
+            : null,
+        originalFiatCurrency:
+            _selectedCurrency != 'sats' ? _selectedCurrency : null,
         originalFiatAmount: _selectedCurrency != 'sats' ? amount : null,
-        originalFiatRate: _selectedCurrency != 'sats' ? (amountInSats / amount) : null,
+        originalFiatRate:
+            _selectedCurrency != 'sats' ? (amountInSats / amount) : null,
       );
 
       // Update state
@@ -1485,7 +1779,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      conversionMessage.isNotEmpty ? conversionMessage : 'Factura: ${invoice.formattedAmount}',
+                      conversionMessage.isNotEmpty
+                          ? conversionMessage
+                          : 'Factura: ${invoice.formattedAmount}',
                       style: const TextStyle(
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w500,
@@ -1506,18 +1802,18 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         ),
       );
 
-      print('[RECEIVE_SCREEN] Factura generada exitosamente: ${invoice.paymentHash}');
-      
+      print(
+          '[RECEIVE_SCREEN] Factura generada exitosamente: ${invoice.paymentHash}');
+
       // Start automatic verification of invoice payment
       _startInvoicePaymentMonitoring(invoice, wallet, serverUrl);
-
     } catch (e) {
       print('[RECEIVE_SCREEN] Error generando factura: $e');
-      
+
       setState(() {
         _isGeneratingInvoice = false;
       });
-      
+
       _showErrorSnackBar('Error generando factura: ${e.toString()}');
     }
   }
@@ -1581,7 +1877,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
   void _copyPaymentInfo(LNAddress defaultAddress) async {
     String textToCopy;
     String successMessage;
-    
+
     if (_generatedInvoice != null) {
       // If there's a generated invoice, copy the invoice
       textToCopy = _generatedInvoice!.paymentRequest;
@@ -1591,7 +1887,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       textToCopy = defaultAddress.fullAddress;
       successMessage = AppLocalizations.of(context)!.address_copied_message;
     }
-    
+
     await Clipboard.setData(ClipboardData(text: textToCopy));
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -1620,19 +1916,22 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     }
   }
 
-  void _startInvoicePaymentMonitoring(LightningInvoice invoice, WalletInfo wallet, String serverUrl) {
-    print('[RECEIVE_SCREEN] Iniciando monitoreo de pago para factura: ${invoice.paymentHash}');
-    
+  void _startInvoicePaymentMonitoring(
+      LightningInvoice invoice, WalletInfo wallet, String serverUrl) {
+    print(
+        '[RECEIVE_SCREEN] Iniciando monitoreo de pago para factura: ${invoice.paymentHash}');
+
     // Cancel previous timer if it exists
     _invoicePaymentTimer?.cancel();
-    
+
     // Check every 2 seconds if the invoice was paid
-    _invoicePaymentTimer = Timer.periodic(const Duration(seconds: 2), (timer) async {
+    _invoicePaymentTimer =
+        Timer.periodic(const Duration(seconds: 2), (timer) async {
       if (!mounted) {
         timer.cancel();
         return;
       }
-      
+
       try {
         // Check invoice status
         final isPaid = await _invoiceService.checkInvoiceStatus(
@@ -1640,19 +1939,20 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           adminKey: wallet.adminKey,
           paymentHash: invoice.paymentHash,
         );
-        
+
         if (isPaid) {
           print('[RECEIVE_SCREEN] Invoice paid! Starting celebration sequence');
           timer.cancel();
-          
+
           if (mounted) {
             // 1. FIRST: Activate spark effect
-            print('[RECEIVE_SCREEN] 🎆 Activando efecto chispa por pago recibido');
+            print(
+                '[RECEIVE_SCREEN] 🎆 Activando efecto chispa por pago recibido');
             _transactionDetector.triggerEventSpark('invoice_paid');
-            
+
             // 2. AFTER: Navigate to HomeScreen to show spark effect
             Navigator.of(context).popUntil((route) => route.isFirst);
-            
+
             // 3. FINALLY: Wait a moment and show green notification
             Future.delayed(const Duration(milliseconds: 800), () {
               if (mounted) {
@@ -1660,7 +1960,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                   SnackBar(
                     content: Row(
                       children: [
-                        const Icon(Icons.check_circle, color: Colors.white, size: 20),
+                        const Icon(Icons.check_circle,
+                            color: Colors.white, size: 20),
                         const SizedBox(width: 12),
                         Text(
                           '${AppLocalizations.of(context)!.received_label}! ${invoice.formattedAmount}',
@@ -1688,7 +1989,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         // Continue checking in case of temporary error
       }
     });
-    
+
     // Auto-cancel after 10 minutes to avoid infinite monitoring
     Timer(const Duration(minutes: 10), () {
       _invoicePaymentTimer?.cancel();
@@ -1727,7 +2028,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
 
   void _copyLNURL(LNAddress defaultAddress) async {
     final lnurl = defaultAddress.lnurl;
-    
+
     if (lnurl != null && lnurl.isNotEmpty) {
       await Clipboard.setData(ClipboardData(text: lnurl));
       if (mounted) {
