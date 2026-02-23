@@ -191,6 +191,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Error loading transactions: ';
 
   @override
+  String get crear_lnaddress_label => 'or create a:';
+
+  @override
   String get lightning_address_title => 'Lightning Address';
 
   @override
@@ -244,6 +247,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get receive_title => 'Receive';
+
+  @override
+  String get crear_factura_label =>
+      'Create an invoice to receive payments directly in your wallet';
 
   @override
   String get amount_sats_label => 'Request Amount';

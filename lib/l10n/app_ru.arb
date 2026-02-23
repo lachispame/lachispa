@@ -67,7 +67,8 @@
   "pending_label": "В ожидании",
   "failed_label": "Не удалось",
   "loading_transactions_error_prefix": "Ошибка загрузки транзакций: ",
-  
+
+  "crear_lnaddress_label": "или вы также можете создать :",
   "lightning_address_title": "Lightning адрес",
   "loading_address_text": "Загрузка адреса...",
   "your_lightning_address_label": "Ваш Lightning адрес:",
@@ -88,6 +89,7 @@
   "logout_confirm_button": "Выйти",
   
   "receive_title": "Получить",
+  "crear_factura_label": "Создайте счет для получения платежей непосредственно в вашем кошельке",
   "amount_sats_label": "Запрашиваемая сумма",
   "amount_label": "Сумма",
   "currency_label": "Валюта",

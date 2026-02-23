@@ -468,6 +468,12 @@ abstract class AppLocalizations {
   /// **'Error loading transactions: '**
   String get loading_transactions_error_prefix;
 
+  /// No description provided for @crear_lnaddress_label.
+  ///
+  /// In en, this message translates to:
+  /// **'or create a:'**
+  String get crear_lnaddress_label;
+
   /// No description provided for @lightning_address_title.
   ///
   /// In en, this message translates to:
@@ -575,6 +581,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Receive'**
   String get receive_title;
+
+  /// No description provided for @crear_factura_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an invoice to receive payments directly in your wallet'**
+  String get crear_factura_label;
 
   /// No description provided for @amount_sats_label.
   ///

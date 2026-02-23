@@ -195,6 +195,9 @@ class AppLocalizationsDe extends AppLocalizations {
       'Fehler beim Laden der Transaktionen: ';
 
   @override
+  String get crear_lnaddress_label => 'oder Sie können auch erstellen :';
+
+  @override
   String get lightning_address_title => 'Lightning-Adresse';
 
   @override
@@ -249,6 +252,10 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get receive_title => 'Empfangen';
+
+  @override
+  String get crear_factura_label =>
+      'Erstellen Sie eine Rechnung, um Zahlungen direkt in Ihrer Wallet zu erhalten';
 
   @override
   String get amount_sats_label => 'Angeforderten Betrag';

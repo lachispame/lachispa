@@ -67,7 +67,8 @@
   "pending_label": "En attente",
   "failed_label": "Échoué",
   "loading_transactions_error_prefix": "Erreur lors du chargement des transactions : ",
-  
+
+  "crear_lnaddress_label": "ou vous pouvez aussi créer un :",
   "lightning_address_title": "Adresse Lightning",
   "loading_address_text": "Chargement de l'adresse...",
   "your_lightning_address_label": "Votre adresse Lightning :",
@@ -88,6 +89,7 @@
   "logout_confirm_button": "Se déconnecter",
   
   "receive_title": "Recevoir",
+  "crear_factura_label": "Créez une facture pour recevoir des paiements directement dans votre portefeuille",
   "amount_sats_label": "Montant demandé",
   "amount_label": "Montant",
   "currency_label": "Devise",

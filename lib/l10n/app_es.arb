@@ -68,6 +68,7 @@
   "failed_label": "Fallida",
   "loading_transactions_error_prefix": "Error cargando transacciones: ",
   
+  "crear_lnaddress_label": "o también puedes crear una:",
   "lightning_address_title": "Dirección Lightning",
   "loading_address_text": "Cargando dirección...",
   "your_lightning_address_label": "Tu dirección Lightning:",
@@ -88,6 +89,7 @@
   "logout_confirm_button": "Cerrar Sesión",
   
   "receive_title": "Recibir",
+  "crear_factura_label": "Crea una factura para recibir pagos directamente en tu wallet",
   "amount_sats_label": "Solicitar Monto",
   "amount_label": "Cantidad",
   "currency_label": "Moneda",

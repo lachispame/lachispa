@@ -192,6 +192,9 @@ class AppLocalizationsRu extends AppLocalizations {
       'Ошибка загрузки транзакций: ';
 
   @override
+  String get crear_lnaddress_label => 'или вы также можете создать :';
+
+  @override
   String get lightning_address_title => 'Lightning адрес';
 
   @override
@@ -245,6 +248,10 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get receive_title => 'Получить';
+
+  @override
+  String get crear_factura_label =>
+      'Создайте счет для получения платежей непосредственно в вашем кошельке';
 
   @override
   String get amount_sats_label => 'Запрашиваемая сумма';

@@ -239,39 +239,33 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
 
                 // Main content
                 Expanded(
-                  child:
-                      Consumer3<
-                        LNAddressProvider,
-                        WalletProvider,
-                        AuthProvider
-                      >(
-                        builder:
-                            (
-                              context,
+                  child: Consumer3<LNAddressProvider, WalletProvider,
+                      AuthProvider>(
+                    builder: (
+                      context,
+                      lnAddressProvider,
+                      walletProvider,
+                      authProvider,
+                      child,
+                    ) {
+                      final isMobile = MediaQuery.of(context).size.width < 768;
+                      return SingleChildScrollView(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: isMobile ? 24.0 : 32.0,
+                          vertical: 16.0,
+                        ),
+                        child: Column(
+                          children: [
+                            SizedBox(height: isMobile ? 8 : 12),
+                            _buildMainContent(
                               lnAddressProvider,
                               walletProvider,
-                              authProvider,
-                              child,
-                            ) {
-                              final isMobile =
-                                  MediaQuery.of(context).size.width < 768;
-                              return SingleChildScrollView(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: isMobile ? 24.0 : 32.0,
-                                  vertical: 16.0,
-                                ),
-                                child: Column(
-                                  children: [
-                                    SizedBox(height: isMobile ? 8 : 12),
-                                    _buildMainContent(
-                                      lnAddressProvider,
-                                      walletProvider,
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                      ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
@@ -534,7 +528,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           ),
           const SizedBox(height: 12),
           Text(
-            AppLocalizations.of(context)!.invoice_receive_description,
+            AppLocalizations.of(context)!.crear_factura_label,
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.8),
               fontSize: 16,
@@ -586,7 +580,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            AppLocalizations.of(context)!.or_create_lnaddress,
+            AppLocalizations.of(context)!.crear_lnaddress_label,
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.6),
               fontSize: 14,
@@ -752,7 +746,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
 
           // Option to create LNAddress
           Text(
-            AppLocalizations.of(context)!.or_create_lnaddress_full,
+            'o también puedes crear una Lightning Address:',
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.6),
               fontSize: 14,
@@ -857,7 +851,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  AppLocalizations.of(context)!.invoice_copied,
+                  'Factura copiada',
                   style: const TextStyle(
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w500,
@@ -1306,7 +1300,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                   Icon(Icons.refresh, color: Colors.white, size: 20),
                   SizedBox(width: 12),
                   Text(
-                    AppLocalizations.of(context)!.invoice_cleared_message,
+                    'Factura cleared',
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w500,
@@ -1336,7 +1330,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         ),
         icon: const Icon(Icons.refresh, size: 20),
         label: Text(
-          AppLocalizations.of(context)!.clear_invoice_button,
+          'Limpiar factura',
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -1495,9 +1489,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                       ),
                                       contentPadding:
                                           const EdgeInsets.symmetric(
-                                            horizontal: 16,
-                                            vertical: 16,
-                                          ),
+                                        horizontal: 16,
+                                        vertical: 16,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -1532,8 +1526,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                         setModalState(() {
                                           final currentIndex = _currencies
                                               .indexOf(_selectedCurrency);
-                                          final nextIndex =
-                                              (currentIndex + 1) %
+                                          final nextIndex = (currentIndex + 1) %
                                               _currencies.length;
                                           _selectedCurrency =
                                               _currencies[nextIndex];
@@ -1579,7 +1572,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                             Text(
                               AppLocalizations.of(
                                 context,
-                              )!.optional_description_label,
+                              )!
+                                  .optional_description_label,
                               style: TextStyle(
                                 color: Colors.white.withValues(alpha: 0.8),
                                 fontSize: 14,
@@ -1598,7 +1592,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                               decoration: InputDecoration(
                                 hintText: AppLocalizations.of(
                                   context,
-                                )!.payment_description_example,
+                                )!
+                                    .payment_description_example,
                                 hintStyle: TextStyle(
                                   color: Colors.white.withValues(alpha: 0.5),
                                 ),
@@ -1684,7 +1679,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                   child: Text(
                                     AppLocalizations.of(
                                       context,
-                                    )!.confirm_button,
+                                    )!
+                                        .confirm_button,
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
@@ -1807,13 +1803,11 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         comment: _noteController.text.trim().isNotEmpty
             ? _noteController.text.trim()
             : null,
-        originalFiatCurrency: _selectedCurrency != 'sats'
-            ? _selectedCurrency
-            : null,
+        originalFiatCurrency:
+            _selectedCurrency != 'sats' ? _selectedCurrency : null,
         originalFiatAmount: _selectedCurrency != 'sats' ? amount : null,
-        originalFiatRate: _selectedCurrency != 'sats'
-            ? (amountInSats / amount)
-            : null,
+        originalFiatRate:
+            _selectedCurrency != 'sats' ? (amountInSats / amount) : null,
       );
 
       // Check if widget was disposed during async operation
