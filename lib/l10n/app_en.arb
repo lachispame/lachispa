@@ -212,7 +212,7 @@
   "invoice_amount_label": "Invoice: {amount}",
   "@invoice_amount_label": {
     "placeholders": {
-      "amount": {"type": "String"}
+      "amount": {"type": "Object"}
     }
   },
   "payment_sent_status": "Payment sent - Status: {status}",
