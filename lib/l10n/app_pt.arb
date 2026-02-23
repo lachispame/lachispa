@@ -68,7 +68,7 @@
   "failed_label": "Falhada",
   "loading_transactions_error_prefix": "Erro ao carregar transações: ",
 
-  "create_lnaddress_label": "ou também pode criar um :",
+  "create_lnaddress_label": "ou também pode criar um:",
   "lightning_address_title": "Endereço Lightning",
   "loading_address_text": "Carregando endereço...",
   "your_lightning_address_label": "O seu endereço Lightning:",

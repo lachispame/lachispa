@@ -746,7 +746,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
 
           // Option to create LNAddress
           Text(
-            'o también puedes crear una Lightning Address:',
+            AppLocalizations.of(context)!.create_lnaddress_label,
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.6),
               fontSize: 14,
@@ -912,7 +912,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'Balance: ${wallet.balanceFormatted}',
+                  '${AppLocalizations.of(context)!.balance_label}: ${wallet.balanceFormatted}',
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.7),
                     fontSize: 14,
@@ -1289,6 +1289,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         onPressed: () {
           // Cancel monitoring of current invoice
           _invoicePaymentTimer?.cancel();
+          _invoicePaymentTimer = null;
+          _invoicePaymentTimeoutTimer?.cancel();
+          _invoicePaymentTimeoutTimer = null;
 
           setState(() {
             _generatedInvoice = null;
