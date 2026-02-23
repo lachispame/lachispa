@@ -851,7 +851,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  'Factura copiada',
+                  AppLocalizations.of(context)!.invoice_copied_message,
                   style: const TextStyle(
                     fontFamily: 'Inter',
                     fontWeight: FontWeight.w500,
@@ -1942,7 +1942,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     if (_generatedInvoice != null) {
       // If there's a generated invoice, copy the invoice
       textToCopy = _generatedInvoice!.paymentRequest;
-      successMessage = AppLocalizations.of(context)!.copy_button;
+      successMessage = AppLocalizations.of(context)!.invoice_copied_message;
     } else {
       // If there's no invoice, copy the Lightning Address
       textToCopy = defaultAddress.fullAddress;

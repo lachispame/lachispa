@@ -578,12 +578,12 @@ class AppLocalizationsRu extends AppLocalizations {
       'Счет без суммы не поддерживается. Запросите счет с указанной суммой.';
 
   @override
-  String invoice_amount_label(String amount) {
+  String invoice_amount_label(Object amount) {
     return 'Счет: $amount';
   }
 
   @override
-  String payment_sent_status(String status) {
+  String payment_sent_status(Object status) {
     return 'Платеж отправлен - Статус: $status';
   }
 

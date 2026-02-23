@@ -591,12 +591,12 @@ class AppLocalizationsIt extends AppLocalizations {
       'Fattura senza importo non supportata. Richiedere una fattura con un importo specifico.';
 
   @override
-  String invoice_amount_label(String amount) {
+  String invoice_amount_label(Object amount) {
     return 'Fattura: $amount';
   }
 
   @override
-  String payment_sent_status(String status) {
+  String payment_sent_status(Object status) {
     return 'Pagamento inviato - Stato: $status';
   }
 

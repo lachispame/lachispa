@@ -580,12 +580,12 @@ class AppLocalizationsPt extends AppLocalizations {
       'Fatura sem valor não suportada. Solicite uma fatura com um valor específico.';
 
   @override
-  String invoice_amount_label(String amount) {
+  String invoice_amount_label(Object amount) {
     return 'Fatura: $amount';
   }
 
   @override
-  String payment_sent_status(String status) {
+  String payment_sent_status(Object status) {
     return 'Pagamento enviado - Estado: $status';
   }
 

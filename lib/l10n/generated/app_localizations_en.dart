@@ -578,12 +578,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'Invoice without amount not supported. Please request an invoice with a specific amount.';
 
   @override
-  String invoice_amount_label(String amount) {
+  String invoice_amount_label(Object amount) {
     return 'Invoice: $amount';
   }
 
   @override
-  String payment_sent_status(String status) {
+  String payment_sent_status(Object status) {
     return 'Payment sent - Status: $status';
   }
 

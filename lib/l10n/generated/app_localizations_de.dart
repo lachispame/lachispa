@@ -589,12 +589,12 @@ class AppLocalizationsDe extends AppLocalizations {
       'Rechnung ohne Betrag wird nicht unterstützt. Bitte fordern Sie eine Rechnung mit einem bestimmten Betrag an.';
 
   @override
-  String invoice_amount_label(String amount) {
+  String invoice_amount_label(Object amount) {
     return 'Rechnung: $amount';
   }
 
   @override
-  String payment_sent_status(String status) {
+  String payment_sent_status(Object status) {
     return 'Zahlung gesendet - Status: $status';
   }
 

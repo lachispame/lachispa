@@ -591,12 +591,12 @@ class AppLocalizationsFr extends AppLocalizations {
       'Facture sans montant non prise en charge. Veuillez demander une facture avec un montant spécifique.';
 
   @override
-  String invoice_amount_label(String amount) {
+  String invoice_amount_label(Object amount) {
     return 'Facture: $amount';
   }
 
   @override
-  String payment_sent_status(String status) {
+  String payment_sent_status(Object status) {
     return 'Paiement envoyé - Statut : $status';
   }
 
