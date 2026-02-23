@@ -528,7 +528,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           ),
           const SizedBox(height: 12),
           Text(
-            AppLocalizations.of(context)!.crear_factura_label,
+            AppLocalizations.of(context)!.create_invoice_label,
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.8),
               fontSize: 16,
@@ -580,7 +580,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           ),
           const SizedBox(height: 16),
           Text(
-            AppLocalizations.of(context)!.crear_lnaddress_label,
+            AppLocalizations.of(context)!.create_lnaddress_label,
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.6),
               fontSize: 14,

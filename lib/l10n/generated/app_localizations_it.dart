@@ -194,7 +194,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Errore nel caricamento delle transazioni: ';
 
   @override
-  String get crear_lnaddress_label => 'o anche puoi creare un :';
+  String get create_lnaddress_label => 'o anche puoi creare un :';
 
   @override
   String get lightning_address_title => 'Indirizzo Lightning';
@@ -253,7 +253,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get receive_title => 'Ricevi';
 
   @override
-  String get crear_factura_label =>
+  String get create_invoice_label =>
       'Crea una fattura per ricevere pagamenti direttamente nel tuo portafoglio';
 
   @override

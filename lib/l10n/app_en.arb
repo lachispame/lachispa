@@ -68,7 +68,7 @@
   "failed_label": "Failed",
   "loading_transactions_error_prefix": "Error loading transactions: ",
 
-  "crear_lnaddress_label": "or create a:",
+  "create_lnaddress_label": "or create a:",
   "lightning_address_title": "Lightning Address",
   "loading_address_text": "Loading address...",
   "your_lightning_address_label": "Your Lightning address:",
@@ -89,7 +89,7 @@
   "logout_confirm_button": "Logout",
   
   "receive_title": "Receive",
-  "crear_factura_label": "Create an invoice to receive payments directly in your wallet",
+  "create_invoice_label": "Create an invoice to receive payments directly in your wallet",
   "amount_sats_label": "Request Amount",
   "amount_label": "Amount",
   "currency_label": "Currency",
