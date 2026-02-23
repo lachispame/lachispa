@@ -118,6 +118,9 @@
   
   "send_to_title": "Envoyer à",
   "clear_button": "C",
+  "invoice_cleared_message": "Facture effacée",
+  "clear_invoice_button": "Effacer la facture",
+  "invoice_copied_message": "Facture copiée",
   "decimal_button": ".",
   "calculating_text": "calcul...",
   "loading_rates_text": "Chargement des taux...",
@@ -152,6 +155,7 @@
   "sending_button": "Envoi...",
   "invoice_expired_error": "La facture a expiré et ne peut pas être payée",
   "amountless_invoice_error": "Facture sans montant non prise en charge. Veuillez demander une facture avec un montant spécifique.",
+  "invoice_amount_label": "Facture: {amount}",
   "payment_sent_status": "Paiement envoyé - Statut : {status}",
   "confirm_no_session_error": "Aucune session active",
   "confirm_no_wallet_error": "Aucun portefeuille principal disponible",

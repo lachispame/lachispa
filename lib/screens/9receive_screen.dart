@@ -1300,7 +1300,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                   Icon(Icons.refresh, color: Colors.white, size: 20),
                   SizedBox(width: 12),
                   Text(
-                    'Factura cleared',
+                    AppLocalizations.of(context)!.invoice_cleared_message,
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontWeight: FontWeight.w500,
@@ -1330,7 +1330,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         ),
         icon: const Icon(Icons.refresh, size: 20),
         label: Text(
-          'Limpiar factura',
+          AppLocalizations.of(context)!.clear_invoice_button,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -1752,7 +1752,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       }
 
       final conversionMessage = _selectedCurrency == 'sats'
-          ? 'Factura: $amountInSats sats'
+          ? AppLocalizations.of(context)!
+              .invoice_amount_label('$amountInSats sats')
           : '$amount $_selectedCurrency / $amountInSats sats';
 
       print('[RECEIVE_SCREEN] Final conversion result: $conversionMessage');
@@ -1837,7 +1838,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                     Text(
                       conversionMessage.isNotEmpty
                           ? conversionMessage
-                          : 'Factura: ${invoice.formattedAmount}',
+                          : AppLocalizations.of(context)!
+                              .invoice_amount_label(invoice.formattedAmount),
                       style: const TextStyle(
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w500,

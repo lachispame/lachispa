@@ -464,6 +464,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get clear_button => 'C';
 
   @override
+  String get invoice_cleared_message => 'Счет очищен';
+
+  @override
+  String get clear_invoice_button => 'Очистить счет';
+
+  @override
+  String get invoice_copied_message => 'Счет скопирован';
+
+  @override
   String get decimal_button => '.';
 
   @override
@@ -567,6 +576,11 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get amountless_invoice_error =>
       'Счет без суммы не поддерживается. Запросите счет с указанной суммой.';
+
+  @override
+  String invoice_amount_label(String amount) {
+    return 'Счет: $amount';
+  }
 
   @override
   String payment_sent_status(String status) {

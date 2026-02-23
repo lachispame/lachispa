@@ -472,6 +472,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get clear_button => 'C';
 
   @override
+  String get invoice_cleared_message => 'Rechnung gelöscht';
+
+  @override
+  String get clear_invoice_button => 'Rechnung löschen';
+
+  @override
+  String get invoice_copied_message => 'Rechnung kopiert';
+
+  @override
   String get decimal_button => '.';
 
   @override
@@ -578,6 +587,11 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get amountless_invoice_error =>
       'Rechnung ohne Betrag wird nicht unterstützt. Bitte fordern Sie eine Rechnung mit einem bestimmten Betrag an.';
+
+  @override
+  String invoice_amount_label(String amount) {
+    return 'Rechnung: $amount';
+  }
 
   @override
   String payment_sent_status(String status) {

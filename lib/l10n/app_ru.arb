@@ -118,6 +118,9 @@
   
   "send_to_title": "Отправить на",
   "clear_button": "C",
+  "invoice_cleared_message": "Счет очищен",
+  "clear_invoice_button": "Очистить счет",
+  "invoice_copied_message": "Счет скопирован",
   "decimal_button": ".",
   "calculating_text": "вычисление...",
   "loading_rates_text": "Загрузка курсов...",
@@ -152,6 +155,7 @@
   "sending_button": "Отправка...",
   "invoice_expired_error": "Счет истек и не может быть оплачен",
   "amountless_invoice_error": "Счет без суммы не поддерживается. Запросите счет с указанной суммой.",
+  "invoice_amount_label": "Счет: {amount}",
   "payment_sent_status": "Платеж отправлен - Статус: {status}",
   "confirm_no_session_error": "Нет активной сессии",
   "confirm_no_wallet_error": "Нет доступного основного кошелька",

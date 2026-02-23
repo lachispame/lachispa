@@ -118,6 +118,9 @@
   
   "send_to_title": "Enviar para",
   "clear_button": "C",
+  "invoice_cleared_message": "Fatura limpa",
+  "clear_invoice_button": "Limpar fatura",
+  "invoice_copied_message": "Fatura copiada",
   "decimal_button": ".",
   "calculating_text": "calculando...",
   "loading_rates_text": "Carregando taxas...",
@@ -152,6 +155,7 @@
   "sending_button": "Enviando...",
   "invoice_expired_error": "A fatura expirou e não pode ser paga",
   "amountless_invoice_error": "Fatura sem valor não suportada. Solicite uma fatura com um valor específico.",
+  "invoice_amount_label": "Fatura: {amount}",
   "payment_sent_status": "Pagamento enviado - Estado: {status}",
   "confirm_no_session_error": "Sem sessão ativa",
   "confirm_no_wallet_error": "Sem carteira principal disponível",

@@ -463,6 +463,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get clear_button => 'C';
 
   @override
+  String get invoice_cleared_message => 'Invoice cleared';
+
+  @override
+  String get clear_invoice_button => 'Clear invoice';
+
+  @override
+  String get invoice_copied_message => 'Invoice copied';
+
+  @override
   String get decimal_button => '.';
 
   @override
@@ -567,6 +576,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get amountless_invoice_error =>
       'Invoice without amount not supported. Please request an invoice with a specific amount.';
+
+  @override
+  String invoice_amount_label(String amount) {
+    return 'Invoice: $amount';
+  }
 
   @override
   String payment_sent_status(String status) {

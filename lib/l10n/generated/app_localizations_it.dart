@@ -472,6 +472,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String get clear_button => 'C';
 
   @override
+  String get invoice_cleared_message => 'Fattura cancellata';
+
+  @override
+  String get clear_invoice_button => 'Cancella fattura';
+
+  @override
+  String get invoice_copied_message => 'Fattura copiata';
+
+  @override
   String get decimal_button => '.';
 
   @override
@@ -580,6 +589,11 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get amountless_invoice_error =>
       'Fattura senza importo non supportata. Richiedere una fattura con un importo specifico.';
+
+  @override
+  String invoice_amount_label(String amount) {
+    return 'Fattura: $amount';
+  }
 
   @override
   String payment_sent_status(String status) {

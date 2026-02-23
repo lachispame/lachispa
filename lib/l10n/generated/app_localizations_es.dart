@@ -466,6 +466,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get clear_button => 'C';
 
   @override
+  String get invoice_cleared_message => 'Factura limpiada';
+
+  @override
+  String get clear_invoice_button => 'Limpiar factura';
+
+  @override
+  String get invoice_copied_message => 'Factura copiada';
+
+  @override
   String get decimal_button => '.';
 
   @override
@@ -570,6 +579,11 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get amountless_invoice_error =>
       'Factura sin monto no soportada. Solicite una factura con un monto específico.';
+
+  @override
+  String invoice_amount_label(String amount) {
+    return 'Factura: $amount';
+  }
 
   @override
   String payment_sent_status(String status) {

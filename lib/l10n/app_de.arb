@@ -118,6 +118,9 @@
   
   "send_to_title": "Senden an",
   "clear_button": "C",
+  "invoice_cleared_message": "Rechnung gelöscht",
+  "clear_invoice_button": "Rechnung löschen",
+  "invoice_copied_message": "Rechnung kopiert",
   "decimal_button": ".",
   "calculating_text": "berechne...",
   "loading_rates_text": "Lade Kurse...",
@@ -152,6 +155,7 @@
   "sending_button": "Sende...",
   "invoice_expired_error": "Die Rechnung ist abgelaufen und kann nicht bezahlt werden",
   "amountless_invoice_error": "Rechnung ohne Betrag wird nicht unterstützt. Bitte fordern Sie eine Rechnung mit einem bestimmten Betrag an.",
+  "invoice_amount_label": "Rechnung: {amount}",
   "payment_sent_status": "Zahlung gesendet - Status: {status}",
   "confirm_no_session_error": "Keine aktive Sitzung",
   "confirm_no_wallet_error": "Keine primäre Wallet verfügbar",

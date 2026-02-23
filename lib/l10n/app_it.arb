@@ -118,6 +118,9 @@
   
   "send_to_title": "Invia a",
   "clear_button": "C",
+  "invoice_cleared_message": "Fattura cancellata",
+  "clear_invoice_button": "Cancella fattura",
+  "invoice_copied_message": "Fattura copiata",
   "decimal_button": ".",
   "calculating_text": "calcolo...",
   "loading_rates_text": "Caricamento tassi...",
@@ -152,6 +155,7 @@
   "sending_button": "Invio...",
   "invoice_expired_error": "La fattura è scaduta e non può essere pagata",
   "amountless_invoice_error": "Fattura senza importo non supportata. Richiedere una fattura con un importo specifico.",
+  "invoice_amount_label": "Fattura: {amount}",
   "payment_sent_status": "Pagamento inviato - Stato: {status}",
   "confirm_no_session_error": "Nessuna sessione attiva",
   "confirm_no_wallet_error": "Nessun portafoglio principale disponibile",

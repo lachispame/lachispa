@@ -972,6 +972,24 @@ abstract class AppLocalizations {
   /// **'C'**
   String get clear_button;
 
+  /// No description provided for @invoice_cleared_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoice cleared'**
+  String get invoice_cleared_message;
+
+  /// No description provided for @clear_invoice_button.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear invoice'**
+  String get clear_invoice_button;
+
+  /// No description provided for @invoice_copied_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoice copied'**
+  String get invoice_copied_message;
+
   /// No description provided for @decimal_button.
   ///
   /// In en, this message translates to:
@@ -1169,6 +1187,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Invoice without amount not supported. Please request an invoice with a specific amount.'**
   String get amountless_invoice_error;
+
+  /// No description provided for @invoice_amount_label.
+  ///
+  /// In en, this message translates to:
+  /// **'Invoice: {amount}'**
+  String invoice_amount_label(String amount);
 
   /// No description provided for @payment_sent_status.
   ///
