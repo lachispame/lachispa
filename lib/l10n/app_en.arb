@@ -207,7 +207,7 @@
   "payment_sent_status": "Payment sent - Status: {status}",
   "@payment_sent_status": {
     "placeholders": {
-      "status": { "type": "String" }
+      "status": { "type": "Object" }
     }
   },
   "confirm_no_session_error": "No active session",
