@@ -27,7 +27,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   
   final List<Particle> _particles = [];
   final math.Random _random = math.Random();
-  late Timer _sparkTimer;
+  Timer? _sparkTimer;
   Size? _screenSize; // Screen size cache
 
   @override
@@ -113,6 +113,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   }
 
   void _setupSparkTimer() {
+    // Cancel existing timer to avoid leaks on repeated didChangeDependencies calls
+    _sparkTimer?.cancel();
     // Create spark effects every 3 seconds
     _sparkTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
       _createRandomSpark();
@@ -140,7 +142,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   void dispose() {
     _staggerController.dispose();
     _sparkController.dispose();
-    _sparkTimer.cancel();
+    _sparkTimer?.cancel();
     super.dispose();
   }
 
@@ -164,17 +166,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
         ),
         child: Stack(
           children: [
-            // Animated spark effects
-            AnimatedBuilder(
-              animation: _sparkController,
-              builder: (context, child) {
-                return CustomPaint(
-                  painter: SparkPainter(_particles),
-                  size: Size.infinite,
-                );
-              },
-            ),
-
             // Background chispa image
             Positioned.fill(
               child: AnimatedBuilder(
@@ -189,6 +180,17 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   );
                 },
               ),
+            ),
+
+            // Animated spark effects (above background, below content)
+            AnimatedBuilder(
+              animation: _sparkController,
+              builder: (context, child) {
+                return CustomPaint(
+                  painter: SparkPainter(_particles),
+                  size: Size.infinite,
+                );
+              },
             ),
 
             // Main content

@@ -45,12 +45,11 @@ class _StartScreenState extends State<StartScreen> {
           children: [
             // Background chispa image
             Positioned.fill(
-              child: Opacity(
-                opacity: 0.4,
-                child: Image.asset(
-                  'assets/images/start_bg.jpg',
-                  fit: BoxFit.cover,
-                ),
+              child: Image.asset(
+                'assets/images/start_bg.jpg',
+                fit: BoxFit.cover,
+                color: Colors.white.withValues(alpha: 0.4),
+                colorBlendMode: BlendMode.modulate,
               ),
             ),
             SafeArea(
