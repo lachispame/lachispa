@@ -1,7 +1,7 @@
 name: lachispa
 description: "LaChispa - Lightning Network wallet using LNBits backend"
 publish_to: 'none'
-version: 0.4.0
+version: 0.4.1
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
