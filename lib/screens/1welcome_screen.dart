@@ -168,17 +168,12 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           children: [
             // Background chispa image
             Positioned.fill(
-              child: AnimatedBuilder(
-                animation: _titleAnimation,
-                builder: (context, child) {
-                  return Opacity(
-                    opacity: _titleAnimation.value,
-                    child: Image.asset(
-                      'assets/images/welcome_bg.png',
-                      fit: BoxFit.cover,
-                    ),
-                  );
-                },
+              child: FadeTransition(
+                opacity: _titleAnimation,
+                child: Image.asset(
+                  'assets/images/welcome_bg.png',
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
 
@@ -229,7 +224,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                             opacity: _titleAnimation.value,
                             child: Column(
                               children: [
-                                const SizedBox(height: 140),
+                                SizedBox(height: (MediaQuery.of(context).size.height * 0.15).clamp(40, 140)),
                                 // Title
                                 Text(
                                   'LaChispa',
