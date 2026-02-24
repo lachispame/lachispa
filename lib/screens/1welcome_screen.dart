@@ -174,7 +174,23 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 );
               },
             ),
-            
+
+            // Background chispa image
+            Positioned.fill(
+              child: AnimatedBuilder(
+                animation: _titleAnimation,
+                builder: (context, child) {
+                  return Opacity(
+                    opacity: _titleAnimation.value,
+                    child: Image.asset(
+                      'assets/images/welcome_bg.png',
+                      fit: BoxFit.cover,
+                    ),
+                  );
+                },
+              ),
+            ),
+
             // Main content
             SafeArea(
               child: Column(
@@ -211,36 +227,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                             opacity: _titleAnimation.value,
                             child: Column(
                               children: [
-                                // Logo
-                                Container(
-                                  width: 120,
-                                  height: 120,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: const Color(0xFF2D3FE7).withValues(alpha: 0.5),
-                                        blurRadius: 25,
-                                        offset: const Offset(0, 10),
-                                      ),
-                                      BoxShadow(
-                                        color: const Color(0xFF5B73FF).withValues(alpha: 0.3),
-                                        blurRadius: 40,
-                                        offset: const Offset(0, 0),
-                                      ),
-                                    ],
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: Image.asset(
-                                      'Logo/chispabordesredondos.png',
-                                      width: 120,
-                                      height: 120,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 24),
+                                const SizedBox(height: 140),
                                 // Title
                                 Text(
                                   'LaChispa',

@@ -41,7 +41,19 @@ class _StartScreenState extends State<StartScreen> {
             stops: [0.0, 0.5, 1.0],
           ),
         ),
-        child: SafeArea(
+        child: Stack(
+          children: [
+            // Background chispa image
+            Positioned.fill(
+              child: Opacity(
+                opacity: 0.4,
+                child: Image.asset(
+                  'assets/images/start_bg.jpg',
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            SafeArea(
           child: Consumer<ServerProvider>(
             builder: (context, serverProvider, child) {
               return Padding(
@@ -52,54 +64,21 @@ class _StartScreenState extends State<StartScreen> {
                     children: [
                     const SizedBox(height: 60),
                     
-                    Column(
-                      children: [
-                        Container(
-                          width: 100,
-                          height: 100,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(18),
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(0xFF2D3FE7).withValues(alpha: 0.5),
-                                blurRadius: 22,
-                                offset: const Offset(0, 8),
-                              ),
-                              BoxShadow(
-                                color: const Color(0xFF5B73FF).withValues(alpha: 0.3),
-                                blurRadius: 35,
-                                offset: const Offset(0, 0),
-                              ),
-                            ],
+                    Text(
+                      'LaChispa',
+                      style: TextStyle(
+                        fontFamily: 'Inter',
+                        fontSize: 42,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        shadows: [
+                          Shadow(
+                            offset: const Offset(0, 4),
+                            blurRadius: 8,
+                            color: const Color(0xFF2D3FE7).withValues(alpha: 0.5),
                           ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(18),
-                            child: Image.asset(
-                              'Logo/chispa.jpg',
-                              width: 100,
-                              height: 100,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        Text(
-                          'LaChispa',
-                          style: TextStyle(
-                            fontFamily: 'Inter',
-                            fontSize: 42,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            shadows: [
-                              Shadow(
-                                offset: const Offset(0, 4),
-                                blurRadius: 8,
-                                color: const Color(0xFF2D3FE7).withValues(alpha: 0.5),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     const SizedBox(height: 16),
                     
@@ -127,6 +106,8 @@ class _StartScreenState extends State<StartScreen> {
               );
             },
           ),
+        ),
+          ],
         ),
       ),
     );
