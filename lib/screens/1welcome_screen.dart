@@ -27,7 +27,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   
   final List<Particle> _particles = [];
   final math.Random _random = math.Random();
-  late Timer _sparkTimer;
+  Timer? _sparkTimer;
   Size? _screenSize; // Screen size cache
 
   @override
@@ -113,6 +113,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   }
 
   void _setupSparkTimer() {
+    // Cancel existing timer to avoid leaks on repeated didChangeDependencies calls
+    _sparkTimer?.cancel();
     // Create spark effects every 3 seconds
     _sparkTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
       _createRandomSpark();
@@ -140,7 +142,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
   void dispose() {
     _staggerController.dispose();
     _sparkController.dispose();
-    _sparkTimer.cancel();
+    _sparkTimer?.cancel();
     super.dispose();
   }
 
@@ -164,7 +166,18 @@ class _WelcomeScreenState extends State<WelcomeScreen>
         ),
         child: Stack(
           children: [
-            // Animated spark effects
+            // Background chispa image
+            Positioned.fill(
+              child: FadeTransition(
+                opacity: _titleAnimation,
+                child: Image.asset(
+                  'assets/images/welcome_bg.png',
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+
+            // Animated spark effects (above background, below content)
             AnimatedBuilder(
               animation: _sparkController,
               builder: (context, child) {
@@ -174,7 +187,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 );
               },
             ),
-            
+
             // Main content
             SafeArea(
               child: Column(
@@ -211,36 +224,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                             opacity: _titleAnimation.value,
                             child: Column(
                               children: [
-                                // Logo
-                                Container(
-                                  width: 120,
-                                  height: 120,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: const Color(0xFF2D3FE7).withValues(alpha: 0.5),
-                                        blurRadius: 25,
-                                        offset: const Offset(0, 10),
-                                      ),
-                                      BoxShadow(
-                                        color: const Color(0xFF5B73FF).withValues(alpha: 0.3),
-                                        blurRadius: 40,
-                                        offset: const Offset(0, 0),
-                                      ),
-                                    ],
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: Image.asset(
-                                      'Logo/chispabordesredondos.png',
-                                      width: 120,
-                                      height: 120,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 24),
+                                SizedBox(height: (MediaQuery.of(context).size.height * 0.15).clamp(40, 140)),
                                 // Title
                                 Text(
                                   'LaChispa',
