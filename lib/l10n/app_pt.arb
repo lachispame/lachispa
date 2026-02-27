@@ -67,7 +67,8 @@
   "pending_label": "Pendente",
   "failed_label": "Falhada",
   "loading_transactions_error_prefix": "Erro ao carregar transações: ",
-  
+
+  "create_lnaddress_label": "ou também pode criar um:",
   "lightning_address_title": "Endereço Lightning",
   "loading_address_text": "Carregando endereço...",
   "your_lightning_address_label": "O seu endereço Lightning:",
@@ -88,6 +89,7 @@
   "logout_confirm_button": "Terminar Sessão",
   
   "receive_title": "Receber",
+  "create_invoice_label": "Crie uma fatura para receber pagamentos diretamente na sua carteira",
   "amount_sats_label": "Solicitar Quantia",
   "amount_label": "Quantia",
   "currency_label": "Moeda",
@@ -116,6 +118,9 @@
   
   "send_to_title": "Enviar para",
   "clear_button": "C",
+  "invoice_cleared_message": "Fatura limpa",
+  "clear_invoice_button": "Limpar fatura",
+  "invoice_copied_message": "Fatura copiada",
   "decimal_button": ".",
   "calculating_text": "calculando...",
   "loading_rates_text": "Carregando taxas...",
@@ -150,6 +155,7 @@
   "sending_button": "Enviando...",
   "invoice_expired_error": "A fatura expirou e não pode ser paga",
   "amountless_invoice_error": "Fatura sem valor não suportada. Solicite uma fatura com um valor específico.",
+  "invoice_amount_label": "Fatura: {amount}",
   "payment_sent_status": "Pagamento enviado - Estado: {status}",
   "confirm_no_session_error": "Sem sessão ativa",
   "confirm_no_wallet_error": "Sem carteira principal disponível",

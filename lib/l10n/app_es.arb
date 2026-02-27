@@ -68,6 +68,7 @@
   "failed_label": "Fallida",
   "loading_transactions_error_prefix": "Error cargando transacciones: ",
   
+  "create_lnaddress_label": "o también puedes crear una:",
   "lightning_address_title": "Dirección Lightning",
   "loading_address_text": "Cargando dirección...",
   "your_lightning_address_label": "Tu dirección Lightning:",
@@ -88,6 +89,7 @@
   "logout_confirm_button": "Cerrar Sesión",
   
   "receive_title": "Recibir",
+  "create_invoice_label": "Crea una factura para recibir pagos directamente en tu billetera",
   "amount_sats_label": "Solicitar Monto",
   "amount_label": "Cantidad",
   "currency_label": "Moneda",
@@ -170,6 +172,9 @@
   
   "send_to_title": "Enviar a",
   "clear_button": "C",
+  "invoice_cleared_message": "Factura limpiada",
+  "clear_invoice_button": "Limpiar factura",
+  "invoice_copied_message": "Factura copiada",
   "decimal_button": ".",
   "calculating_text": "calculando...",
   "loading_rates_text": "Loading rates...",
@@ -204,6 +209,14 @@
   "sending_button": "Enviando...",
   "invoice_expired_error": "La factura ha expirado y no se puede pagar",
   "amountless_invoice_error": "Factura sin monto no soportada. Solicite una factura con un monto específico.",
+  "invoice_amount_label": "Factura: {amount}",
+  "@invoice_amount_label": {
+    "placeholders": {
+      "amount": {
+        "type": "Object"
+      }
+    }
+  },
   "payment_sent_status": "Pago enviado - Estado: {status}",
   "confirm_no_session_error": "Sin sesión activa",
   "confirm_no_wallet_error": "No hay wallet principal disponible",
