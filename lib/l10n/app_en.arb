@@ -67,7 +67,8 @@
   "pending_label": "Pending",
   "failed_label": "Failed",
   "loading_transactions_error_prefix": "Error loading transactions: ",
-  
+
+  "create_lnaddress_label": "or create a:",
   "lightning_address_title": "Lightning Address",
   "loading_address_text": "Loading address...",
   "your_lightning_address_label": "Your Lightning address:",
@@ -88,6 +89,7 @@
   "logout_confirm_button": "Logout",
   
   "receive_title": "Receive",
+  "create_invoice_label": "Create an invoice to receive payments directly in your wallet",
   "amount_sats_label": "Request Amount",
   "amount_label": "Amount",
   "currency_label": "Currency",
@@ -170,6 +172,9 @@
   
   "send_to_title": "Send to",
   "clear_button": "C",
+  "invoice_cleared_message": "Invoice cleared",
+  "clear_invoice_button": "Clear invoice",
+  "invoice_copied_message": "Invoice copied",
   "decimal_button": ".",
   "calculating_text": "calculating...",
   "loading_rates_text": "Loading rates...",
@@ -204,10 +209,16 @@
   "sending_button": "Sending...",
   "invoice_expired_error": "The invoice has expired and cannot be paid",
   "amountless_invoice_error": "Invoice without amount not supported. Please request an invoice with a specific amount.",
+  "invoice_amount_label": "Invoice: {amount}",
+  "@invoice_amount_label": {
+    "placeholders": {
+      "amount": {"type": "Object"}
+    }
+  },
   "payment_sent_status": "Payment sent - Status: {status}",
   "@payment_sent_status": {
     "placeholders": {
-      "status": { "type": "String" }
+      "status": { "type": "Object" }
     }
   },
   "confirm_no_session_error": "No active session",

@@ -67,7 +67,8 @@ import 'app_localizations_ru.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale)
+      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -75,7 +76,8 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -87,7 +89,8 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
     delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
@@ -465,6 +468,12 @@ abstract class AppLocalizations {
   /// **'Error cargando transacciones: '**
   String get loading_transactions_error_prefix;
 
+  /// No description provided for @create_lnaddress_label.
+  ///
+  /// In es, this message translates to:
+  /// **'o también puedes crear una:'**
+  String get create_lnaddress_label;
+
   /// No description provided for @lightning_address_title.
   ///
   /// In es, this message translates to:
@@ -572,6 +581,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Recibir'**
   String get receive_title;
+
+  /// No description provided for @create_invoice_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Crea una factura para recibir pagos directamente en tu wallet'**
+  String get create_invoice_label;
 
   /// No description provided for @amount_sats_label.
   ///
@@ -957,6 +972,24 @@ abstract class AppLocalizations {
   /// **'C'**
   String get clear_button;
 
+  /// No description provided for @invoice_cleared_message.
+  ///
+  /// In es, this message translates to:
+  /// **'Factura limpiada'**
+  String get invoice_cleared_message;
+
+  /// No description provided for @clear_invoice_button.
+  ///
+  /// In es, this message translates to:
+  /// **'Limpiar factura'**
+  String get clear_invoice_button;
+
+  /// No description provided for @invoice_copied_message.
+  ///
+  /// In es, this message translates to:
+  /// **'Factura copiada'**
+  String get invoice_copied_message;
+
   /// No description provided for @decimal_button.
   ///
   /// In es, this message translates to:
@@ -1154,6 +1187,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Factura sin monto no soportada. Solicite una factura con un monto específico.'**
   String get amountless_invoice_error;
+
+  /// No description provided for @invoice_amount_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Factura: {amount}'**
+  String invoice_amount_label(Object amount);
 
   /// No description provided for @payment_sent_status.
   ///
@@ -1654,7 +1693,8 @@ abstract class AppLocalizations {
   String get deep_link_login_required_message;
 }
 
-class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -1663,30 +1703,42 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['de', 'en', 'es', 'fr', 'it', 'pt', 'ru'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>[
+        'de',
+        'en',
+        'es',
+        'fr',
+        'it',
+        'pt',
+        'ru'
+      ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'de': return AppLocalizationsDe();
-    case 'en': return AppLocalizationsEn();
-    case 'es': return AppLocalizationsEs();
-    case 'fr': return AppLocalizationsFr();
-    case 'it': return AppLocalizationsIt();
-    case 'pt': return AppLocalizationsPt();
-    case 'ru': return AppLocalizationsRu();
+    case 'de':
+      return AppLocalizationsDe();
+    case 'en':
+      return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
+    case 'fr':
+      return AppLocalizationsFr();
+    case 'it':
+      return AppLocalizationsIt();
+    case 'pt':
+      return AppLocalizationsPt();
+    case 'ru':
+      return AppLocalizationsRu();
   }
 
   throw FlutterError(
-    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-    'an issue with the localizations generation tool. Please file an issue '
-    'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
-  );
+      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+      'an issue with the localizations generation tool. Please file an issue '
+      'on GitHub with a reproducible sample app and the gen-l10n configuration '
+      'that was used.');
 }
