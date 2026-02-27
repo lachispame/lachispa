@@ -89,7 +89,7 @@
   "logout_confirm_button": "Cerrar Sesión",
   
   "receive_title": "Recibir",
-  "create_invoice_label": "Crea una factura para recibir pagos directamente en tu wallet",
+  "create_invoice_label": "Crea una factura para recibir pagos directamente en tu billetera",
   "amount_sats_label": "Solicitar Monto",
   "amount_label": "Cantidad",
   "currency_label": "Moneda",
