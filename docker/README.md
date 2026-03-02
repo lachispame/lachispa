@@ -10,7 +10,7 @@ This directory contains all Docker configuration files for deploying LaChispa We
 
 ## Structure
 
-```
+```text
 docker/
 ├── Dockerfile           # Multi-stage build (Flutter + Nginx)
 ├── docker-compose.yml   # Service orchestration
@@ -34,7 +34,7 @@ docker-compose up -d --build
 
 ### Access Application
 
-```
+```text
 http://localhost:7777
 ```
 
@@ -129,7 +129,7 @@ deploy:
 
 ### Security Headers
 
-```
+```text
 X-Frame-Options: SAMEORIGIN
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -200,7 +200,7 @@ Este directorio contiene todos los archivos de configuración Docker para desple
 
 ## Estructura
 
-```
+```text
 docker/
 ├── Dockerfile           # Build multi-stage (Flutter + Nginx)
 ├── docker-compose.yml   # Orquestación de servicios
@@ -224,7 +224,7 @@ docker-compose up -d --build
 
 ### Acceder a la Aplicación
 
-```
+```text
 http://localhost:7777
 ```
 
@@ -319,7 +319,7 @@ deploy:
 
 ### Encabezados de Seguridad
 
-```
+```text
 X-Frame-Options: SAMEORIGIN
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
