@@ -1,6 +1,6 @@
 # LaChispa Docker Documentation
 
-English | [Español](`#descripcion-general`)
+English | [Español](#descripcion-general)
 
 ---
 
