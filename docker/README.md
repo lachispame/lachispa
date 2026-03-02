@@ -2,7 +2,6 @@
 
 English | [Español](`#espanol`)
 <a id="espanol"></a>
-# Documentación de Docker - LaChispa
 
 ---
 
