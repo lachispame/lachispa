@@ -1,7 +1,6 @@
 # LaChispa Docker Documentation
 
 English | [Español](`#espanol`)
-<a id="espanol"></a>
 
 ---
 
