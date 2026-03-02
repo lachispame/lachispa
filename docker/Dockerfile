@@ -15,7 +15,7 @@ RUN flutter build web --release --web-renderer=$FLUTTER_WEB_RENDERER
 FROM nginx:alpine
 
 COPY --from=build /app/build/web /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY docker/nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 80
 
