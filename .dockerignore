@@ -24,6 +24,8 @@ README.md
 Dockerfile*
 docker-compose*
 .dockerignore
+docker/
+nginx.conf
 
 # Logs
 *.log
