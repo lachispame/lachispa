@@ -1,4 +1,4 @@
-package com.example.chispa
+package me.lachispa.app
 
 import io.flutter.embedding.android.FlutterActivity
 
