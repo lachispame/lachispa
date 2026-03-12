@@ -63,9 +63,16 @@ jobs:
             
             ### Descarga disponible:
             - **Android**: `app-release.apk`
+            - **Docker**: `ghcr.io/${{ github.repository }}:${{ steps.tag.outputs.VERSION }}`
             
             ### Instalación:
             - Descargar APK e instalar en Android
+            
+            ### Docker
+            ```bash
+            docker pull ghcr.io/${{ github.repository }}:${{ steps.tag.outputs.VERSION }}
+            docker run -p 7777:80 ghcr.io/${{ github.repository }}:${{ steps.tag.outputs.VERSION }}
+            ```
             
           files: |
             app-release.apk

@@ -48,26 +48,3 @@ jobs:
             FLUTTER_WEB_RENDERER=html
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-      - name: Create or update release
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ github.ref_name }}
-          name: LaChispa ${{ github.ref_name }}
-          body: |
-            ## LaChispa ${{ github.ref_name }}
-
-            ### Docker Image
-            ```
-            ghcr.io/${{ github.repository }}:${{ github.ref_name }}
-            ```
-
-            ### Usage
-            ```bash
-            docker pull ghcr.io/${{ github.repository }}:${{ github.ref_name }}
-            docker run -p 7777:80 ghcr.io/${{ github.repository }}:${{ github.ref_name }}
-            ```
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
