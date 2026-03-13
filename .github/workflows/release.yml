@@ -1,9 +1,10 @@
 name: Build and Release Android
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_run:
+    workflows: ["docker-release.yml"]
+    types: [completed]
+    branches: [main]
 
 permissions:
   contents: write
@@ -40,6 +41,7 @@ jobs:
 
   release:
     needs: [build-android]
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -48,10 +50,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: android-apk
-        
+      
       - name: Get tag version
         id: tag
-        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        run: |
+          # Get tag from workflow run head branch (e.g., v1.0.0)
+          TAG=${{ github.event.workflow_run.head_branch }}
+          echo "VERSION=$TAG" >> $GITHUB_OUTPUT
         
       - name: Create Release
         uses: softprops/action-gh-release@v2
@@ -63,9 +68,16 @@ jobs:
             
             ### Descarga disponible:
             - **Android**: `app-release.apk`
+            - **Docker**: `ghcr.io/${{ github.repository }}:${{ steps.tag.outputs.VERSION }}`
             
             ### Instalación:
             - Descargar APK e instalar en Android
+            
+            ### Docker
+            ```bash
+            docker pull ghcr.io/${{ github.repository }}:${{ steps.tag.outputs.VERSION }}
+            docker run -p 7777:80 ghcr.io/${{ github.repository }}:${{ steps.tag.outputs.VERSION }}
+            ```
             
           files: |
             app-release.apk
