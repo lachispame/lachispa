@@ -67,7 +67,8 @@
   "pending_label": "En attente",
   "failed_label": "Échoué",
   "loading_transactions_error_prefix": "Erreur lors du chargement des transactions : ",
-  
+
+  "create_lnaddress_label": "ou vous pouvez aussi créer un :",
   "lightning_address_title": "Adresse Lightning",
   "loading_address_text": "Chargement de l'adresse...",
   "your_lightning_address_label": "Votre adresse Lightning :",
@@ -88,6 +89,7 @@
   "logout_confirm_button": "Se déconnecter",
   
   "receive_title": "Recevoir",
+  "create_invoice_label": "Créez une facture pour recevoir des paiements directement dans votre portefeuille",
   "amount_sats_label": "Montant demandé",
   "amount_label": "Montant",
   "currency_label": "Devise",
@@ -116,6 +118,9 @@
   
   "send_to_title": "Envoyer à",
   "clear_button": "C",
+  "invoice_cleared_message": "Facture effacée",
+  "clear_invoice_button": "Effacer la facture",
+  "invoice_copied_message": "Facture copiée",
   "decimal_button": ".",
   "calculating_text": "calcul...",
   "loading_rates_text": "Chargement des taux...",
@@ -150,6 +155,7 @@
   "sending_button": "Envoi...",
   "invoice_expired_error": "La facture a expiré et ne peut pas être payée",
   "amountless_invoice_error": "Facture sans montant non prise en charge. Veuillez demander une facture avec un montant spécifique.",
+  "invoice_amount_label": "Facture: {amount}",
   "payment_sent_status": "Paiement envoyé - Statut : {status}",
   "confirm_no_session_error": "Aucune session active",
   "confirm_no_wallet_error": "Aucun portefeuille principal disponible",

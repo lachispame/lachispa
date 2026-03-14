@@ -67,7 +67,8 @@
   "pending_label": "Ausstehend",
   "failed_label": "Fehlgeschlagen",
   "loading_transactions_error_prefix": "Fehler beim Laden der Transaktionen: ",
-  
+
+  "create_lnaddress_label": "oder Sie können auch eine erstellen:",
   "lightning_address_title": "Lightning-Adresse",
   "loading_address_text": "Lade Adresse...",
   "your_lightning_address_label": "Ihre Lightning-Adresse:",
@@ -88,6 +89,7 @@
   "logout_confirm_button": "Abmelden",
   
   "receive_title": "Empfangen",
+  "create_invoice_label": "Erstellen Sie eine Rechnung, um Zahlungen direkt in Ihrer Wallet zu erhalten",
   "amount_sats_label": "Angeforderten Betrag",
   "amount_label": "Betrag",
   "currency_label": "Währung",
@@ -116,6 +118,9 @@
   
   "send_to_title": "Senden an",
   "clear_button": "C",
+  "invoice_cleared_message": "Rechnung gelöscht",
+  "clear_invoice_button": "Rechnung löschen",
+  "invoice_copied_message": "Rechnung kopiert",
   "decimal_button": ".",
   "calculating_text": "berechne...",
   "loading_rates_text": "Lade Kurse...",
@@ -150,6 +155,7 @@
   "sending_button": "Sende...",
   "invoice_expired_error": "Die Rechnung ist abgelaufen und kann nicht bezahlt werden",
   "amountless_invoice_error": "Rechnung ohne Betrag wird nicht unterstützt. Bitte fordern Sie eine Rechnung mit einem bestimmten Betrag an.",
+  "invoice_amount_label": "Rechnung: {amount}",
   "payment_sent_status": "Zahlung gesendet - Status: {status}",
   "confirm_no_session_error": "Keine aktive Sitzung",
   "confirm_no_wallet_error": "Keine primäre Wallet verfügbar",

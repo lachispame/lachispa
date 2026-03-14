@@ -67,7 +67,8 @@
   "pending_label": "В ожидании",
   "failed_label": "Не удалось",
   "loading_transactions_error_prefix": "Ошибка загрузки транзакций: ",
-  
+
+  "create_lnaddress_label": "или вы также можете создать :",
   "lightning_address_title": "Lightning адрес",
   "loading_address_text": "Загрузка адреса...",
   "your_lightning_address_label": "Ваш Lightning адрес:",
@@ -88,6 +89,7 @@
   "logout_confirm_button": "Выйти",
   
   "receive_title": "Получить",
+  "create_invoice_label": "Создайте счет для получения платежей непосредственно в вашем кошельке",
   "amount_sats_label": "Запрашиваемая сумма",
   "amount_label": "Сумма",
   "currency_label": "Валюта",
@@ -116,6 +118,9 @@
   
   "send_to_title": "Отправить на",
   "clear_button": "C",
+  "invoice_cleared_message": "Счет очищен",
+  "clear_invoice_button": "Очистить счет",
+  "invoice_copied_message": "Счет скопирован",
   "decimal_button": ".",
   "calculating_text": "вычисление...",
   "loading_rates_text": "Загрузка курсов...",
@@ -150,6 +155,7 @@
   "sending_button": "Отправка...",
   "invoice_expired_error": "Счет истек и не может быть оплачен",
   "amountless_invoice_error": "Счет без суммы не поддерживается. Запросите счет с указанной суммой.",
+  "invoice_amount_label": "Счет: {amount}",
   "payment_sent_status": "Платеж отправлен - Статус: {status}",
   "confirm_no_session_error": "Нет активной сессии",
   "confirm_no_wallet_error": "Нет доступного основного кошелька",
