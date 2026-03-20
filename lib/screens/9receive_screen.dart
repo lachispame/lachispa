@@ -1762,8 +1762,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         });
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Failed to generate invoice'),
+            SnackBar(
+              content: Text(
+                  AppLocalizations.of(context)!.invoice_empty_response_error),
               backgroundColor: Colors.red,
             ),
           );

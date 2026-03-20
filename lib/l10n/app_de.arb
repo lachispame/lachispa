@@ -103,6 +103,7 @@
   "generating_button": "ERSTELLE...",
   "invoice_generated_message": "Rechnung erfolgreich erstellt",
   "invoice_generation_error_prefix": "Fehler beim Erstellen der Rechnung: ",
+  "invoice_empty_response_error": "Rechnung konnte nicht erstellt werden",
   
   "send_title": "Senden",
   "paste_invoice_placeholder": "Rechnung, LNURL oder Adresse einfügen",
