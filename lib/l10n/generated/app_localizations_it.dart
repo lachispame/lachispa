@@ -297,6 +297,9 @@ class AppLocalizationsIt extends AppLocalizations {
       'Errore nella generazione della fattura: ';
 
   @override
+  String get invoice_empty_response_error => 'Impossibile generare la fattura';
+
+  @override
   String get send_title => 'Invia';
 
   @override

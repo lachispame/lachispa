@@ -666,6 +666,12 @@ abstract class AppLocalizations {
   /// **'Error generando factura: '**
   String get invoice_generation_error_prefix;
 
+  /// No description provided for @invoice_empty_response_error.
+  ///
+  /// In es, this message translates to:
+  /// **'Error al generar la factura'**
+  String get invoice_empty_response_error;
+
   /// No description provided for @send_title.
   ///
   /// In es, this message translates to:

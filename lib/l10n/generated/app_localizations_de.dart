@@ -298,6 +298,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Fehler beim Erstellen der Rechnung: ';
 
   @override
+  String get invoice_empty_response_error =>
+      'Rechnung konnte nicht erstellt werden';
+
+  @override
   String get send_title => 'Senden';
 
   @override

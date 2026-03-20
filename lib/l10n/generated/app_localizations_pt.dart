@@ -296,6 +296,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get invoice_generation_error_prefix => 'Erro ao gerar fatura: ';
 
   @override
+  String get invoice_empty_response_error => 'Falha ao gerar fatura';
+
+  @override
   String get send_title => 'Enviar';
 
   @override
