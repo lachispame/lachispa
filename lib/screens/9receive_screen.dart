@@ -50,6 +50,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
   // Timer to verify invoice payment
   Timer? _invoicePaymentTimer;
 
+  // Reentrancy guard for invoice payment timer
+  bool _isCheckingInvoice = false;
+
   // Timer for invoice payment monitoring timeout (10 minutes)
   Timer? _invoicePaymentTimeoutTimer;
 
@@ -67,9 +70,6 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     final authProvider = context.read<AuthProvider>();
 
     try {
-      print('[RECEIVE_SCREEN] Initializing currencies...');
-      print('[RECEIVE_SCREEN] Server URL: ${authProvider.currentServer}');
-
       // Ensure provider has server URL configured
       if (authProvider.currentServer != null) {
         await currencyProvider.updateServerUrl(authProvider.currentServer);
@@ -112,6 +112,35 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     }
   }
 
+  /// Normalizes a localized number string to a standard format for parsing.
+  /// Handles both US format (1234.56) and EU format (1234,56).
+  double? _normalizeLocalizedNumber(String input) {
+    final normalized = input.replaceAll(' ', '');
+    final hasComma = normalized.contains(',');
+    final hasDot = normalized.contains('.');
+
+    if (!hasComma && !hasDot) {
+      return double.tryParse(normalized);
+    }
+
+    String normalizedString;
+    if (hasComma && hasDot) {
+      final lastComma = normalized.lastIndexOf(',');
+      final lastDot = normalized.lastIndexOf('.');
+      if (lastComma > lastDot) {
+        normalizedString = normalized.replaceAll('.', '').replaceAll(',', '.');
+      } else {
+        normalizedString = normalized.replaceAll(',', '');
+      }
+    } else if (hasComma) {
+      normalizedString = normalized.replaceAll(',', '.');
+    } else {
+      normalizedString = normalized;
+    }
+
+    return double.tryParse(normalizedString);
+  }
+
   /// Convert fiat amount to sats using inverse conversion (same method as amount_screen)
   Future<int> _getAmountInSats(double amount, String currency) async {
     print('[RECEIVE_SCREEN] Converting $amount $currency to sats');
@@ -138,12 +167,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         '[RECEIVE_SCREEN] Rate check: $oneBtcInSats sats = $oneBtcInFiat $currency',
       );
 
-      // Step 2: Parse the result to get numeric rate
-      final fiatString = oneBtcInFiat.replaceAll(
-        RegExp(r'[^\d.]'),
-        '',
-      ); // Remove non-numeric chars
-      final oneBtcRate = double.tryParse(fiatString);
+      // Step 2: Parse the result to get numeric rate (handles localized formats)
+      final oneBtcRate = _normalizeLocalizedNumber(oneBtcInFiat);
 
       if (oneBtcRate == null || oneBtcRate <= 0) {
         throw Exception('Invalid rate obtained: $oneBtcInFiat');
@@ -1721,13 +1746,6 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       }
 
       print('[RECEIVE_SCREEN] Generando factura: $amountInSats sats');
-      print('[RECEIVE_SCREEN] Server: $serverUrl');
-      print('[RECEIVE_SCREEN] Wallet: ${wallet.name}');
-      print('[RECEIVE_SCREEN] Original currency: $_selectedCurrency');
-      print('[RECEIVE_SCREEN] Original amount: $amount');
-      print(
-        '[RECEIVE_SCREEN] Original rate: ${_selectedCurrency != 'sats' ? (amountInSats / amount) : 'N/A'}',
-      );
 
       // Prepare memo with fiat info as fallback for LNBits limitations
       String? finalMemo;
@@ -1954,12 +1972,18 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     _invoicePaymentTimer = Timer.periodic(const Duration(seconds: 2), (
       timer,
     ) async {
-      if (!mounted) {
-        timer.cancel();
+      // Reentrancy guard - skip if already checking
+      if (_isCheckingInvoice) {
         return;
       }
+      _isCheckingInvoice = true;
 
       try {
+        if (!mounted) {
+          timer.cancel();
+          return;
+        }
+
         // Check invoice status
         final isPaid = await _invoiceService.checkInvoiceStatus(
           serverUrl: serverUrl,
@@ -2018,6 +2042,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       } catch (e) {
         print('[RECEIVE_SCREEN] Error verificando estado de factura: $e');
         // Continue checking in case of temporary error
+      } finally {
+        _isCheckingInvoice = false;
       }
     });
 
