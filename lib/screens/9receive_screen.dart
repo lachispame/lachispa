@@ -578,49 +578,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               ),
             ),
           ),
-          const SizedBox(height: 16),
-          Text(
-            AppLocalizations.of(context)!.create_lnaddress_label,
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.6),
-              fontSize: 14,
-              fontFamily: 'Inter',
-            ),
-          ),
-          const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton.icon(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LNAddressScreen(),
-                  ),
-                );
-              },
-              style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.white,
-                side: BorderSide(
-                  color: Colors.white.withValues(alpha: 0.3),
-                  width: 1.5,
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-              icon: const Icon(Icons.add, size: 20),
-              label: Text(
-                AppLocalizations.of(context)!.lightning_address_title,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'Inter',
-                ),
-              ),
-            ),
-          ),
+          _buildCreateLnAddressCta(),
         ],
       ),
     );
@@ -745,49 +703,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           const SizedBox(height: 16),
 
           // Option to create LNAddress
-          Text(
-            AppLocalizations.of(context)!.create_lnaddress_label,
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.6),
-              fontSize: 14,
-              fontFamily: 'Inter',
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton.icon(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LNAddressScreen(),
-                  ),
-                );
-              },
-              style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.white,
-                side: BorderSide(
-                  color: Colors.white.withValues(alpha: 0.3),
-                  width: 1.5,
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-              icon: const Icon(Icons.add, size: 20),
-              label: Text(
-                AppLocalizations.of(context)!.lightning_address_title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'Inter',
-                ),
-              ),
-            ),
-          ),
+          _buildCreateLnAddressCta(topSpacing: 12, textAlign: TextAlign.center),
         ],
       ),
     );
@@ -2192,6 +2108,58 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const VoucherScanScreen()),
+    );
+  }
+
+  Widget _buildCreateLnAddressCta(
+      {double topSpacing = 16, TextAlign? textAlign}) {
+    return Column(
+      children: [
+        SizedBox(height: topSpacing),
+        Text(
+          AppLocalizations.of(context)!.create_lnaddress_label,
+          style: TextStyle(
+            color: Colors.white.withValues(alpha: 0.6),
+            fontSize: 14,
+            fontFamily: 'Inter',
+          ),
+          textAlign: textAlign,
+        ),
+        const SizedBox(height: 16),
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton.icon(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LNAddressScreen(),
+                ),
+              );
+            },
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colors.white,
+              side: BorderSide(
+                color: Colors.white.withValues(alpha: 0.3),
+                width: 1.5,
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+            icon: const Icon(Icons.add, size: 20),
+            label: Text(
+              AppLocalizations.of(context)!.lightning_address_title,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
