@@ -50,6 +50,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
   // Timer to verify invoice payment
   Timer? _invoicePaymentTimer;
 
+  // Reentrancy guard for invoice payment timer
+  bool _isCheckingInvoice = false;
+
   // Timer for invoice payment monitoring timeout (10 minutes)
   Timer? _invoicePaymentTimeoutTimer;
 
@@ -67,9 +70,6 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     final authProvider = context.read<AuthProvider>();
 
     try {
-      print('[RECEIVE_SCREEN] Initializing currencies...');
-      print('[RECEIVE_SCREEN] Server URL: ${authProvider.currentServer}');
-
       // Ensure provider has server URL configured
       if (authProvider.currentServer != null) {
         await currencyProvider.updateServerUrl(authProvider.currentServer);
@@ -112,6 +112,35 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     }
   }
 
+  /// Normalizes a localized number string to a standard format for parsing.
+  /// Handles both US format (1234.56) and EU format (1234,56).
+  double? _normalizeLocalizedNumber(String input) {
+    final normalized = input.replaceAll(' ', '');
+    final hasComma = normalized.contains(',');
+    final hasDot = normalized.contains('.');
+
+    if (!hasComma && !hasDot) {
+      return double.tryParse(normalized);
+    }
+
+    String normalizedString;
+    if (hasComma && hasDot) {
+      final lastComma = normalized.lastIndexOf(',');
+      final lastDot = normalized.lastIndexOf('.');
+      if (lastComma > lastDot) {
+        normalizedString = normalized.replaceAll('.', '').replaceAll(',', '.');
+      } else {
+        normalizedString = normalized.replaceAll(',', '');
+      }
+    } else if (hasComma) {
+      normalizedString = normalized.replaceAll(',', '.');
+    } else {
+      normalizedString = normalized;
+    }
+
+    return double.tryParse(normalizedString);
+  }
+
   /// Convert fiat amount to sats using inverse conversion (same method as amount_screen)
   Future<int> _getAmountInSats(double amount, String currency) async {
     print('[RECEIVE_SCREEN] Converting $amount $currency to sats');
@@ -138,12 +167,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         '[RECEIVE_SCREEN] Rate check: $oneBtcInSats sats = $oneBtcInFiat $currency',
       );
 
-      // Step 2: Parse the result to get numeric rate
-      final fiatString = oneBtcInFiat.replaceAll(
-        RegExp(r'[^\d.]'),
-        '',
-      ); // Remove non-numeric chars
-      final oneBtcRate = double.tryParse(fiatString);
+      // Step 2: Parse the result to get numeric rate (handles localized formats)
+      final oneBtcRate = _normalizeLocalizedNumber(oneBtcInFiat);
 
       if (oneBtcRate == null || oneBtcRate <= 0) {
         throw Exception('Invalid rate obtained: $oneBtcInFiat');
@@ -378,21 +403,17 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
   ) {
     final defaultAddress = lnAddressProvider.defaultAddress;
 
-    if (lnAddressProvider.isLoading) {
-      return _buildLoadingState();
-    }
-
-    if (lnAddressProvider.error != null) {
-      return _buildErrorState(lnAddressProvider.error!);
-    }
-
-    // Show Lightning Address with QR if available
+    // Show Lightning Address with QR if available - prioritize this
     if (defaultAddress != null) {
       return _buildLightningAddressCard(defaultAddress, walletProvider);
     }
 
-    // No Lightning Address - allow creating invoice directly
-    return _buildNoAddressState(walletProvider);
+    // No address - show invoice-only flow with loading/error as secondary info
+    return _buildNoAddressState(
+      walletProvider,
+      isLoading: lnAddressProvider.isLoading,
+      error: lnAddressProvider.error,
+    );
   }
 
   Widget _buildLoadingState() {
@@ -493,7 +514,11 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     );
   }
 
-  Widget _buildNoAddressState(WalletProvider walletProvider) {
+  Widget _buildNoAddressState(
+    WalletProvider walletProvider, {
+    bool isLoading = false,
+    String? error,
+  }) {
     if (_generatedInvoice != null) {
       return _buildInvoiceOnlyCard(walletProvider);
     }
@@ -511,6 +536,30 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          if (isLoading)
+            const Padding(
+              padding: EdgeInsets.only(bottom: 16),
+              child: SizedBox(
+                width: 24,
+                height: 24,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.white54,
+                ),
+              ),
+            )
+          else if (error != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Text(
+                error,
+                style: TextStyle(
+                  color: Colors.red.shade300,
+                  fontSize: 12,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
           Icon(
             Icons.qr_code_2,
             color: Colors.white.withValues(alpha: 0.6),
@@ -579,48 +628,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          Text(
-            AppLocalizations.of(context)!.create_lnaddress_label,
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.6),
-              fontSize: 14,
-              fontFamily: 'Inter',
-            ),
-          ),
-          const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton.icon(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LNAddressScreen(),
-                  ),
-                );
-              },
-              style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.white,
-                side: BorderSide(
-                  color: Colors.white.withValues(alpha: 0.3),
-                  width: 1.5,
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-              icon: const Icon(Icons.add, size: 20),
-              label: Text(
-                AppLocalizations.of(context)!.lightning_address_title,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'Inter',
-                ),
-              ),
-            ),
-          ),
+          _buildCreateLnAddressCta(),
         ],
       ),
     );
@@ -745,49 +753,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           const SizedBox(height: 16),
 
           // Option to create LNAddress
-          Text(
-            AppLocalizations.of(context)!.create_lnaddress_label,
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.6),
-              fontSize: 14,
-              fontFamily: 'Inter',
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton.icon(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LNAddressScreen(),
-                  ),
-                );
-              },
-              style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.white,
-                side: BorderSide(
-                  color: Colors.white.withValues(alpha: 0.3),
-                  width: 1.5,
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-              icon: const Icon(Icons.add, size: 20),
-              label: Text(
-                AppLocalizations.of(context)!.lightning_address_title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'Inter',
-                ),
-              ),
-            ),
-          ),
+          _buildCreateLnAddressCta(topSpacing: 12, textAlign: TextAlign.center),
         ],
       ),
     );
@@ -1780,13 +1746,6 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       }
 
       print('[RECEIVE_SCREEN] Generando factura: $amountInSats sats');
-      print('[RECEIVE_SCREEN] Server: $serverUrl');
-      print('[RECEIVE_SCREEN] Wallet: ${wallet.name}');
-      print('[RECEIVE_SCREEN] Original currency: $_selectedCurrency');
-      print('[RECEIVE_SCREEN] Original amount: $amount');
-      print(
-        '[RECEIVE_SCREEN] Original rate: ${_selectedCurrency != 'sats' ? (amountInSats / amount) : 'N/A'}',
-      );
 
       // Prepare memo with fiat info as fallback for LNBits limitations
       String? finalMemo;
@@ -1813,6 +1772,23 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         originalFiatRate:
             _selectedCurrency != 'sats' ? (amountInSats / amount) : null,
       );
+
+      // Validate BOLT11 response before updating state
+      if (invoice.paymentRequest.isEmpty) {
+        setState(() {
+          _isGeneratingInvoice = false;
+        });
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                  AppLocalizations.of(context)!.invoice_empty_response_error),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+        return;
+      }
 
       // Check if widget was disposed during async operation
       if (!mounted) {
@@ -1996,12 +1972,18 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     _invoicePaymentTimer = Timer.periodic(const Duration(seconds: 2), (
       timer,
     ) async {
-      if (!mounted) {
-        timer.cancel();
+      // Reentrancy guard - skip if already checking
+      if (_isCheckingInvoice) {
         return;
       }
+      _isCheckingInvoice = true;
 
       try {
+        if (!mounted) {
+          timer.cancel();
+          return;
+        }
+
         // Check invoice status
         final isPaid = await _invoiceService.checkInvoiceStatus(
           serverUrl: serverUrl,
@@ -2060,6 +2042,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       } catch (e) {
         print('[RECEIVE_SCREEN] Error verificando estado de factura: $e');
         // Continue checking in case of temporary error
+      } finally {
+        _isCheckingInvoice = false;
       }
     });
 
@@ -2192,6 +2176,58 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const VoucherScanScreen()),
+    );
+  }
+
+  Widget _buildCreateLnAddressCta(
+      {double topSpacing = 16, TextAlign? textAlign}) {
+    return Column(
+      children: [
+        SizedBox(height: topSpacing),
+        Text(
+          AppLocalizations.of(context)!.create_lnaddress_label,
+          style: TextStyle(
+            color: Colors.white.withValues(alpha: 0.6),
+            fontSize: 14,
+            fontFamily: 'Inter',
+          ),
+          textAlign: textAlign,
+        ),
+        const SizedBox(height: 16),
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton.icon(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LNAddressScreen(),
+                ),
+              );
+            },
+            style: OutlinedButton.styleFrom(
+              foregroundColor: Colors.white,
+              side: BorderSide(
+                color: Colors.white.withValues(alpha: 0.3),
+                width: 1.5,
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+            ),
+            icon: const Icon(Icons.add, size: 20),
+            label: Text(
+              AppLocalizations.of(context)!.lightning_address_title,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'Inter',
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

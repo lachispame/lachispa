@@ -585,7 +585,7 @@ abstract class AppLocalizations {
   /// No description provided for @create_invoice_label.
   ///
   /// In es, this message translates to:
-  /// **'Crea una factura para recibir pagos directamente en tu wallet'**
+  /// **'Crea una factura para recibir pagos directamente en tu billetera'**
   String get create_invoice_label;
 
   /// No description provided for @amount_sats_label.
@@ -665,6 +665,12 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Error generando factura: '**
   String get invoice_generation_error_prefix;
+
+  /// No description provided for @invoice_empty_response_error.
+  ///
+  /// In es, this message translates to:
+  /// **'Error al generar la factura'**
+  String get invoice_empty_response_error;
 
   /// No description provided for @send_title.
   ///

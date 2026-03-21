@@ -103,6 +103,7 @@
   "generating_button": "GENERANDO...",
   "invoice_generated_message": "Factura generada correctamente",
   "invoice_generation_error_prefix": "Error generando factura: ",
+  "invoice_empty_response_error": "Error al generar la factura",
   
   "send_title": "Enviar",
   "paste_invoice_placeholder": "Pega factura, LNURL o dirección",

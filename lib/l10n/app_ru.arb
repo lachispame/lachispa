@@ -103,6 +103,7 @@
   "generating_button": "СОЗДАНИЕ...",
   "invoice_generated_message": "Счет успешно создан",
   "invoice_generation_error_prefix": "Ошибка создания счета: ",
+  "invoice_empty_response_error": "Не удалось создать счет",
   
   "send_title": "Отправить",
   "paste_invoice_placeholder": "Вставьте счет, LNURL или адрес",

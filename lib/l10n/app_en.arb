@@ -103,6 +103,7 @@
   "generating_button": "GENERATING...",
   "invoice_generated_message": "Invoice generated successfully",
   "invoice_generation_error_prefix": "Error generating invoice: ",
+  "invoice_empty_response_error": "Failed to generate invoice",
   
   "send_title": "Send",
   "paste_invoice_placeholder": "Paste invoice, LNURL or address",

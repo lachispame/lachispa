@@ -253,7 +253,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get create_invoice_label =>
-      'Crea una factura para recibir pagos directamente en tu wallet';
+      'Crea una factura para recibir pagos directamente en tu billetera';
 
   @override
   String get amount_sats_label => 'Solicitar Monto';
@@ -293,6 +293,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get invoice_generation_error_prefix => 'Error generando factura: ';
+
+  @override
+  String get invoice_empty_response_error => 'Error al generar la factura';
 
   @override
   String get send_title => 'Enviar';
