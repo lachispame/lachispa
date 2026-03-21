@@ -72,29 +72,35 @@ class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
       );
 
       // Check payment status from response to provide appropriate feedback
-      final paymentStatus = paymentResult['status']?.toString()?.toLowerCase() ?? 'unknown';
+      final paymentStatus =
+          paymentResult['status']?.toString()?.toLowerCase() ?? 'unknown';
       final isPending = paymentStatus == 'pending';
-      final isSuccess = paymentStatus == 'complete' || paymentStatus == 'settled' || paymentStatus == 'paid';
+      final isSuccess = paymentStatus == 'complete' ||
+          paymentStatus == 'settled' ||
+          paymentStatus == 'paid';
 
-      if (isPending) {
-        _showPendingSnackBar('Pago pendiente - Factura Hold detectada');
-      } else if (isSuccess) {
-        _showSuccessSnackBar('Pago completado exitosamente');
-      } else {
-        _showSuccessSnackBar('Pago enviado - Estado: $paymentStatus');
+      if (mounted) {
+        if (isPending) {
+          _showPendingSnackBar('Pago pendiente - Factura Hold detectada');
+        } else if (isSuccess) {
+          _showSuccessSnackBar('Pago completado exitosamente');
+        } else {
+          _showSuccessSnackBar('Pago enviado - Estado: $paymentStatus');
+        }
       }
 
       // Return to previous screen after brief delay for user feedback
       await Future.delayed(const Duration(seconds: 2));
-      
+
       if (mounted) {
         Navigator.of(context).pop();
         Navigator.of(context).pop(); // Return to HomeScreen
       }
-
     } catch (e) {
-      print('[INVOICE_CONFIRM] Error sending payment: $e');
-      _showErrorSnackBar('Error enviando pago: $e');
+      if (mounted) {
+        print('[INVOICE_CONFIRM] Error sending payment: $e');
+        _showErrorSnackBar('Error enviando pago: $e');
+      }
     } finally {
       if (mounted) {
         setState(() {
@@ -159,7 +165,7 @@ class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
         builder: (context, constraints) {
           final screenWidth = constraints.maxWidth;
           final isMobile = screenWidth < 768;
-          
+
           return Container(
             width: double.infinity,
             height: double.infinity,
@@ -214,9 +220,7 @@ class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
                             ),
                           ],
                         ),
-                        
                         SizedBox(height: isMobile ? 0 : 4),
-                        
                         Text(
                           'Confirmar Pago',
                           style: TextStyle(
@@ -231,7 +235,6 @@ class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
                       ],
                     ),
                   ),
-                  
                   Expanded(
                     child: SingleChildScrollView(
                       padding: EdgeInsets.symmetric(
@@ -241,7 +244,6 @@ class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
                       child: Column(
                         children: [
                           SizedBox(height: isMobile ? 16 : 24),
-                          
                           Container(
                             width: double.infinity,
                             decoration: BoxDecoration(
@@ -280,36 +282,38 @@ class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
                                       ],
                                     ),
                                   ),
-                                  
                                   const SizedBox(height: 32),
-                                  
                                   _buildDescriptionRow(
                                     'Descripción',
-                                    widget.decodedInvoice.description.isEmpty 
-                                        ? 'Sin descripción' 
+                                    widget.decodedInvoice.description.isEmpty
+                                        ? 'Sin descripción'
                                         : widget.decodedInvoice.description,
                                     icon: Icons.description_outlined,
                                   ),
-                                  
                                   const SizedBox(height: 16),
-                                  
                                   _buildInfoRow(
                                     'Estado',
-                                    widget.decodedInvoice.isExpired ? 'Expirada' : 'Válida',
-                                    icon: widget.decodedInvoice.isExpired ? Icons.error_outline : Icons.check_circle_outline,
-                                    valueColor: widget.decodedInvoice.isExpired ? Colors.red : Colors.green,
+                                    widget.decodedInvoice.isExpired
+                                        ? 'Expirada'
+                                        : 'Válida',
+                                    icon: widget.decodedInvoice.isExpired
+                                        ? Icons.error_outline
+                                        : Icons.check_circle_outline,
+                                    valueColor: widget.decodedInvoice.isExpired
+                                        ? Colors.red
+                                        : Colors.green,
                                   ),
-                                  
                                   const SizedBox(height: 16),
-                                  
                                   _buildInfoRow(
                                     'Expiración',
                                     widget.decodedInvoice.formattedExpiry,
                                     icon: Icons.schedule_outlined,
-                                    valueColor: widget.decodedInvoice.isExpired ? Colors.red : null,
+                                    valueColor: widget.decodedInvoice.isExpired
+                                        ? Colors.red
+                                        : null,
                                   ),
-                                  
-                                  if (widget.decodedInvoice.paymentHash.isNotEmpty) ...[
+                                  if (widget.decodedInvoice.paymentHash
+                                      .isNotEmpty) ...[
                                     const SizedBox(height: 16),
                                     _buildInfoRow(
                                       'Hash de Pago',
@@ -317,12 +321,13 @@ class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
                                       icon: Icons.fingerprint_outlined,
                                     ),
                                   ],
-                                  
-                                  if (widget.decodedInvoice.destination.isNotEmpty) ...[
+                                  if (widget.decodedInvoice.destination
+                                      .isNotEmpty) ...[
                                     const SizedBox(height: 16),
                                     _buildInfoRow(
                                       'Destinatario',
-                                      widget.decodedInvoice.destination.length > 20
+                                      widget.decodedInvoice.destination.length >
+                                              20
                                           ? '${widget.decodedInvoice.destination.substring(0, 20)}...'
                                           : widget.decodedInvoice.destination,
                                       icon: Icons.person_outline,
@@ -332,9 +337,7 @@ class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
                               ),
                             ),
                           ),
-                          
                           const SizedBox(height: 32),
-                          
                           Row(
                             children: [
                               Expanded(
@@ -342,11 +345,14 @@ class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
                                 child: Container(
                                   height: 56,
                                   child: ElevatedButton(
-                                    onPressed: _isProcessing ? null : () {
-                                      Navigator.pop(context);
-                                    },
+                                    onPressed: _isProcessing
+                                        ? null
+                                        : () {
+                                            Navigator.pop(context);
+                                          },
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.white.withOpacity(0.08),
+                                      backgroundColor:
+                                          Colors.white.withOpacity(0.08),
                                       foregroundColor: Colors.white,
                                       elevation: 0,
                                       shape: RoundedRectangleBorder(
@@ -371,46 +377,61 @@ class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
                                   ),
                                 ),
                               ),
-                              
                               const SizedBox(width: 16),
-                              
                               Expanded(
                                 flex: 1,
                                 child: Container(
                                   height: 56,
                                   child: ElevatedButton(
-                                    onPressed: (!widget.decodedInvoice.isExpired && !_isProcessing)
-                                        ? _confirmPayment
-                                        : null,
+                                    onPressed:
+                                        (!widget.decodedInvoice.isExpired &&
+                                                !_isProcessing)
+                                            ? _confirmPayment
+                                            : null,
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: (!widget.decodedInvoice.isExpired && !_isProcessing)
-                                          ? const Color(0xFF2D3FE7)
-                                          : Colors.white.withOpacity(0.08),
+                                      backgroundColor:
+                                          (!widget.decodedInvoice.isExpired &&
+                                                  !_isProcessing)
+                                              ? const Color(0xFF2D3FE7)
+                                              : Colors.white.withOpacity(0.08),
                                       foregroundColor: Colors.white,
-                                      elevation: (!widget.decodedInvoice.isExpired && !_isProcessing) ? 8 : 0,
+                                      elevation:
+                                          (!widget.decodedInvoice.isExpired &&
+                                                  !_isProcessing)
+                                              ? 8
+                                              : 0,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(16),
                                         side: BorderSide(
-                                          color: (!widget.decodedInvoice.isExpired && !_isProcessing)
+                                          color: (!widget.decodedInvoice
+                                                      .isExpired &&
+                                                  !_isProcessing)
                                               ? const Color(0xFF4C63F7)
                                               : Colors.white.withOpacity(0.1),
                                           width: 1,
                                         ),
                                       ),
-                                      shadowColor: (!widget.decodedInvoice.isExpired && !_isProcessing)
-                                          ? const Color(0xFF2D3FE7).withOpacity(0.3)
-                                          : Colors.transparent,
+                                      shadowColor:
+                                          (!widget.decodedInvoice.isExpired &&
+                                                  !_isProcessing)
+                                              ? const Color(0xFF2D3FE7)
+                                                  .withOpacity(0.3)
+                                              : Colors.transparent,
                                     ),
                                     child: _isProcessing
                                         ? Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
                                               SizedBox(
                                                 width: 18,
                                                 height: 18,
-                                                child: CircularProgressIndicator(
+                                                child:
+                                                    CircularProgressIndicator(
                                                   strokeWidth: 2,
-                                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                                  valueColor:
+                                                      AlwaysStoppedAnimation<
+                                                          Color>(Colors.white),
                                                 ),
                                               ),
                                               const SizedBox(width: 8),
@@ -425,13 +446,18 @@ class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
                                             ],
                                           )
                                         : Text(
-                                            widget.decodedInvoice.isExpired ? 'Expirada' : 'Pagar',
+                                            widget.decodedInvoice.isExpired
+                                                ? 'Expirada'
+                                                : 'Pagar',
                                             style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.w700,
-                                              color: (!widget.decodedInvoice.isExpired && !_isProcessing)
+                                              color: (!widget.decodedInvoice
+                                                          .isExpired &&
+                                                      !_isProcessing)
                                                   ? Colors.white
-                                                  : Colors.white.withOpacity(0.4),
+                                                  : Colors.white
+                                                      .withOpacity(0.4),
                                             ),
                                             textAlign: TextAlign.center,
                                             overflow: TextOverflow.visible,
@@ -441,7 +467,6 @@ class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
                               ),
                             ],
                           ),
-                          
                           const SizedBox(height: 24),
                         ],
                       ),
@@ -456,7 +481,8 @@ class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
     );
   }
 
-  Widget _buildInfoRow(String label, String value, {IconData? icon, Color? valueColor}) {
+  Widget _buildInfoRow(String label, String value,
+      {IconData? icon, Color? valueColor}) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -498,7 +524,8 @@ class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
     );
   }
 
-  Widget _buildDescriptionRow(String label, String value, {IconData? icon, Color? valueColor}) {
+  Widget _buildDescriptionRow(String label, String value,
+      {IconData? icon, Color? valueColor}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

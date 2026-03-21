@@ -18,34 +18,35 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, TickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen>
+    with WidgetsBindingObserver, TickerProviderStateMixin {
   bool _walletsInitialized = false;
   bool _balanceVisible = true;
   bool _isInHistory = false;
-  
+
   // Auto-refresh timer
   Timer? _autoRefreshTimer;
   bool _isRefreshing = false;
-  
+
   // Currency toggle
   int _currentCurrencyIndex = 0;
   final List<String> _currencies = ['sats', 'USD', 'CUP'];
-  
+
   // Transaction detector
   final TransactionDetector _transactionDetector = TransactionDetector();
   late StreamSubscription _sparkSubscription;
-  
+
   // Currency conversion service
   final YadioService _yadioService = YadioService();
-  
+
   // Currency conversion cache to avoid multiple API calls
   Map<String, String> _conversionCache = {};
-  
+
   // Timer to update conversions every 5 minutes
   Timer? _conversionTimer;
   DateTime? _lastConversionUpdate;
   int? _lastKnownBalance;
-  
+
   // Staggered animations
   late AnimationController _staggerController;
   late AnimationController _flashController;
@@ -60,13 +61,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
   late Animation<double> _flashAnimation;
   late Animation<double> _glowAnimation;
   late Animation<double> _celebrationAnimation;
-  
+
   // Spark effects system
   bool _showDepositSpark = false;
   late Timer _sparkTimer;
   final List<Particle> _particles = [];
   final math.Random _random = math.Random();
-  
+
   // Interactive states
   bool _sendButtonPressed = false;
   bool _receiveButtonPressed = false;
@@ -75,11 +76,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    
+
     _setupAnimations();
     _startAnimations();
     _setupSparkTimer();
-    
+
     // Initialize after first frame
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeWallets();
@@ -104,38 +105,38 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
     _stopAutoRefresh();
     super.deactivate();
   }
-  
+
   void _setupAnimations() {
     // Staggered animation controller - 1600ms duration
     _staggerController = AnimationController(
       duration: const Duration(milliseconds: 1600),
       vsync: this,
     );
-    
+
     // Spark animation controller - 60 FPS (16ms)
     _sparkController = AnimationController(
       duration: const Duration(milliseconds: 16),
       vsync: this,
     )..repeat();
-    
+
     // Flash controller for currency change
     _flashController = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
     );
-    
+
     // Glow animation controller - 2000ms with reverse
     _glowController = AnimationController(
       duration: const Duration(milliseconds: 2000),
       vsync: this,
     )..repeat(reverse: true);
-    
+
     // Celebration animation controller - 600ms
     _celebrationController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
     );
-    
+
     // Header animation - Interval 0.0-0.2
     _headerAnimation = Tween<double>(
       begin: 0.0,
@@ -144,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
       parent: _staggerController,
       curve: const Interval(0.0, 0.2, curve: Curves.easeOutCubic),
     ));
-    
+
     // User info animation - Interval 0.125-0.325 (200ms delay)
     _userInfoAnimation = Tween<double>(
       begin: 0.0,
@@ -153,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
       parent: _staggerController,
       curve: const Interval(0.125, 0.325, curve: Curves.easeOutCubic),
     ));
-    
+
     // Balance animation - Interval 0.25-0.45 (400ms delay)
     _balanceAnimation = Tween<double>(
       begin: 0.0,
@@ -162,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
       parent: _staggerController,
       curve: const Interval(0.25, 0.45, curve: Curves.easeOutCubic),
     ));
-    
+
     // Buttons animation - Interval 0.375-0.575 (600ms delay)
     _buttonsAnimation = Tween<double>(
       begin: 0.0,
@@ -171,7 +172,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
       parent: _staggerController,
       curve: const Interval(0.375, 0.575, curve: Curves.easeOutCubic),
     ));
-    
+
     // Bottom nav animation - Interval 0.5-0.7 (800ms delay)
     _bottomNavAnimation = Tween<double>(
       begin: 0.0,
@@ -180,12 +181,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
       parent: _staggerController,
       curve: const Interval(0.5, 0.7, curve: Curves.easeOutCubic),
     ));
-    
+
     // Flash animation for currency change
     _flashAnimation = Tween<double>(begin: 1.0, end: 0.3).animate(
       CurvedAnimation(parent: _flashController, curve: Curves.easeInOut),
     );
-    
+
     // Glow animation for title with variable blur 20-30px
     _glowAnimation = Tween<double>(
       begin: 0.3,
@@ -194,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
       parent: _glowController,
       curve: Curves.easeInOut,
     ));
-    
+
     // Celebration animation for balance card
     _celebrationAnimation = Tween<double>(
       begin: 1.0,
@@ -204,11 +205,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
       curve: Curves.easeOut,
     ));
   }
-  
+
   void _startAnimations() {
     _staggerController.forward();
   }
-  
+
   void _setupSparkTimer() {
     // Timer to update particles at 60 FPS (16.67ms) - only for deposits
     _sparkTimer = Timer.periodic(const Duration(milliseconds: 16), (timer) {
@@ -250,19 +251,21 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
   // Initialize user wallets (optimized)
   void _initializeWallets() {
     if (_walletsInitialized) return;
-    
+
     final authProvider = context.read<AuthProvider>();
     final walletProvider = context.read<WalletProvider>();
-    
+
     if (authProvider.isLoggedIn && !walletProvider.isInitialized) {
       print('[HOME_SCREEN] Initializing wallets...');
       _walletsInitialized = true;
-      
+
       // Initialize wallets immediately without waiting
-      walletProvider.initializeWallets(
+      walletProvider
+          .initializeWallets(
         serverUrl: authProvider.currentServer ?? '',
         authToken: authProvider.sessionData?.token ?? '',
-      ).catchError((error) {
+      )
+          .catchError((error) {
         print('[HOME_SCREEN] Error initializing wallets: $error');
         // Retry in 2 seconds if it fails
         Future.delayed(const Duration(seconds: 2), () {
@@ -311,46 +314,50 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
   void _refreshBalance({bool showFeedback = false}) {
     final authProvider = context.read<AuthProvider>();
     final walletProvider = context.read<WalletProvider>();
-    
+
     if (!authProvider.isLoggedIn || _isRefreshing) return;
-    
+
     // Detect balance change
     final currentBalance = walletProvider.primaryBalance;
-    final balanceChanged = _lastKnownBalance != null && _lastKnownBalance != currentBalance;
-    
+    final balanceChanged =
+        _lastKnownBalance != null && _lastKnownBalance != currentBalance;
+
     if (balanceChanged) {
-      print('[HOME_SCREEN] Balance changed from $_lastKnownBalance to $currentBalance - updating conversions');
+      print(
+          '[HOME_SCREEN] Balance changed from $_lastKnownBalance to $currentBalance - updating conversions');
       // Clear cache and force conversion update
       _clearConversionCache();
       _updateConversionsIfNeeded(force: true);
     }
-    
+
     _lastKnownBalance = currentBalance;
-    
+
     if (showFeedback) {
       setState(() {
         _isRefreshing = true;
       });
     }
-    
+
     final previousBalance = walletProvider.primaryBalance;
-    
-    walletProvider.refreshPrimaryBalance(
+
+    walletProvider
+        .refreshPrimaryBalance(
       serverUrl: authProvider.currentServer ?? '',
-    ).then((_) {
+    )
+        .then((_) {
       // Check if there's a new deposit
       final newBalance = walletProvider.primaryBalance;
       if (newBalance > previousBalance) {
         final difference = newBalance - previousBalance;
-        print('[HOME_SCREEN] New deposit detected! +$difference sats');
-        
+        print('[HOME_SCREEN] New deposit detected');
+
         // Activate celebration effects
         createDepositSpark();
         depositCelebration();
-        
+
         // Notify transaction detector
         _transactionDetector.triggerDepositSpark(difference);
-        
+
         // Visual feedback
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -368,14 +375,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
           );
         }
       }
-      
+
       if (showFeedback && mounted) {
         setState(() {
           _isRefreshing = false;
         });
       }
     }).catchError((error) {
-      print('[HOME_SCREEN] Error refrescando balance: $error');
+      print('[HOME_SCREEN] Error refreshing balance');
       if (showFeedback && mounted) {
         setState(() {
           _isRefreshing = false;
@@ -387,28 +394,28 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
   // Get conversion with cache to avoid multiple API calls
   Future<String> _getCachedConversion(int balanceSats, String currency) async {
     final cacheKey = '${balanceSats}_$currency';
-    
+
     // Check cache first
     if (_conversionCache.containsKey(cacheKey)) {
       return _conversionCache[cacheKey]!;
     }
-    
+
     try {
       // Make conversion using YadioService
       final result = await _yadioService.convertSatsToFiat(
         sats: balanceSats,
         currency: currency,
       );
-      
+
       // Save to cache
       _conversionCache[cacheKey] = result;
       return result;
     } catch (e) {
-      print('[HOME_SCREEN] Error converting $balanceSats sats to $currency: $e');
+      print('[HOME_SCREEN] Error converting balance to currency');
       return '--';
     }
   }
-  
+
   // Clear cache when balance changes
   void _clearConversionCache() {
     _conversionCache.clear();
@@ -418,10 +425,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
   void _toggleCurrency() {
     _flashController.forward().then((_) {
       setState(() {
-        _currentCurrencyIndex = (_currentCurrencyIndex + 1) % _currencies.length;
+        _currentCurrencyIndex =
+            (_currentCurrencyIndex + 1) % _currencies.length;
       });
       _flashController.reverse();
-      
+
       // Update conversions for new currency (only if not in cache)
       _updateConversionsIfNeeded();
     });
@@ -430,48 +438,48 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
   // Format main balance according to selected currency (sync)
   String _formatMainBalanceSync(int balanceSats) {
     if (!_balanceVisible) return '••• ${_currencies[_currentCurrencyIndex]}';
-    
+
     final currency = _currencies[_currentCurrencyIndex];
     if (currency == 'sats') {
       return '$balanceSats sats';
     }
-    
+
     // If balance is 0, show 0 directly in fiat currency
     if (balanceSats == 0) {
       return currency == 'USD' ? '\$0' : '0 $currency';
     }
-    
+
     // For fiat currencies, show value from cache or "Calculating..."
     final cacheKey = '${balanceSats}_$currency';
     if (_conversionCache.containsKey(cacheKey)) {
       final value = _conversionCache[cacheKey]!;
       return currency == 'USD' ? '\$$value' : '$value $currency';
     }
-    
+
     return 'Calculando...';
   }
 
   // Format secondary balance (sats) to show below when not in sats
   String? _formatSecondaryBalance(int balanceSats) {
     if (!_balanceVisible) return null;
-    
+
     // Only show sats below when we're in another currency
     if (_currencies[_currentCurrencyIndex] == 'sats') {
       return null;
     }
-    
+
     return '$balanceSats sats';
   }
 
   /// Determines balance font size based on selected currency
   double _getBalanceFontSize(bool isMobile) {
     final currency = _currencies[_currentCurrencyIndex];
-    
+
     // For sats, use normal size
     if (currency == 'sats') {
       return isMobile ? 36 : 42;
     }
-    
+
     // For CUP and USD, use smaller size
     return isMobile ? 28 : 34;
   }
@@ -479,19 +487,19 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
   // Check if conversions need updating
   bool _needsConversionUpdate(int balanceSats, {bool force = false}) {
     if (force) return true;
-    
+
     final currency = _currencies[_currentCurrencyIndex];
     if (currency == 'sats') return false;
-    
+
     final cacheKey = '${balanceSats}_$currency';
     if (!_conversionCache.containsKey(cacheKey)) return true;
-    
+
     // Check if more than 5 minutes have passed since last update
     if (_lastConversionUpdate != null) {
       final timeSinceUpdate = DateTime.now().difference(_lastConversionUpdate!);
       return timeSinceUpdate.inMinutes >= 5;
     }
-    
+
     return true;
   }
 
@@ -499,16 +507,18 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
   Future<void> _updateConversionsIfNeeded({bool force = false}) async {
     final walletProvider = context.read<WalletProvider>();
     if (walletProvider.primaryWallet == null) return;
-    
+
     final balanceSats = walletProvider.primaryBalance;
     final currency = _currencies[_currentCurrencyIndex];
-    
-    if (currency != 'sats' && balanceSats > 0 && _needsConversionUpdate(balanceSats, force: force)) {
+
+    if (currency != 'sats' &&
+        balanceSats > 0 &&
+        _needsConversionUpdate(balanceSats, force: force)) {
       try {
-        print('[HOME_SCREEN] Updating conversion $balanceSats sats → $currency');
+        print('[HOME_SCREEN] Updating conversion');
         await _getCachedConversion(balanceSats, currency);
         _lastConversionUpdate = DateTime.now();
-        
+
         // Update UI after getting conversion
         if (mounted) setState(() {});
       } catch (e) {
@@ -519,7 +529,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
 
   // Initialize spark effects system
   void _initializeSparkEffect() {
-    _sparkSubscription = _transactionDetector.sparkTriggerStream.listen((shouldTrigger) {
+    _sparkSubscription =
+        _transactionDetector.sparkTriggerStream.listen((shouldTrigger) {
       if (shouldTrigger && mounted) {
         print('[HOME_SCREEN] 🎆 Transaction event detected!');
         createDepositSpark();
@@ -558,7 +569,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
   void _goToSend(BuildContext context) {
     // Loading state with visual feedback
     setState(() => _sendButtonPressed = true);
-    
+
     // Actual navigation to send screen
     Future.delayed(const Duration(milliseconds: 150), () {
       if (mounted) {
@@ -576,7 +587,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
   void _goToReceive(BuildContext context) {
     // Loading state with visual feedback
     setState(() => _receiveButtonPressed = true);
-    
+
     // Actual navigation to receive screen
     Future.delayed(const Duration(milliseconds: 150), () {
       if (mounted) {
@@ -591,35 +602,34 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
     });
   }
 
-
-  
   // Create celebration sparks for deposits
   void createDepositSpark() {
     if (!mounted) return;
-    
+
     print('[HOME_SCREEN] 🎆 Activating deposit spark!');
-    
+
     // Create 5-10 simultaneous sparks
     final sparkCount = _random.nextInt(6) + 5; // 5-10 chispas
-    
+
     for (int spark = 0; spark < sparkCount; spark++) {
       final screenSize = MediaQuery.of(context).size;
       final x = _random.nextDouble() * screenSize.width;
       final y = _random.nextDouble() * screenSize.height;
-      final particleCount = _random.nextInt(31) + 20; // 20-50 particles per spark
-      
+      final particleCount =
+          _random.nextInt(31) + 20; // 20-50 particles per spark
+
       for (int i = 0; i < particleCount; i++) {
         _particles.add(Particle(x, y, _random));
       }
     }
-    
+
     setState(() {
       _showDepositSpark = true;
     });
-    
+
     // Activate deposit celebration
     depositCelebration();
-    
+
     // Auto-hide after 3 seconds with automatic cleanup
     Timer(const Duration(seconds: 3), () {
       if (mounted) {
@@ -630,11 +640,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
       }
     });
   }
-  
+
   // Celebration animation for deposits
   void depositCelebration() {
     if (!mounted) return;
-    
+
     // Balance card scale animation: 1.0 → 1.05 → 1.0
     _celebrationController.reset();
     _celebrationController.forward().then((_) {
@@ -643,10 +653,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
       }
     });
   }
-  
+
   void _updateParticles() {
     if (!mounted) return;
-    
+
     setState(() {
       // Remove dead particles automatically (optimization)
       _particles.removeWhere((particle) {
@@ -655,7 +665,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
       });
     });
   }
-  
+
   // Method for manual testing
   void _triggerTestSpark() {
     createDepositSpark();
@@ -708,7 +718,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                                 );
                               },
                             ),
-                            
+
                             // Animated user information
                             AnimatedBuilder(
                               animation: _userInfoAnimation,
@@ -725,15 +735,16 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                                 );
                               },
                             ),
-                            
+
                             // Main content
                             Expanded(
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 24),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 24),
                                 child: Column(
                                   children: [
                                     const Spacer(flex: 2),
-                                    
+
                                     // Animated balance card
                                     AnimatedBuilder(
                                       animation: _balanceAnimation,
@@ -745,14 +756,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                                           ).animate(_balanceAnimation),
                                           child: FadeTransition(
                                             opacity: _balanceAnimation,
-                                            child: _buildBalanceCard(context, isMobile),
+                                            child: _buildBalanceCard(
+                                                context, isMobile),
                                           ),
                                         );
                                       },
                                     ),
-                                    
+
                                     const SizedBox(height: 32),
-                                    
+
                                     // Animated action buttons
                                     AnimatedBuilder(
                                       animation: _buttonsAnimation,
@@ -764,12 +776,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                                           ).animate(_buttonsAnimation),
                                           child: FadeTransition(
                                             opacity: _buttonsAnimation,
-                                            child: _buildActionButtons(context, isMobile),
+                                            child: _buildActionButtons(
+                                                context, isMobile),
                                           ),
                                         );
                                       },
                                     ),
-                                    
+
                                     const Spacer(flex: 2),
                                   ],
                                 ),
@@ -778,7 +791,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                           ],
                         ),
                       ),
-          
+
                       // Particle system with z-index 100 (overlay)
                       if (_showDepositSpark)
                         Positioned.fill(
@@ -789,7 +802,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                                 return CustomPaint(
                                   painter: SparkPainter(_particles),
                                   size: Size.infinite,
-                                  willChange: true, // Optimization for animations
+                                  willChange:
+                                      true, // Optimization for animations
                                 );
                               },
                             ),
@@ -798,7 +812,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                     ],
                   ),
                 ),
-              
+
                 // Fixed history button at the bottom
                 SafeArea(
                   top: false,
@@ -827,7 +841,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
       },
     );
   }
-  
+
   Widget _buildHeader(BuildContext context) {
     return Container(
       width: double.infinity,
@@ -855,9 +869,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
               onPressed: () => Scaffold.of(context).openDrawer(),
             ),
           ),
-          
+
           const Spacer(),
-          
+
           // 'LaChispa' title with animated glow (20-30px variable blur)
           AnimatedBuilder(
             animation: _glowAnimation,
@@ -871,30 +885,33 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                  shadows: [
-                    Shadow(
-                      offset: const Offset(0, 0),
-                      blurRadius: 20 + (10 * _glowAnimation.value), // 20-30px blur
-                      color: const Color(0xFF2D3FE7).withValues(
-                        alpha: 0.3 + (0.4 * _glowAnimation.value), // More intensity
+                    shadows: [
+                      Shadow(
+                        offset: const Offset(0, 0),
+                        blurRadius:
+                            20 + (10 * _glowAnimation.value), // 20-30px blur
+                        color: const Color(0xFF2D3FE7).withValues(
+                          alpha: 0.3 +
+                              (0.4 * _glowAnimation.value), // More intensity
+                        ),
                       ),
-                    ),
-                    Shadow(
-                      offset: const Offset(0, 0),
-                      blurRadius: 10 + (5 * _glowAnimation.value), // Glow adicional
-                      color: const Color(0xFF4C63F7).withValues(
-                        alpha: 0.2 + (0.3 * _glowAnimation.value),
+                      Shadow(
+                        offset: const Offset(0, 0),
+                        blurRadius:
+                            10 + (5 * _glowAnimation.value), // Glow adicional
+                        color: const Color(0xFF4C63F7).withValues(
+                          alpha: 0.2 + (0.3 * _glowAnimation.value),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
                 ),
               );
             },
           ),
-          
+
           const Spacer(),
-          
+
           // Test spark button
           Container(
             width: 48,
@@ -920,7 +937,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
       ),
     );
   }
-  
+
   Widget _buildUserInfo() {
     return Consumer2<AuthProvider, WalletProvider>(
       builder: (context, authProvider, walletProvider, child) {
@@ -933,7 +950,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                 GestureDetector(
                   onTap: () => _openWalletSelector(),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(16),
@@ -979,7 +997,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                       height: 12,
                       child: CircularProgressIndicator(
                         strokeWidth: 1,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white70),
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Colors.white70),
                       ),
                     ),
                     SizedBox(width: 8),
@@ -1009,7 +1028,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
       return url.replaceAll('https://', '').replaceAll('http://', '');
     }
   }
-  
+
   Widget _buildBalanceCard(BuildContext context, bool isMobile) {
     return Center(
       child: Container(
@@ -1060,34 +1079,46 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                             animation: _flashAnimation,
                             builder: (context, child) {
                               return Opacity(
-                                opacity: _isRefreshing ? 0.5 : _flashAnimation.value,
+                                opacity:
+                                    _isRefreshing ? 0.5 : _flashAnimation.value,
                                 child: GestureDetector(
                                   onTap: _toggleCurrency,
                                   child: AnimatedSwitcher(
                                     duration: const Duration(milliseconds: 300),
                                     child: Consumer<WalletProvider>(
-                                      builder: (context, walletProvider, child) {
+                                      builder:
+                                          (context, walletProvider, child) {
                                         // Show balance with dual format (fiat + sats)
-                                        final balance = walletProvider.primaryBalance;
-                                        final mainBalance = walletProvider.primaryWallet != null
+                                        final balance =
+                                            walletProvider.primaryBalance;
+                                        final mainBalance = walletProvider
+                                                    .primaryWallet !=
+                                                null
                                             ? _formatMainBalanceSync(balance)
                                             : walletProvider.isLoading
                                                 ? 'Cargando...'
                                                 : '0 sats';
-                                        
+
                                         // Activate conversions if necessary
-                                        if (walletProvider.primaryWallet != null && 
-                                            _currencies[_currentCurrencyIndex] != 'sats') {
-                                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                                        if (walletProvider.primaryWallet !=
+                                                null &&
+                                            _currencies[
+                                                    _currentCurrencyIndex] !=
+                                                'sats') {
+                                          WidgetsBinding.instance
+                                              .addPostFrameCallback((_) {
                                             _updateConversionsIfNeeded();
                                           });
                                         }
-                                        final secondaryBalance = walletProvider.primaryWallet != null
+                                        final secondaryBalance = walletProvider
+                                                    .primaryWallet !=
+                                                null
                                             ? _formatSecondaryBalance(balance)
                                             : null;
 
                                         return Column(
-                                          key: ValueKey('${_currentCurrencyIndex}_$balance'),
+                                          key: ValueKey(
+                                              '${_currentCurrencyIndex}_$balance'),
                                           children: [
                                             // Balance principal
                                             Text(
@@ -1095,7 +1126,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 fontFamily: 'Inter',
-                                                fontSize: _getBalanceFontSize(isMobile),
+                                                fontSize: _getBalanceFontSize(
+                                                    isMobile),
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white,
                                               ),
@@ -1110,7 +1142,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                                                   fontFamily: 'Inter',
                                                   fontSize: isMobile ? 16 : 18,
                                                   fontWeight: FontWeight.w500,
-                                                  color: Colors.white.withOpacity(0.7),
+                                                  color: Colors.white
+                                                      .withOpacity(0.7),
                                                 ),
                                               ),
                                             ],
@@ -1158,7 +1191,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
       ),
     );
   }
-  
+
   Widget _buildActionButtons(BuildContext context, bool isMobile) {
     return Center(
       child: Container(
@@ -1247,18 +1280,22 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                     ),
                     width: 1,
                   ),
-                  boxShadow: _receiveButtonPressed ? [
-                    BoxShadow(
-                      color: Colors.white.withOpacity(0.1),
-                      blurRadius: 8,
-                      offset: const Offset(0, 3),
-                    ),
-                  ] : [],
+                  boxShadow: _receiveButtonPressed
+                      ? [
+                          BoxShadow(
+                            color: Colors.white.withOpacity(0.1),
+                            blurRadius: 8,
+                            offset: const Offset(0, 3),
+                          ),
+                        ]
+                      : [],
                 ),
                 child: GestureDetector(
-                  onTapDown: (_) => setState(() => _receiveButtonPressed = true),
+                  onTapDown: (_) =>
+                      setState(() => _receiveButtonPressed = true),
                   onTapUp: (_) => setState(() => _receiveButtonPressed = false),
-                  onTapCancel: () => setState(() => _receiveButtonPressed = false),
+                  onTapCancel: () =>
+                      setState(() => _receiveButtonPressed = false),
                   onTap: () => _goToReceive(context),
                   child: Container(
                     width: double.infinity,
@@ -1295,7 +1332,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
       ),
     );
   }
-  
+
   Widget _buildWalletSelectorSheet() {
     return Consumer<WalletProvider>(
       builder: (context, walletProvider, child) {
@@ -1347,7 +1384,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                   ],
                 ),
               ),
-              
+
               // Wallets List
               Flexible(
                 child: ListView.builder(
@@ -1356,17 +1393,18 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                   itemCount: walletProvider.wallets.length,
                   itemBuilder: (context, index) {
                     final wallet = walletProvider.wallets[index];
-                    final isSelected = walletProvider.primaryWallet?.id == wallet.id;
-                    
+                    final isSelected =
+                        walletProvider.primaryWallet?.id == wallet.id;
+
                     return Container(
                       margin: const EdgeInsets.only(bottom: 12),
                       decoration: BoxDecoration(
-                        color: isSelected 
+                        color: isSelected
                             ? const Color(0xFF2D3FE7).withOpacity(0.3)
                             : Colors.white.withOpacity(0.05),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: isSelected 
+                          color: isSelected
                               ? const Color(0xFF2D3FE7)
                               : Colors.white.withOpacity(0.1),
                         ),
@@ -1377,14 +1415,16 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                           width: 48,
                           height: 48,
                           decoration: BoxDecoration(
-                            color: isSelected 
+                            color: isSelected
                                 ? const Color(0xFF2D3FE7).withOpacity(0.3)
                                 : Colors.white.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Icon(
                             Icons.account_balance_wallet,
-                            color: isSelected ? const Color(0xFF5B73FF) : Colors.white70,
+                            color: isSelected
+                                ? const Color(0xFF5B73FF)
+                                : Colors.white70,
                             size: 24,
                           ),
                         ),
@@ -1393,18 +1433,21 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
-                            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                            fontWeight:
+                                isSelected ? FontWeight.w600 : FontWeight.w500,
                           ),
                         ),
                         subtitle: Text(
                           wallet.balanceFormatted,
                           style: TextStyle(
-                            color: isSelected ? const Color(0xFF5B73FF) : Colors.white70,
+                            color: isSelected
+                                ? const Color(0xFF5B73FF)
+                                : Colors.white70,
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        trailing: isSelected 
+                        trailing: isSelected
                             ? const Icon(
                                 Icons.check_circle,
                                 color: Color(0xFF5B73FF),
@@ -1414,11 +1457,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                         onTap: () {
                           walletProvider.setPrimaryWallet(wallet);
                           Navigator.pop(context);
-                          
+
                           // Show feedback
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text('Billetera "${wallet.name}" seleccionada'),
+                              content: Text(
+                                  'Billetera "${wallet.name}" seleccionada'),
                               backgroundColor: const Color(0xFF2D3FE7),
                               duration: const Duration(seconds: 2),
                             ),
@@ -1429,7 +1473,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                   },
                 ),
               ),
-              
+
               // Info Section
               Container(
                 margin: const EdgeInsets.all(24),
@@ -1588,7 +1632,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                     fontFamily: 'Inter',
                     fontSize: 16,
                     fontWeight: FontWeight.w500, // Weight for secondary buttons
-                    color: _isInHistory ? const Color(0xFF5B73FF) : Colors.white,
+                    color:
+                        _isInHistory ? const Color(0xFF5B73FF) : Colors.white,
                   ),
                 ),
               ],
@@ -1599,7 +1644,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
     );
   }
 
-  Widget _buildDrawer(BuildContext context, AuthProvider authProvider, WalletProvider walletProvider) {
+  Widget _buildDrawer(BuildContext context, AuthProvider authProvider,
+      WalletProvider walletProvider) {
     return Drawer(
       backgroundColor: const Color(0xFF1A1D47),
       child: Container(
@@ -1656,7 +1702,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                _extractDomain(authProvider.currentServer ?? ''),
+                                _extractDomain(
+                                    authProvider.currentServer ?? ''),
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.white.withOpacity(0.7),
@@ -1667,9 +1714,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                         ),
                       ],
                     ),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     // Current wallet information
                     if (walletProvider.primaryWallet != null)
                       Container(
@@ -1702,7 +1749,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                                     ),
                                   ),
                                   Text(
-                                    walletProvider.primaryWallet!.balanceFormatted,
+                                    walletProvider
+                                        .primaryWallet!.balanceFormatted,
                                     style: const TextStyle(
                                       fontSize: 12,
                                       color: Color(0xFF5B73FF),
@@ -1724,7 +1772,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                 child: ListView(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   children: [
-                    
                     _buildDrawerItem(
                       icon: Icons.alternate_email,
                       title: 'Lightning Address',
@@ -1738,7 +1785,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                         );
                       },
                     ),
-                    
                     _buildDrawerItem(
                       icon: Icons.info_outline,
                       title: 'Acerca de',
@@ -1952,7 +1998,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
               Navigator.pop(context);
               await authProvider.logout();
               // Reset WalletProvider to clear previous session data
-              final walletProvider = Provider.of<WalletProvider>(context, listen: false);
+              final walletProvider =
+                  Provider.of<WalletProvider>(context, listen: false);
               walletProvider.reset();
               if (mounted) {
                 Navigator.pushNamedAndRemoveUntil(
@@ -1983,13 +2030,13 @@ class Particle {
   final double decay;
   final double maxLife;
 
-  Particle(this.x, this.y, math.Random random) :
-    size = (random.nextDouble() * 3 + 1.0), // 1-4px as specified
-    speedX = (random.nextDouble() - 0.5) * (2 + random.nextDouble() * 4),
-    speedY = (random.nextDouble() - 0.5) * (2 + random.nextDouble() * 4),
-    life = 100, // Life 100 frames
-    maxLife = 100,
-    decay = random.nextDouble() * 1.5 + 0.5;
+  Particle(this.x, this.y, math.Random random)
+      : size = (random.nextDouble() * 3 + 1.0), // 1-4px as specified
+        speedX = (random.nextDouble() - 0.5) * (2 + random.nextDouble() * 4),
+        speedY = (random.nextDouble() - 0.5) * (2 + random.nextDouble() * 4),
+        life = 100, // Life 100 frames
+        maxLife = 100,
+        decay = random.nextDouble() * 1.5 + 0.5;
 
   void update() {
     x += speedX;
@@ -2000,7 +2047,7 @@ class Particle {
   }
 
   bool get isAlive => life > 0;
-  
+
   // EaseOutQuart curve for smooth fading (optimized)
   double get opacity {
     if (life <= 0) return 0.0;
@@ -2018,11 +2065,11 @@ class SparkPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     // Optimized particle rendering
     if (particles.isEmpty) return;
-    
+
     // Predefined Chispa colors for performance
     const primaryColor = Color(0xFF5B73FF); // Glow exterior
     const secondaryColor = Color(0xFF4C63F7); // Glow interior
-    
+
     // Draw particles with z-index 100 (overlay)
     for (final particle in particles) {
       final alpha = particle.opacity;
@@ -2030,10 +2077,12 @@ class SparkPainter extends CustomPainter {
 
       final center = Offset(particle.x, particle.y);
       final scaledSize = particle.size;
-      
+
       // Check if particle is on screen (optimization)
-      if (center.dx < -scaledSize * 2 || center.dx > size.width + scaledSize * 2 ||
-          center.dy < -scaledSize * 2 || center.dy > size.height + scaledSize * 2) {
+      if (center.dx < -scaledSize * 2 ||
+          center.dx > size.width + scaledSize * 2 ||
+          center.dy < -scaledSize * 2 ||
+          center.dy > size.height + scaledSize * 2) {
         continue;
       }
 
@@ -2041,20 +2090,20 @@ class SparkPainter extends CustomPainter {
       final glowPaint2 = Paint()
         ..color = primaryColor.withOpacity(alpha * 0.4)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.0);
-      
+
       canvas.drawCircle(center, scaledSize * 2, glowPaint2);
 
       // 2. Inner glow (more intense)
       final glowPaint1 = Paint()
         ..color = secondaryColor.withOpacity(alpha * 0.8)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.0);
-      
+
       canvas.drawCircle(center, scaledSize * 1.5, glowPaint1);
 
       // 3. Main particle (solid)
       final particlePaint = Paint()
         ..color = primaryColor.withOpacity(alpha * 0.9);
-      
+
       canvas.drawCircle(center, scaledSize, particlePaint);
     }
   }

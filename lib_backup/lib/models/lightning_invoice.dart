@@ -16,17 +16,15 @@ class LightningInvoice {
   });
 
   factory LightningInvoice.fromJson(Map<String, dynamic> json) {
-    print('[LIGHTNING_INVOICE] Parsing JSON: $json');
-    
     final paymentRequest = json['payment_request'] ?? json['bolt11'] ?? '';
-    print('[LIGHTNING_INVOICE] Payment request found: $paymentRequest');
-    
+
     return LightningInvoice(
       paymentHash: json['payment_hash'] ?? json['checking_id'] ?? '',
       paymentRequest: paymentRequest,
       amount: json['amount'] ?? 0,
       memo: json['memo'] ?? '',
-      createdAt: DateTime.tryParse(json['time']?.toString() ?? '') ?? DateTime.now(),
+      createdAt:
+          DateTime.tryParse(json['time']?.toString() ?? '') ?? DateTime.now(),
       isPaid: json['paid'] ?? false,
     );
   }
@@ -79,5 +77,6 @@ class LightningInvoice {
   }
 
   @override
-  int get hashCode => paymentHash.hashCode ^ paymentRequest.hashCode ^ amount.hashCode;
+  int get hashCode =>
+      paymentHash.hashCode ^ paymentRequest.hashCode ^ amount.hashCode;
 }

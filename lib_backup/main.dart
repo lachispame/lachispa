@@ -12,8 +12,15 @@ void main() {
   runApp(const LaChispaApp());
 }
 
-class LaChispaApp extends StatelessWidget {
+class LaChispaApp extends StatefulWidget {
   const LaChispaApp({super.key});
+
+  @override
+  State<LaChispaApp> createState() => _LaChispaAppState();
+}
+
+class _LaChispaAppState extends State<LaChispaApp> {
+  bool _initialized = false;
 
   @override
   Widget build(BuildContext context) {
@@ -21,22 +28,27 @@ class LaChispaApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => ServerProvider()),
         ChangeNotifierProvider(create: (_) => AuthProviderFactory.create()),
-        
         Provider<WalletService>(create: (_) => WalletService()),
-        
         ProxyProvider<ServerProvider, LNAddressService>(
-          create: (context) => LNAddressService(context.read<ServerProvider>().selectedServer),
-          update: (_, serverProvider, previous) => LNAddressService(serverProvider.selectedServer),
+          create: (context) =>
+              LNAddressService(context.read<ServerProvider>().selectedServer),
+          update: (_, serverProvider, previous) {
+            previous?.updateServerUrl(serverProvider.selectedServer);
+            return previous ?? LNAddressService(serverProvider.selectedServer);
+          },
         ),
-        
         ChangeNotifierProxyProvider<WalletService, WalletProvider>(
           create: (context) => WalletProvider(context.read<WalletService>()),
-          update: (_, walletService, previous) => previous ?? WalletProvider(walletService),
+          update: (_, walletService, previous) =>
+              previous ?? WalletProvider(walletService),
         ),
-        ChangeNotifierProxyProvider2<LNAddressService, ServerProvider, LNAddressProvider>(
+        ChangeNotifierProxyProvider2<LNAddressService, ServerProvider,
+            LNAddressProvider>(
           create: (context) {
-            final provider = LNAddressProvider(context.read<LNAddressService>());
-            provider.setServerUrl(context.read<ServerProvider>().selectedServer);
+            final provider =
+                LNAddressProvider(context.read<LNAddressService>());
+            provider
+                .setServerUrl(context.read<ServerProvider>().selectedServer);
             return provider;
           },
           update: (_, lnAddressService, serverProvider, previous) {
@@ -48,11 +60,14 @@ class LaChispaApp extends StatelessWidget {
       ],
       child: Builder(
         builder: (context) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _initializeProvidersInParallel(context);
-            _setupWalletLNAddressConnection(context);
-          });
-          
+          if (!_initialized) {
+            _initialized = true;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              _initializeProvidersInParallel(context);
+              _setupWalletLNAddressConnection(context);
+            });
+          }
+
           return MaterialApp(
             title: 'LaChispa',
             theme: ThemeData(
@@ -67,7 +82,6 @@ class LaChispaApp extends StatelessWidget {
     );
   }
 
-  /// Initialize providers in parallel to improve performance
   void _initializeProvidersInParallel(BuildContext context) {
     try {
       final serverProvider = context.read<ServerProvider>();
@@ -83,17 +97,17 @@ class LaChispaApp extends StatelessWidget {
     }
   }
 
-  /// Set up automatic connection between WalletProvider and LNAddressProvider
   void _setupWalletLNAddressConnection(BuildContext context) {
     try {
       final walletProvider = context.read<WalletProvider>();
       final lnAddressProvider = context.read<LNAddressProvider>();
-      
+
       walletProvider.setOnWalletChangedCallback((walletId) {
         lnAddressProvider.onWalletChanged(walletId);
       });
-      
-      print('[MAIN] WalletProvider <-> LNAddressProvider connection configured');
+
+      print(
+          '[MAIN] WalletProvider <-> LNAddressProvider connection configured');
     } catch (e) {
       print('[MAIN] Error configuring provider connection: $e');
     }

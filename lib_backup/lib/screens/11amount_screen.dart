@@ -23,22 +23,23 @@ class AmountScreen extends StatefulWidget {
 class _AmountScreenState extends State<AmountScreen> {
   final YadioService _yadioService = YadioService();
   final InvoiceService _invoiceService = InvoiceService();
-  
+
   String _amount = '0';
   String _selectedCurrency = 'sats';
   final List<String> _currencies = ['sats', 'USD', 'CUP'];
-  
+
   Map<String, double>? _exchangeRates;
   bool _isLoadingRates = false;
   bool _isProcessingPayment = false;
-  
+
   // Real-time conversion cache to avoid API calls on every input change
   double _cachedSatsAmount = 0.0;
   bool _isConverting = false;
-  
+
   // Debounce timer for currency conversions to reduce API load
   Timer? _conversionTimer;
-  
+  int _conversionRequestId = 0;
+
   @override
   void initState() {
     super.initState();
@@ -55,21 +56,25 @@ class _AmountScreenState extends State<AmountScreen> {
   }
 
   Future<void> _loadExchangeRates() async {
+    if (!mounted) return;
     setState(() {
       _isLoadingRates = true;
     });
 
     try {
       final rates = await _yadioService.getExchangeRates();
+      if (!mounted) return;
       setState(() {
         _exchangeRates = rates;
       });
     } catch (e) {
-      _showErrorSnackBar('Error cargando tipos de cambio');
+      if (mounted) _showErrorSnackBar('Error cargando tipos de cambio');
     } finally {
-      setState(() {
-        _isLoadingRates = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoadingRates = false;
+        });
+      }
     }
   }
 
@@ -133,11 +138,11 @@ class _AmountScreenState extends State<AmountScreen> {
 
   Future<double> _getAmountInSats() async {
     final amount = double.tryParse(_amount) ?? 0.0;
-    
+
     if (_selectedCurrency == 'sats') {
       return amount;
     }
-    
+
     // Use YadioService for direct currency conversion
     try {
       final sats = await _yadioService.convertToSats(
@@ -153,7 +158,7 @@ class _AmountScreenState extends State<AmountScreen> {
 
   String _formatDisplayAmount() {
     final amount = double.tryParse(_amount) ?? 0.0;
-    
+
     if (_selectedCurrency == 'sats') {
       return '${amount.toStringAsFixed(0)} sats';
     } else {
@@ -168,30 +173,38 @@ class _AmountScreenState extends State<AmountScreen> {
       });
       return;
     }
-    
+
     // Cancel previous timer if exists to prevent multiple API calls
     _conversionTimer?.cancel();
-    
+
     // Show "calculating..." state immediately for UX feedback
     if (!_isConverting) {
       setState(() {
         _isConverting = true;
       });
     }
-    
+
+    // Increment request ID to track latest request
+    final requestId = ++_conversionRequestId;
+
     // Wait 800ms before making API request (debounce for user input)
     _conversionTimer = Timer(const Duration(milliseconds: 800), () async {
+      // Ignore stale responses
+      if (requestId != _conversionRequestId) return;
+
       try {
         final satsAmount = await _getAmountInSats();
-        if (mounted) {
+        // Only update if this is still the latest request
+        if (mounted && requestId == _conversionRequestId) {
           setState(() {
             _cachedSatsAmount = satsAmount;
             _isConverting = false;
           });
         }
       } catch (e) {
-        print('Error updating conversion: $e');
-        if (mounted) {
+        // Only update if this is still the latest request
+        if (mounted && requestId == _conversionRequestId) {
+          print('Error updating conversion: $e');
           setState(() {
             _isConverting = false;
           });
@@ -204,32 +217,33 @@ class _AmountScreenState extends State<AmountScreen> {
     if (_selectedCurrency == 'sats') {
       return '';
     }
-    
+
     if (_isConverting) {
       return ' / calculando...';
     }
-    
+
     if (_cachedSatsAmount > 0) {
       return ' / ${_cachedSatsAmount.toStringAsFixed(0)} sats';
     }
-    
+
     return ' / -- sats';
   }
 
   Future<void> _processPayment() async {
     if (_isProcessingPayment) return;
-    
+
     // Use cached amount if available, otherwise calculate
     double satsAmount = _cachedSatsAmount;
     if (satsAmount <= 0) {
       satsAmount = await _getAmountInSats();
     }
-    
+
     if (satsAmount <= 0) {
-      _showErrorSnackBar('Por favor ingresa un monto válido');
+      if (mounted) _showErrorSnackBar('Por favor ingresa un monto válido');
       return;
     }
 
+    if (!mounted) return;
     setState(() {
       _isProcessingPayment = true;
     });
@@ -242,36 +256,37 @@ class _AmountScreenState extends State<AmountScreen> {
         await _processLightningAddressPayment(satsAmount.round());
       }
     } catch (e) {
-      _showErrorSnackBar('Error procesando pago: $e');
+      if (mounted) _showErrorSnackBar('Error procesando pago: $e');
     } finally {
-      setState(() {
-        _isProcessingPayment = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isProcessingPayment = false;
+        });
+      }
     }
   }
 
   Future<void> _processLNURLPayment(int satsAmount) async {
     try {
-      print('[AMOUNT_SCREEN] Processing LNURL payment: ${widget.destination}');
-      print('[AMOUNT_SCREEN] Amount: $satsAmount sats');
-      
+      print('[AMOUNT_SCREEN] Processing LNURL payment');
+
       // Get required providers for authentication and wallet access
       final authProvider = context.read<AuthProvider>();
       final walletProvider = context.read<WalletProvider>();
-      
+
       if (authProvider.sessionData == null) {
         throw Exception('Sin sesión activa');
       }
-      
+
       if (walletProvider.primaryWallet == null) {
         throw Exception('Sin billetera principal disponible');
       }
-      
+
       final session = authProvider.sessionData!;
       final wallet = walletProvider.primaryWallet!;
-      
+
       _showSuccessSnackBar('Enviando pago LNURL...');
-      
+
       // Send payment directly to LNURL using LNBits
       final paymentResult = await _invoiceService.sendPaymentToLNURL(
         serverUrl: session.serverUrl,
@@ -280,13 +295,16 @@ class _AmountScreenState extends State<AmountScreen> {
         amountSats: satsAmount,
         comment: null, // TODO: Add comment support in UI
       );
-      
+
       print('[AMOUNT_SCREEN] LNURL payment sent successfully: $paymentResult');
-      
+
       // Check payment status from response to provide appropriate user feedback
-      final paymentStatus = paymentResult['status']?.toString()?.toLowerCase() ?? 'unknown';
+      final paymentStatus =
+          paymentResult['status']?.toString()?.toLowerCase() ?? 'unknown';
       final isPending = paymentStatus == 'pending';
-      final isSuccess = paymentStatus == 'complete' || paymentStatus == 'settled' || paymentStatus == 'paid';
+      final isSuccess = paymentStatus == 'complete' ||
+          paymentStatus == 'settled' ||
+          paymentStatus == 'paid';
 
       if (isPending) {
         _showPendingSnackBar('Pago LNURL pendiente - Factura Hold detectada');
@@ -295,61 +313,64 @@ class _AmountScreenState extends State<AmountScreen> {
       } else {
         _showSuccessSnackBar('Pago LNURL enviado! Estado: $paymentStatus');
       }
-      
+
       // Wait for user to see success message before navigation
       await Future.delayed(const Duration(seconds: 2));
-      
+
       if (mounted) {
         // Navigate back to home, skipping send screen
         Navigator.of(context).popUntil((route) => route.isFirst);
       }
-      
     } catch (e) {
       print('[AMOUNT_SCREEN] Error processing LNURL: $e');
-      
+
       // Show specific error message to user based on error type
       String errorMessage = 'Error procesando pago LNURL';
-      
-      if (e.toString().contains('not found') || e.toString().contains('no encontrada')) {
+
+      if (e.toString().contains('not found') ||
+          e.toString().contains('no encontrada')) {
         errorMessage = 'LNURL no encontrada';
-      } else if (e.toString().contains('Minimum amount') || e.toString().contains('Minimum amount')) {
+      } else if (e.toString().contains('Minimum amount') ||
+          e.toString().contains('Minimum amount')) {
         errorMessage = e.toString();
-      } else if (e.toString().contains('Maximum amount') || e.toString().contains('Maximum amount')) {
+      } else if (e.toString().contains('Maximum amount') ||
+          e.toString().contains('Maximum amount')) {
         errorMessage = e.toString();
-      } else if (e.toString().contains('Insufficient balance') || e.toString().contains('Saldo insuficiente')) {
+      } else if (e.toString().contains('Insufficient balance') ||
+          e.toString().contains('Saldo insuficiente')) {
         errorMessage = 'Saldo insuficiente para realizar el pago';
-      } else if (e.toString().contains('authentication') || e.toString().contains('authentication')) {
+      } else if (e.toString().contains('authentication') ||
+          e.toString().contains('authentication')) {
         errorMessage = 'Authentication error. Please try logging in again.';
       } else if (e.toString().contains('Timeout')) {
         errorMessage = 'Request timeout. Please check your connection.';
       }
-      
+
       _showErrorSnackBar(errorMessage);
     }
   }
 
   Future<void> _processLightningAddressPayment(int satsAmount) async {
     try {
-      print('[AMOUNT_SCREEN] Processing Lightning Address payment: ${widget.destination}');
-      print('[AMOUNT_SCREEN] Amount: $satsAmount sats');
-      
+      print('[AMOUNT_SCREEN] Processing Lightning Address payment');
+
       // Get required providers for authentication and wallet access
       final authProvider = context.read<AuthProvider>();
       final walletProvider = context.read<WalletProvider>();
-      
+
       if (authProvider.sessionData == null) {
         throw Exception('Sin sesión activa');
       }
-      
+
       if (walletProvider.primaryWallet == null) {
         throw Exception('Sin billetera principal disponible');
       }
-      
+
       final session = authProvider.sessionData!;
       final wallet = walletProvider.primaryWallet!;
-      
+
       _showSuccessSnackBar('Sending Lightning Address payment...');
-      
+
       // Send payment directly to Lightning Address using LNBits
       final paymentResult = await _invoiceService.sendPaymentToLightningAddress(
         serverUrl: session.serverUrl,
@@ -358,50 +379,59 @@ class _AmountScreenState extends State<AmountScreen> {
         amountSats: satsAmount,
         comment: null, // TODO: Add comment support in UI
       );
-      
+
       print('[AMOUNT_SCREEN] Payment sent successfully: $paymentResult');
-      
+
       // Check payment status from response to provide appropriate user feedback
-      final paymentStatus = paymentResult['status']?.toString()?.toLowerCase() ?? 'unknown';
+      final paymentStatus =
+          paymentResult['status']?.toString()?.toLowerCase() ?? 'unknown';
       final isPending = paymentStatus == 'pending';
-      final isSuccess = paymentStatus == 'complete' || paymentStatus == 'settled' || paymentStatus == 'paid';
+      final isSuccess = paymentStatus == 'complete' ||
+          paymentStatus == 'settled' ||
+          paymentStatus == 'paid';
 
       if (isPending) {
-        _showPendingSnackBar('Pago Lightning Address pendiente - Factura Hold detectada');
+        _showPendingSnackBar(
+            'Pago Lightning Address pendiente - Factura Hold detectada');
       } else if (isSuccess) {
         _showSuccessSnackBar('Pago Lightning Address completado exitosamente!');
       } else {
-        _showSuccessSnackBar('Pago Lightning Address enviado! Estado: $paymentStatus');
+        _showSuccessSnackBar(
+            'Pago Lightning Address enviado! Estado: $paymentStatus');
       }
-      
+
       // Wait for user to see success message before navigation
       await Future.delayed(const Duration(seconds: 2));
-      
+
       if (mounted) {
         // Navigate back to home, skipping send screen
         Navigator.of(context).popUntil((route) => route.isFirst);
       }
-      
     } catch (e) {
       print('[AMOUNT_SCREEN] Error processing Lightning Address: $e');
-      
+
       // Show specific error message to user based on error type
       String errorMessage = 'Error procesando pago';
-      
-      if (e.toString().contains('not found') || e.toString().contains('no encontrada')) {
+
+      if (e.toString().contains('not found') ||
+          e.toString().contains('no encontrada')) {
         errorMessage = 'Lightning Address no encontrada';
-      } else if (e.toString().contains('Minimum amount') || e.toString().contains('Minimum amount')) {
+      } else if (e.toString().contains('Minimum amount') ||
+          e.toString().contains('Minimum amount')) {
         errorMessage = e.toString();
-      } else if (e.toString().contains('Maximum amount') || e.toString().contains('Maximum amount')) {
+      } else if (e.toString().contains('Maximum amount') ||
+          e.toString().contains('Maximum amount')) {
         errorMessage = e.toString();
-      } else if (e.toString().contains('Insufficient balance') || e.toString().contains('Saldo insuficiente')) {
+      } else if (e.toString().contains('Insufficient balance') ||
+          e.toString().contains('Saldo insuficiente')) {
         errorMessage = 'Saldo insuficiente para realizar el pago';
-      } else if (e.toString().contains('authentication') || e.toString().contains('authentication')) {
+      } else if (e.toString().contains('authentication') ||
+          e.toString().contains('authentication')) {
         errorMessage = 'Authentication error. Please try logging in again.';
       } else if (e.toString().contains('Timeout')) {
         errorMessage = 'Request timeout. Please check your connection.';
       }
-      
+
       _showErrorSnackBar(errorMessage);
     }
   }
@@ -454,7 +484,8 @@ class _AmountScreenState extends State<AmountScreen> {
     );
   }
 
-  Widget _buildNumberButton(String text, VoidCallback onPressed, bool isMobile) {
+  Widget _buildNumberButton(
+      String text, VoidCallback onPressed, bool isMobile) {
     return Container(
       height: isMobile ? 48 : 56,
       child: ElevatedButton(
@@ -484,7 +515,8 @@ class _AmountScreenState extends State<AmountScreen> {
     );
   }
 
-  Widget _buildActionButton(String text, VoidCallback onPressed, {IconData? icon, required bool isMobile}) {
+  Widget _buildActionButton(String text, VoidCallback onPressed,
+      {IconData? icon, required bool isMobile}) {
     return Container(
       height: isMobile ? 48 : 56,
       child: ElevatedButton(
@@ -507,8 +539,12 @@ class _AmountScreenState extends State<AmountScreen> {
             : Text(
                 text,
                 style: TextStyle(
-                  fontSize: (text == '00' || text == '000' || text == 'sats' || text == 'CUP' || text == 'USD') 
-                      ? (isMobile ? 12 : 14) 
+                  fontSize: (text == '00' ||
+                          text == '000' ||
+                          text == 'sats' ||
+                          text == 'CUP' ||
+                          text == 'USD')
+                      ? (isMobile ? 12 : 14)
                       : (isMobile ? 14 : 16),
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
@@ -525,7 +561,7 @@ class _AmountScreenState extends State<AmountScreen> {
         builder: (context, constraints) {
           final screenWidth = constraints.maxWidth;
           final isMobile = screenWidth < 768;
-          
+
           return Container(
             width: double.infinity,
             height: double.infinity,
@@ -583,9 +619,9 @@ class _AmountScreenState extends State<AmountScreen> {
                             ),
                           ],
                         ),
-                        
+
                         SizedBox(height: isMobile ? 0 : 4),
-                        
+
                         // Title and recipient
                         Column(
                           children: [
@@ -618,7 +654,7 @@ class _AmountScreenState extends State<AmountScreen> {
                       ],
                     ),
                   ),
-                  
+
                   // Main content
                   Expanded(
                     child: Padding(
@@ -629,7 +665,7 @@ class _AmountScreenState extends State<AmountScreen> {
                       child: Column(
                         children: [
                           SizedBox(height: isMobile ? 16 : 24),
-                          
+
                           // Amount display
                           Container(
                             width: double.infinity,
@@ -662,9 +698,9 @@ class _AmountScreenState extends State<AmountScreen> {
                               ],
                             ),
                           ),
-                          
+
                           SizedBox(height: isMobile ? 20 : 32),
-                          
+
                           // Numeric keypad
                           Flexible(
                             child: Container(
@@ -690,55 +726,109 @@ class _AmountScreenState extends State<AmountScreen> {
                                   children: [
                                     Row(
                                       children: [
-                                        Expanded(child: _buildNumberButton('1', () => _onNumberPressed('1'), isMobile)),
+                                        Expanded(
+                                            child: _buildNumberButton(
+                                                '1',
+                                                () => _onNumberPressed('1'),
+                                                isMobile)),
                                         SizedBox(width: isMobile ? 8 : 12),
-                                        Expanded(child: _buildNumberButton('2', () => _onNumberPressed('2'), isMobile)),
+                                        Expanded(
+                                            child: _buildNumberButton(
+                                                '2',
+                                                () => _onNumberPressed('2'),
+                                                isMobile)),
                                         SizedBox(width: isMobile ? 8 : 12),
-                                        Expanded(child: _buildNumberButton('3', () => _onNumberPressed('3'), isMobile)),
+                                        Expanded(
+                                            child: _buildNumberButton(
+                                                '3',
+                                                () => _onNumberPressed('3'),
+                                                isMobile)),
                                         SizedBox(width: isMobile ? 8 : 12),
-                                        Expanded(child: _buildActionButton('⌫', _onDeletePressed, icon: Icons.backspace_outlined, isMobile: isMobile)),
+                                        Expanded(
+                                            child: _buildActionButton(
+                                                '⌫', _onDeletePressed,
+                                                icon: Icons.backspace_outlined,
+                                                isMobile: isMobile)),
                                       ],
                                     ),
-                                    
                                     SizedBox(height: isMobile ? 8 : 12),
-                                    
                                     Row(
                                       children: [
-                                        Expanded(child: _buildNumberButton('4', () => _onNumberPressed('4'), isMobile)),
+                                        Expanded(
+                                            child: _buildNumberButton(
+                                                '4',
+                                                () => _onNumberPressed('4'),
+                                                isMobile)),
                                         SizedBox(width: isMobile ? 8 : 12),
-                                        Expanded(child: _buildNumberButton('5', () => _onNumberPressed('5'), isMobile)),
+                                        Expanded(
+                                            child: _buildNumberButton(
+                                                '5',
+                                                () => _onNumberPressed('5'),
+                                                isMobile)),
                                         SizedBox(width: isMobile ? 8 : 12),
-                                        Expanded(child: _buildNumberButton('6', () => _onNumberPressed('6'), isMobile)),
+                                        Expanded(
+                                            child: _buildNumberButton(
+                                                '6',
+                                                () => _onNumberPressed('6'),
+                                                isMobile)),
                                         SizedBox(width: isMobile ? 8 : 12),
-                                        Expanded(child: _buildActionButton('00', () => _onZerosPressed('00'), isMobile: isMobile)),
+                                        Expanded(
+                                            child: _buildActionButton('00',
+                                                () => _onZerosPressed('00'),
+                                                isMobile: isMobile)),
                                       ],
                                     ),
-                                    
                                     SizedBox(height: isMobile ? 8 : 12),
-                                    
                                     Row(
                                       children: [
-                                        Expanded(child: _buildNumberButton('7', () => _onNumberPressed('7'), isMobile)),
+                                        Expanded(
+                                            child: _buildNumberButton(
+                                                '7',
+                                                () => _onNumberPressed('7'),
+                                                isMobile)),
                                         SizedBox(width: isMobile ? 8 : 12),
-                                        Expanded(child: _buildNumberButton('8', () => _onNumberPressed('8'), isMobile)),
+                                        Expanded(
+                                            child: _buildNumberButton(
+                                                '8',
+                                                () => _onNumberPressed('8'),
+                                                isMobile)),
                                         SizedBox(width: isMobile ? 8 : 12),
-                                        Expanded(child: _buildNumberButton('9', () => _onNumberPressed('9'), isMobile)),
+                                        Expanded(
+                                            child: _buildNumberButton(
+                                                '9',
+                                                () => _onNumberPressed('9'),
+                                                isMobile)),
                                         SizedBox(width: isMobile ? 8 : 12),
-                                        Expanded(child: _buildActionButton('000', () => _onZerosPressed('000'), isMobile: isMobile)),
+                                        Expanded(
+                                            child: _buildActionButton('000',
+                                                () => _onZerosPressed('000'),
+                                                isMobile: isMobile)),
                                       ],
                                     ),
-                                    
                                     SizedBox(height: isMobile ? 8 : 12),
-                                    
                                     Row(
                                       children: [
-                                        Expanded(child: _buildActionButton('.', _onDecimalPressed, isMobile: isMobile)),
+                                        Expanded(
+                                            child: _buildActionButton(
+                                                '.', _onDecimalPressed,
+                                                isMobile: isMobile)),
                                         SizedBox(width: isMobile ? 8 : 12),
-                                        Expanded(child: _buildNumberButton('0', () => _onNumberPressed('0'), isMobile)),
+                                        Expanded(
+                                            child: _buildNumberButton(
+                                                '0',
+                                                () => _onNumberPressed('0'),
+                                                isMobile)),
                                         SizedBox(width: isMobile ? 8 : 12),
-                                        Expanded(child: _buildActionButton('C', _onClearPressed, isMobile: isMobile)),
+                                        Expanded(
+                                            child: _buildActionButton(
+                                                'C', _onClearPressed,
+                                                isMobile: isMobile)),
                                         SizedBox(width: isMobile ? 8 : 12),
-                                        Expanded(child: _buildActionButton(_selectedCurrency, _toggleCurrency, isMobile: isMobile)),
+                                        Expanded(
+                                            child: _buildActionButton(
+                                                _selectedCurrency,
+                                                _toggleCurrency,
+                                                isMobile: isMobile)),
                                       ],
                                     ),
                                   ],
@@ -746,22 +836,25 @@ class _AmountScreenState extends State<AmountScreen> {
                               ),
                             ),
                           ),
-                          
+
                           const SizedBox(height: 16),
-                          
+
                           Container(
                             width: double.infinity,
                             height: 64,
                             child: ElevatedButton(
-                              onPressed: (double.tryParse(_amount) ?? 0) > 0 && !_isProcessingPayment
+                              onPressed: (double.tryParse(_amount) ?? 0) > 0 &&
+                                      !_isProcessingPayment
                                   ? _processPayment
                                   : null,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: (double.tryParse(_amount) ?? 0) > 0
-                                    ? const Color(0xFF2D3FE7)
-                                    : Colors.white.withOpacity(0.08),
+                                backgroundColor:
+                                    (double.tryParse(_amount) ?? 0) > 0
+                                        ? const Color(0xFF2D3FE7)
+                                        : Colors.white.withOpacity(0.08),
                                 foregroundColor: Colors.white,
-                                elevation: (double.tryParse(_amount) ?? 0) > 0 ? 8 : 0,
+                                elevation:
+                                    (double.tryParse(_amount) ?? 0) > 0 ? 8 : 0,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
                                   side: BorderSide(
@@ -777,14 +870,17 @@ class _AmountScreenState extends State<AmountScreen> {
                               ),
                               child: _isProcessingPayment
                                   ? Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
                                       children: [
                                         SizedBox(
                                           width: 20,
                                           height: 20,
                                           child: CircularProgressIndicator(
                                             strokeWidth: 2,
-                                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                    Colors.white),
                                           ),
                                         ),
                                         const SizedBox(width: 12),
@@ -805,16 +901,16 @@ class _AmountScreenState extends State<AmountScreen> {
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w700,
-                                        color: (double.tryParse(_amount) ?? 0) > 0
-                                            ? Colors.white
-                                            : Colors.white.withOpacity(0.4),
+                                        color:
+                                            (double.tryParse(_amount) ?? 0) > 0
+                                                ? Colors.white
+                                                : Colors.white.withOpacity(0.4),
                                       ),
                                       textAlign: TextAlign.center,
                                     ),
                             ),
                           ),
-                          
-                          
+
                           // Compact loading indicator for exchange rates
                           if (_isLoadingRates) ...[
                             const SizedBox(height: 8),

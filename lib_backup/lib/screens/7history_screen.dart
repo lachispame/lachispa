@@ -14,18 +14,19 @@ class HistoryScreen extends StatefulWidget {
   State<HistoryScreen> createState() => _HistoryScreenState();
 }
 
-class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateMixin {
+class _HistoryScreenState extends State<HistoryScreen>
+    with TickerProviderStateMixin {
   late AnimationController _glowController;
   late AnimationController _staggerController;
   late Animation<double> _glowAnimation;
   late Animation<double> _headerAnimation;
   late Animation<double> _listAnimation;
-  
+
   List<TransactionInfo> _transactions = [];
   bool _isLoading = true;
   bool _hasError = false;
   String _errorMessage = '';
-  
+
   TransactionFilter _currentFilter = TransactionFilter.all;
   final ScrollController _scrollController = ScrollController();
 
@@ -34,7 +35,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
     super.initState();
     _setupAnimations();
     _startAnimations();
-    
+
     // Load transactions after first frame to avoid blocking UI
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadTransactions();
@@ -182,7 +183,6 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                   );
                 },
               ),
-              
               AnimatedBuilder(
                 animation: _headerAnimation,
                 builder: (context, child) {
@@ -198,7 +198,6 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                   );
                 },
               ),
-              
               Expanded(
                 child: AnimatedBuilder(
                   animation: _listAnimation,
@@ -250,9 +249,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
               ),
             ),
           ),
-          
           const SizedBox(width: 16),
-          
           Expanded(
             child: AnimatedBuilder(
               animation: _glowAnimation,
@@ -261,7 +258,8 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF2D3FE7).withOpacity(_glowAnimation.value * 0.3),
+                        color: const Color(0xFF2D3FE7)
+                            .withOpacity(_glowAnimation.value * 0.3),
                         blurRadius: 20,
                         spreadRadius: 2,
                       ),
@@ -275,7 +273,8 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                       color: Colors.white,
                       shadows: [
                         Shadow(
-                          color: const Color(0xFF2D3FE7).withOpacity(_glowAnimation.value * 0.8),
+                          color: const Color(0xFF2D3FE7)
+                              .withOpacity(_glowAnimation.value * 0.8),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -286,7 +285,6 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
               },
             ),
           ),
-          
           Container(
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.08),
@@ -359,12 +357,12 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected 
+          color: isSelected
               ? const Color(0xFF2D3FE7).withOpacity(0.3)
               : Colors.white.withOpacity(0.05),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected 
+            color: isSelected
                 ? const Color(0xFF2D3FE7)
                 : Colors.white.withOpacity(0.1),
           ),
@@ -383,7 +381,8 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                color: isSelected ? Colors.white : Colors.white.withOpacity(0.7),
+                color:
+                    isSelected ? Colors.white : Colors.white.withOpacity(0.7),
               ),
             ),
           ],
@@ -424,12 +423,12 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
     if (transaction.isPending) {
       return Icons.schedule;
     }
-    
+
     // Show error icon for failed transactions
     if (transaction.isFailed) {
       return Icons.error_outline;
     }
-    
+
     // Show arrow based on direction for completed transactions
     if (transaction.isIncoming) {
       return Icons.arrow_downward_rounded;
@@ -444,12 +443,12 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
     if (transaction.isPending) {
       return Colors.orange;
     }
-    
+
     // Show red color for failed transactions
     if (transaction.isFailed) {
       return Colors.red;
     }
-    
+
     // Show color based on direction for completed transactions
     if (transaction.isIncoming) {
       return Colors.green;
@@ -686,7 +685,8 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: _getTransactionIconColor(transaction).withOpacity(0.2),
+                    color:
+                        _getTransactionIconColor(transaction).withOpacity(0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
@@ -711,7 +711,9 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                       Text(
                         transaction.displayAmount,
                         style: TextStyle(
-                          color: transaction.isIncoming ? Colors.green : Colors.orange,
+                          color: transaction.isIncoming
+                              ? Colors.green
+                              : Colors.orange,
                           fontSize: 24,
                           fontWeight: FontWeight.w700,
                         ),
@@ -721,19 +723,27 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             _buildDetailRow('Fecha', transaction.formattedDate),
-            _buildDetailRow('Descripción', transaction.memo.isEmpty ? 'Sin descripción' : transaction.memo),
+            _buildDetailRow(
+                'Descripción',
+                transaction.memo.isEmpty
+                    ? 'Sin descripción'
+                    : transaction.memo),
             if (transaction.paymentHash != null)
               _buildDetailRow('Hash', transaction.paymentHash!, copyable: true),
             if (transaction.fee != null)
               _buildDetailRow('Fee', '${transaction.fee} msat'),
-            _buildDetailRow('Estado', transaction.isPending ? 'Pendiente' : 'Completado'),
-            
+            _buildDetailRow(
+                'Estado',
+                transaction.isFailed
+                    ? 'Fallido'
+                    : (transaction.isPending ? 'Pendiente' : 'Completado')),
+
             const SizedBox(height: 16),
-            
+
             // Close button
             SizedBox(
               width: double.infinity,
@@ -774,12 +784,15 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
           ),
           Expanded(
             child: GestureDetector(
-              onTap: copyable ? () {
-                // TODO: Implement clipboard copy
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Copiado al portapapeles')),
-                );
-              } : null,
+              onTap: copyable
+                  ? () {
+                      // TODO: Implement clipboard copy
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Copiado al portapapeles')),
+                      );
+                    }
+                  : null,
               child: Text(
                 value,
                 style: TextStyle(

@@ -26,25 +26,26 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
   String? _cachedLightningAddress;
   String? _cachedLNURL;
   Future<String?>? _lnurlFuture;
-  
+
   // State for information panel
   bool _isInfoExpanded = false;
-  
+
   // State for request amount modal
   final _amountController = TextEditingController();
   final _noteController = TextEditingController();
   String _selectedCurrency = 'sats';
   final List<String> _currencies = ['sats', 'CUP', 'USD'];
-  
+
   // State for generated invoice
   LightningInvoice? _generatedInvoice;
   final InvoiceService _invoiceService = InvoiceService();
   final YadioService _yadioService = YadioService();
   final TransactionDetector _transactionDetector = TransactionDetector();
   bool _isGeneratingInvoice = false;
-  
+
   // Timer to verify invoice payment
   Timer? _invoicePaymentTimer;
+  Timer? _invoiceTimeoutTimer;
 
   @override
   void initState() {
@@ -61,6 +62,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     _invoiceService.dispose();
     _yadioService.dispose();
     _invoicePaymentTimer?.cancel();
+    _invoiceTimeoutTimer?.cancel();
     super.dispose();
   }
 
@@ -77,7 +79,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     }
 
     // Only load addresses if they are not already loaded
-    if (lnAddressProvider.currentWalletAddresses.isEmpty && !lnAddressProvider.isLoading) {
+    if (lnAddressProvider.currentWalletAddresses.isEmpty &&
+        !lnAddressProvider.isLoading) {
       lnAddressProvider.loadAllAddresses();
     }
   }
@@ -103,11 +106,13 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             children: [
               // Header with navigation
               _buildHeader(),
-              
+
               // Main content
               Expanded(
-                child: Consumer3<LNAddressProvider, WalletProvider, AuthProvider>(
-                  builder: (context, lnAddressProvider, walletProvider, authProvider, child) {
+                child:
+                    Consumer3<LNAddressProvider, WalletProvider, AuthProvider>(
+                  builder: (context, lnAddressProvider, walletProvider,
+                      authProvider, child) {
                     final isMobile = MediaQuery.of(context).size.width < 768;
                     return SingleChildScrollView(
                       padding: EdgeInsets.symmetric(
@@ -133,7 +138,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
 
   Widget _buildHeader() {
     final isMobile = MediaQuery.of(context).size.width < 768;
-    
+
     return Container(
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
       child: Column(
@@ -174,9 +179,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               ),
             ],
           ),
-          
+
           SizedBox(height: isMobile ? 0 : 4),
-          
+
           // Centered title
           Text(
             'Recibir',
@@ -194,21 +199,22 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     );
   }
 
-  Widget _buildMainContent(LNAddressProvider lnAddressProvider, WalletProvider walletProvider) {
+  Widget _buildMainContent(
+      LNAddressProvider lnAddressProvider, WalletProvider walletProvider) {
     final defaultAddress = lnAddressProvider.defaultAddress;
-    
+
     if (lnAddressProvider.isLoading) {
       return _buildLoadingState();
     }
-    
+
     if (lnAddressProvider.error != null) {
       return _buildErrorState(lnAddressProvider.error!);
     }
-    
+
     if (defaultAddress == null) {
       return _buildNoAddressState();
     }
-    
+
     // Show Lightning Address with QR
     return _buildLightningAddressCard(defaultAddress, walletProvider);
   }
@@ -404,7 +410,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     );
   }
 
-  Widget _buildLightningAddressCard(LNAddress defaultAddress, WalletProvider walletProvider) {
+  Widget _buildLightningAddressCard(
+      LNAddress defaultAddress, WalletProvider walletProvider) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -427,14 +434,14 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         children: [
           // QR Code with LNURL
           _buildQRSection(defaultAddress),
-          
+
           const SizedBox(height: 16),
-          
+
           // Lightning Address and copy button together
           _buildAddressWithCopySection(defaultAddress),
-          
+
           const SizedBox(height: 16),
-          
+
           // Collapsible contextual information
           _buildCollapsibleInfoSection(),
         ],
@@ -445,7 +452,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
   Widget _buildWalletInfo(WalletProvider walletProvider) {
     final wallet = walletProvider.primaryWallet;
     if (wallet == null) return const SizedBox.shrink();
-    
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -559,7 +566,6 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     );
   }
 
-
   Widget _buildQRSection(LNAddress defaultAddress) {
     return Center(
       child: Container(
@@ -580,26 +586,29 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
   Widget _buildQRCodeWithLNURL(LNAddress defaultAddress) {
     // If there's a generated invoice, show its QR
     if (_generatedInvoice != null) {
-      print('[RECEIVE_SCREEN] Mostrando QR de factura: ${_generatedInvoice!.paymentRequest.substring(0, 20)}...');
+      print(
+          '[RECEIVE_SCREEN] Mostrando QR de factura: ${_generatedInvoice!.paymentRequest.substring(0, 20)}...');
       return _buildInvoiceQR(_generatedInvoice!);
     }
-    
+
     // If there's no invoice, show Lightning Address
     final lnurl = defaultAddress.lnurl;
-    
+
     if (lnurl != null && lnurl.isNotEmpty) {
-      print('[RECEIVE_SCREEN] Usando LNURL de LNBits: ${lnurl.substring(0, 20)}...${lnurl.substring(lnurl.length - 10)}');
+      print(
+          '[RECEIVE_SCREEN] Usando LNURL de LNBits: ${lnurl.substring(0, 20)}...${lnurl.substring(lnurl.length - 10)}');
       return _buildSuccessQR(lnurl);
     } else {
       print('[RECEIVE_SCREEN] No hay LNURL en el modelo, usando fallback');
-      return _buildFallbackQR(defaultAddress.fullAddress, 'LNURL no disponible en LNBits');
+      return _buildFallbackQR(
+          defaultAddress.fullAddress, 'LNURL no disponible en LNBits');
     }
   }
 
   Widget _buildLoadingQR() {
     return const SizedBox(
       height: 220, // Reduced from 280 to 220
-      width: 220,  // Reduced from 280 to 220
+      width: 220, // Reduced from 280 to 220
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -722,7 +731,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           ),
           icon: const Icon(Icons.copy, color: Colors.white, size: 20),
           label: Text(
-            _generatedInvoice != null ? 'Copiar Factura' : 'Copiar Lightning Address',
+            _generatedInvoice != null
+                ? 'Copiar Factura'
+                : 'Copiar Lightning Address',
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -741,18 +752,18 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       children: [
         // Lightning Address display
         _buildAddressDisplay(defaultAddress),
-        
+
         const SizedBox(height: 12),
-        
+
         // Copy button right below
         _buildCopyButton(defaultAddress),
-        
+
         const SizedBox(height: 12),
-        
+
         // Request amount button or clear invoice button
-        _generatedInvoice != null 
-          ? _buildClearInvoiceButton()
-          : _buildRequestAmountButton(),
+        _generatedInvoice != null
+            ? _buildClearInvoiceButton()
+            : _buildRequestAmountButton(),
       ],
     );
   }
@@ -809,7 +820,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               ),
             ),
           ),
-          
+
           // Expandable content
           if (_isInfoExpanded)
             Container(
@@ -876,7 +887,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         onPressed: () {
           // Cancel monitoring of current invoice
           _invoicePaymentTimer?.cancel();
-          
+
           setState(() {
             _generatedInvoice = null;
           });
@@ -962,7 +973,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              
+
               // Header
               Container(
                 padding: const EdgeInsets.all(24),
@@ -995,7 +1006,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                   ],
                 ),
               ),
-              
+
               // Modal content
               Expanded(
                 child: Padding(
@@ -1064,9 +1075,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                               ],
                             ),
                           ),
-                          
+
                           const SizedBox(width: 12),
-                          
+
                           // Currency selector
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1091,9 +1102,12 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                     borderRadius: BorderRadius.circular(12),
                                     onTap: () {
                                       setModalState(() {
-                                        final currentIndex = _currencies.indexOf(_selectedCurrency);
-                                        final nextIndex = (currentIndex + 1) % _currencies.length;
-                                        _selectedCurrency = _currencies[nextIndex];
+                                        final currentIndex = _currencies
+                                            .indexOf(_selectedCurrency);
+                                        final nextIndex = (currentIndex + 1) %
+                                            _currencies.length;
+                                        _selectedCurrency =
+                                            _currencies[nextIndex];
                                       });
                                     },
                                     child: Container(
@@ -1122,9 +1136,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                           ),
                         ],
                       ),
-                      
+
                       const SizedBox(height: 16),
-                      
+
                       // Note input
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1180,9 +1194,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                           ),
                         ],
                       ),
-                      
+
                       const Spacer(),
-                      
+
                       // Buttons
                       Padding(
                         padding: const EdgeInsets.only(bottom: 24),
@@ -1196,7 +1210,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                   side: BorderSide(
                                     color: Colors.white.withOpacity(0.3),
                                   ),
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
@@ -1218,7 +1233,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: const Color(0xFF2D3FE7),
                                   foregroundColor: Colors.white,
-                                  padding: const EdgeInsets.symmetric(vertical: 16),
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 16),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
@@ -1274,10 +1290,10 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       // Get necessary data
       final walletProvider = context.read<WalletProvider>();
       final authProvider = context.read<AuthProvider>();
-      
+
       final wallet = walletProvider.primaryWallet;
       final serverUrl = authProvider.sessionData?.serverUrl;
-      
+
       if (wallet == null || serverUrl == null) {
         throw Exception('Sin billetera o servidor configurado');
       }
@@ -1285,36 +1301,40 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       // CURRENCY CONVERSION TO SATOSHIS
       int amountInSats;
       String conversionMessage = '';
-      
+
       if (_selectedCurrency == 'sats') {
         // If already in sats, use directly
         amountInSats = amount.toInt();
-        
+
         print('[RECEIVE_SCREEN] Monto directo en sats: $amountInSats');
       } else {
         // Convert using Yadio.io
-        print('[RECEIVE_SCREEN] Convirtiendo $amount $_selectedCurrency a sats usando Yadio');
-        
+        print(
+            '[RECEIVE_SCREEN] Convirtiendo $amount $_selectedCurrency a sats usando Yadio');
+
         amountInSats = await _yadioService.convertToSats(
           amount: amount,
           currency: _selectedCurrency,
         );
-        
+
         conversionMessage = '$amount $_selectedCurrency / $amountInSats sats';
         print('[RECEIVE_SCREEN] Conversion completed: $conversionMessage');
-        
+
         // Basic validations
         if (amountInSats < 1) {
           throw Exception('Monto convertido muy pequeño (mínimo 1 sat)');
         }
-        
+
         // Validate extremely large amounts that can cause server problems
-        if (amountInSats > 2100000000000000) { // 21M BTC en sats
+        if (amountInSats > 2100000000000000) {
+          // 21M BTC en sats
           throw Exception('Monto muy grande. Máximo: 21M BTC');
         }
-        
-        if (amountInSats > 100000000000) { // 1000 BTC as practical limit
-          print('[RECEIVE_SCREEN] ⚠️ WARNING: Very large amount ($amountInSats sats = ${(amountInSats/100000000).toStringAsFixed(2)} BTC)');
+
+        if (amountInSats > 100000000000) {
+          // 1000 BTC as practical limit
+          print(
+              '[RECEIVE_SCREEN] ⚠️ WARNING: Very large amount ($amountInSats sats = ${(amountInSats / 100000000).toStringAsFixed(2)} BTC)');
         }
       }
 
@@ -1327,7 +1347,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         serverUrl: serverUrl,
         adminKey: wallet.adminKey,
         amount: amountInSats,
-        memo: _noteController.text.trim().isNotEmpty ? _noteController.text.trim() : null,
+        memo: _noteController.text.trim().isNotEmpty
+            ? _noteController.text.trim()
+            : null,
       );
 
       // Update state
@@ -1349,7 +1371,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      conversionMessage.isNotEmpty ? conversionMessage : 'Factura: ${invoice.formattedAmount}',
+                      conversionMessage.isNotEmpty
+                          ? conversionMessage
+                          : 'Factura: ${invoice.formattedAmount}',
                       style: const TextStyle(
                         fontFamily: 'Inter',
                         fontWeight: FontWeight.w500,
@@ -1370,18 +1394,18 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         ),
       );
 
-      print('[RECEIVE_SCREEN] Factura generada exitosamente: ${invoice.paymentHash}');
-      
+      print(
+          '[RECEIVE_SCREEN] Factura generada exitosamente: ${invoice.paymentHash}');
+
       // Start automatic verification of invoice payment
       _startInvoicePaymentMonitoring(invoice, wallet, serverUrl);
-
     } catch (e) {
       print('[RECEIVE_SCREEN] Error generando factura: $e');
-      
+
       setState(() {
         _isGeneratingInvoice = false;
       });
-      
+
       _showErrorSnackBar('Error generando factura: ${e.toString()}');
     }
   }
@@ -1445,7 +1469,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
   void _copyPaymentInfo(LNAddress defaultAddress) async {
     String textToCopy;
     String successMessage;
-    
+
     if (_generatedInvoice != null) {
       // If there's a generated invoice, copy the invoice
       textToCopy = _generatedInvoice!.paymentRequest;
@@ -1455,7 +1479,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       textToCopy = defaultAddress.fullAddress;
       successMessage = 'Lightning Address copiada';
     }
-    
+
     await Clipboard.setData(ClipboardData(text: textToCopy));
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -1484,19 +1508,22 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     }
   }
 
-  void _startInvoicePaymentMonitoring(LightningInvoice invoice, WalletInfo wallet, String serverUrl) {
-    print('[RECEIVE_SCREEN] Iniciando monitoreo de pago para factura: ${invoice.paymentHash}');
-    
+  void _startInvoicePaymentMonitoring(
+      LightningInvoice invoice, WalletInfo wallet, String serverUrl) {
+    print(
+        '[RECEIVE_SCREEN] Iniciando monitoreo de pago para factura: ${invoice.paymentHash}');
+
     // Cancel previous timer if it exists
     _invoicePaymentTimer?.cancel();
-    
+
     // Check every 2 seconds if the invoice was paid
-    _invoicePaymentTimer = Timer.periodic(const Duration(seconds: 2), (timer) async {
+    _invoicePaymentTimer =
+        Timer.periodic(const Duration(seconds: 2), (timer) async {
       if (!mounted) {
         timer.cancel();
         return;
       }
-      
+
       try {
         // Check invoice status
         final isPaid = await _invoiceService.checkInvoiceStatus(
@@ -1504,19 +1531,20 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           adminKey: wallet.adminKey,
           paymentHash: invoice.paymentHash,
         );
-        
+
         if (isPaid) {
           print('[RECEIVE_SCREEN] Invoice paid! Starting celebration sequence');
           timer.cancel();
-          
+
           if (mounted) {
             // 1. FIRST: Activate spark effect
-            print('[RECEIVE_SCREEN] 🎆 Activando efecto chispa por pago recibido');
+            print(
+                '[RECEIVE_SCREEN] 🎆 Activando efecto chispa por pago recibido');
             _transactionDetector.triggerEventSpark('invoice_paid');
-            
+
             // 2. AFTER: Navigate to HomeScreen to show spark effect
             Navigator.of(context).popUntil((route) => route.isFirst);
-            
+
             // 3. FINALLY: Wait a moment and show green notification
             Future.delayed(const Duration(milliseconds: 800), () {
               if (mounted) {
@@ -1524,7 +1552,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                   SnackBar(
                     content: Row(
                       children: [
-                        const Icon(Icons.check_circle, color: Colors.white, size: 20),
+                        const Icon(Icons.check_circle,
+                            color: Colors.white, size: 20),
                         const SizedBox(width: 12),
                         Text(
                           'Pago recibido! ${invoice.formattedAmount}',
@@ -1552,9 +1581,10 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         // Continue checking in case of temporary error
       }
     });
-    
+
     // Auto-cancel after 10 minutes to avoid infinite monitoring
-    Timer(const Duration(minutes: 10), () {
+    _invoiceTimeoutTimer?.cancel();
+    _invoiceTimeoutTimer = Timer(const Duration(minutes: 10), () {
       _invoicePaymentTimer?.cancel();
       print('[RECEIVE_SCREEN] Timeout: Deteniendo monitoreo de factura');
     });
