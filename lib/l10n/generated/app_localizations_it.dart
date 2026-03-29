@@ -194,7 +194,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Errore nel caricamento delle transazioni: ';
 
   @override
-  String get create_lnaddress_label => 'o anche puoi creare un:';
+  String get create_lnaddress_label => 'oppure crea un indirizzo:';
 
   @override
   String get lightning_address_title => 'Indirizzo Lightning';
