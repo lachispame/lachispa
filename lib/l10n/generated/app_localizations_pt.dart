@@ -870,4 +870,18 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get deep_link_login_required_message =>
       'Você deve fazer login em sua conta LaChispa para processar este pagamento.';
+
+  @override
+  String get invoice_key_qr_title => 'QR Chave da Fatura';
+
+  @override
+  String get invoice_key_qr_description =>
+      'Use este código QR com LaChispaPOS ou outros aplicativos Lightning para receber pagamentos sem expor sua chave de administrador.';
+
+  @override
+  String get copy_invoice_key => 'Copiar Chave';
+
+  @override
+  String get invoice_key_copied =>
+      'Chave da fatura copiada para a área de transferência';
 }

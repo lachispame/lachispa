@@ -328,5 +328,10 @@
   "error_checking_currency": "Error verificando {currency}: {error}",
   
   "deep_link_login_required_title": "Inicio de sesión requerido",
-  "deep_link_login_required_message": "Debes iniciar sesión en tu cuenta LaChispa para procesar este pago."
+  "deep_link_login_required_message": "Debes iniciar sesión en tu cuenta LaChispa para procesar este pago.",
+  
+  "invoice_key_qr_title": "QR de Clave de Facturación",
+  "invoice_key_qr_description": "Usa este código QR con LaChispaPOS u otras apps Lightning para recibir pagos sin exponer tu clave de administrador.",
+  "copy_invoice_key": "Copiar Clave",
+  "invoice_key_copied": "Clave de facturación copiada al portapapeles"
 }

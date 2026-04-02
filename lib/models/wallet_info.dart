@@ -4,6 +4,7 @@ class WalletInfo {
   final String name;
   final String adminKey;
   final String inKey;
+  final String readKey;
   final int balanceMsat;
 
   WalletInfo({
@@ -11,6 +12,7 @@ class WalletInfo {
     required this.name,
     required this.adminKey,
     required this.inKey,
+    this.readKey = '',
     required this.balanceMsat,
   });
 
@@ -23,6 +25,7 @@ class WalletInfo {
       name: json['name'] as String,
       adminKey: json['adminkey'] ?? json['admin_key'] ?? json['adminKey'] ?? '',
       inKey: json['inkey'] ?? json['in_key'] ?? json['inKey'] ?? '',
+      readKey: json['readkey'] ?? json['read_key'] ?? json['readKey'] ?? '',
       balanceMsat: json['balance_msat'] ?? json['balance'] ?? 0,
     );
   }
@@ -33,6 +36,7 @@ class WalletInfo {
       'name': name,
       'adminkey': adminKey,
       'inkey': inKey,
+      'readkey': readKey,
       'balance_msat': balanceMsat,
     };
   }
@@ -83,9 +87,9 @@ class WalletBalance {
 
 class WalletException implements Exception {
   final String message;
-  
+
   WalletException(this.message);
-  
+
   @override
   String toString() => 'WalletException: $message';
 }
