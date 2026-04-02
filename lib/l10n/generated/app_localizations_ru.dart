@@ -871,8 +871,30 @@ class AppLocalizationsRu extends AppLocalizations {
       'Используйте этот QR-код с LaChispaPOS или другими приложениями Lightning для получения платежей без раскрытия ключа администратора.';
 
   @override
+  String get invoice_key_qr_subtitle => 'Показать QR для других приложений';
+
+  @override
   String get copy_invoice_key => 'Копировать ключ';
 
   @override
   String get invoice_key_copied => 'Ключ счета скопирован в буфер обмена';
+
+  @override
+  String get invoice_key_unavailable_title => 'Кошелек не найден';
+
+  @override
+  String get invoice_key_unavailable_subtitle =>
+      'Пожалуйста, сначала создайте кошелек';
+
+  @override
+  String currency_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count валют',
+      few: '$count валюты',
+      one: '1 валюта',
+    );
+    return '$_temp0';
+  }
 }

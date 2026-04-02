@@ -324,6 +324,24 @@
   
   "invoice_key_qr_title": "QR Chiave fattura",
   "invoice_key_qr_description": "Usa questo codice QR con LaChispaPOS o altre app Lightning per ricevere pagamenti senza esporre la tua chiave amministratore.",
+  "invoice_key_qr_subtitle": "Mostra QR per altre app",
   "copy_invoice_key": "Copia chiave",
-  "invoice_key_copied": "Chiave fattura copiata negli appunti"
+  "invoice_key_copied": "Chiave fattura copiata negli appunti",
+  "invoice_key_unavailable_title": "Portafoglio non trovato",
+  "invoice_key_unavailable_subtitle": "Crea prima un portafoglio",
+  "@invoice_key_unavailable_title": {
+    "description": "Titolo quando nessun portafoglio è disponibile"
+  },
+  "@invoice_key_unavailable_subtitle": {
+    "description": "Sottotitolo quando nessun portafoglio è disponibile"
+  },
+  "currency_count": "{count, plural, =1{1 valuta} other{{count} valute}}",
+  "@currency_count": {
+    "description": "Numero di valute disponibili",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

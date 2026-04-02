@@ -81,9 +81,11 @@ class InvoiceKeyScreen extends StatelessWidget {
     return Consumer<WalletProvider>(
       builder: (context, walletProvider, child) {
         final wallet = walletProvider.primaryWallet;
-        final inKey = wallet?.inKey ?? '';
+        final invoiceKey = (wallet?.readKey ?? '').isEmpty
+            ? (wallet?.inKey ?? '')
+            : (wallet?.readKey ?? '');
 
-        if (wallet == null || inKey.isEmpty) {
+        if (wallet == null || invoiceKey.isEmpty) {
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(24),
@@ -97,7 +99,7 @@ class InvoiceKeyScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'No wallet found',
+                    AppLocalizations.of(context)!.invoice_key_unavailable_title,
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 18,
@@ -107,7 +109,8 @@ class InvoiceKeyScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Please create a wallet first',
+                    AppLocalizations.of(context)!
+                        .invoice_key_unavailable_subtitle,
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 14,
@@ -125,11 +128,11 @@ class InvoiceKeyScreen extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 20),
-              _buildQRCode(inKey),
+              _buildQRCode(invoiceKey),
               const SizedBox(height: 24),
-              _buildKeyInfo(context, inKey),
+              _buildKeyInfo(context, invoiceKey),
               const SizedBox(height: 24),
-              _buildCopyButton(context, inKey),
+              _buildCopyButton(context, invoiceKey),
               const SizedBox(height: 24),
               _buildWarning(context),
             ],

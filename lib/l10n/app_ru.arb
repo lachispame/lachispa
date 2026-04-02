@@ -324,6 +324,24 @@
   
   "invoice_key_qr_title": "QR Ключ счета",
   "invoice_key_qr_description": "Используйте этот QR-код с LaChispaPOS или другими приложениями Lightning для получения платежей без раскрытия ключа администратора.",
+  "invoice_key_qr_subtitle": "Показать QR для других приложений",
   "copy_invoice_key": "Копировать ключ",
-  "invoice_key_copied": "Ключ счета скопирован в буфер обмена"
+  "invoice_key_copied": "Ключ счета скопирован в буфер обмена",
+  "invoice_key_unavailable_title": "Кошелек не найден",
+  "invoice_key_unavailable_subtitle": "Пожалуйста, сначала создайте кошелек",
+  "@invoice_key_unavailable_title": {
+    "description": "Заголовок когда кошелек недоступен"
+  },
+  "@invoice_key_unavailable_subtitle": {
+    "description": "Подзаголовок когда кошелек недоступен"
+  },
+  "currency_count": "{count, plural, =1{1 валюта} few{{count} валюты} other{{count} валют}}",
+  "@currency_count": {
+    "description": "Количество доступных валют",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

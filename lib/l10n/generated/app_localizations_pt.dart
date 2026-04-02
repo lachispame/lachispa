@@ -876,9 +876,30 @@ class AppLocalizationsPt extends AppLocalizations {
       'Use este código QR com LaChispaPOS ou outros aplicativos Lightning para receber pagamentos sem expor sua chave de administrador.';
 
   @override
+  String get invoice_key_qr_subtitle => 'Mostrar QR para outros apps';
+
+  @override
   String get copy_invoice_key => 'Copiar Chave';
 
   @override
   String get invoice_key_copied =>
       'Chave da fatura copiada para a área de transferência';
+
+  @override
+  String get invoice_key_unavailable_title => 'Carteira não encontrada';
+
+  @override
+  String get invoice_key_unavailable_subtitle =>
+      'Por favor crie uma carteira primeiro';
+
+  @override
+  String currency_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count moedas',
+      one: '1 moeda',
+    );
+    return '$_temp0';
+  }
 }

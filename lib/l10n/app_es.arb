@@ -332,6 +332,24 @@
   
   "invoice_key_qr_title": "QR de Clave de Facturación",
   "invoice_key_qr_description": "Usa este código QR con LaChispaPOS u otras apps Lightning para recibir pagos sin exponer tu clave de administrador.",
+  "invoice_key_qr_subtitle": "Mostrar QR para otras apps",
   "copy_invoice_key": "Copiar Clave",
-  "invoice_key_copied": "Clave de facturación copiada al portapapeles"
+  "invoice_key_copied": "Clave de facturación copiada al portapapeles",
+  "invoice_key_unavailable_title": "Billetera no encontrada",
+  "invoice_key_unavailable_subtitle": "Por favor crea una billetera primero",
+  "@invoice_key_unavailable_title": {
+    "description": "Título cuando no hay billetera disponible"
+  },
+  "@invoice_key_unavailable_subtitle": {
+    "description": "Subtítulo cuando no hay billetera disponible"
+  },
+  "currency_count": "{count, plural, =1{1 moneda} other{{count} monedas}}",
+  "@currency_count": {
+    "description": "Cantidad de monedas disponibles",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }
