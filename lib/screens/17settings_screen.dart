@@ -6,6 +6,7 @@ import '../l10n/generated/app_localizations.dart';
 import '7ln_address_screen.dart';
 import '16currency_settings_screen.dart';
 import '18language_selection_screen.dart';
+import '19invoice_key_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -38,17 +39,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: [
               // Header with back button
               _buildHeader(),
-              
+
               // Settings list
               Expanded(
                 child: ListView(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                   children: [
                     // Lightning Address
                     _buildSettingsItem(
                       icon: Icons.alternate_email,
                       iconColor: const Color(0xFF4C63F7),
-                      title: AppLocalizations.of(context)!.lightning_address_title,
+                      title:
+                          AppLocalizations.of(context)!.lightning_address_title,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -58,43 +61,66 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         );
                       },
                     ),
-                    
+
                     const SizedBox(height: 12),
-                    
+
+                    // Invoice Key QR
+                    _buildSettingsItem(
+                      icon: Icons.qr_code,
+                      iconColor: const Color(0xFF4C63F7),
+                      title: AppLocalizations.of(context)!.invoice_key_qr_title,
+                      subtitle: 'Show QR for other apps',
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const InvoiceKeyScreen(),
+                          ),
+                        );
+                      },
+                    ),
+
+                    const SizedBox(height: 12),
+
                     // Currency Settings
                     Consumer<CurrencySettingsProvider>(
                       builder: (context, currencyProvider, child) {
                         return _buildSettingsItem(
                           icon: Icons.attach_money,
                           iconColor: const Color(0xFF4C63F7),
-                          title: AppLocalizations.of(context)!.currency_settings_title,
-                          subtitle: '${currencyProvider.availableCurrencies.length} currencies',
+                          title: AppLocalizations.of(context)!
+                              .currency_settings_title,
+                          subtitle:
+                              '${currencyProvider.availableCurrencies.length} currencies',
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const CurrencySettingsScreen(),
+                                builder: (context) =>
+                                    const CurrencySettingsScreen(),
                               ),
                             );
                           },
                         );
                       },
                     ),
-                    
+
                     const SizedBox(height: 12),
-                    
+
                     // Language Settings
                     Consumer<LanguageProvider>(
                       builder: (context, languageProvider, child) {
                         return _buildSettingsItem(
                           icon: Icons.language,
                           iconColor: const Color(0xFF4C63F7),
-                          title: AppLocalizations.of(context)!.language_selector_title,
+                          title: AppLocalizations.of(context)!
+                              .language_selector_title,
                           subtitle: languageProvider.getCurrentLanguageName(),
                           onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const LanguageSelectionScreen(),
+                              builder: (context) =>
+                                  const LanguageSelectionScreen(),
                             ),
                           ),
                         );
@@ -219,5 +245,4 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
     );
   }
-
 }

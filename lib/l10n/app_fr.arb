@@ -321,5 +321,10 @@
   "error_checking_currency": "Erreur lors de la vérification de {currency} : {error}",
   
   "deep_link_login_required_title": "Connexion requise",
-  "deep_link_login_required_message": "Vous devez vous connecter à votre compte LaChispa pour traiter ce paiement."
+  "deep_link_login_required_message": "Vous devez vous connecter à votre compte LaChispa pour traiter ce paiement.",
+  
+  "invoice_key_qr_title": "QR de clé de facturation",
+  "invoice_key_qr_description": "Utilisez ce code QR avec LaChispaPOS ou d'autres applications Lightning pour recevoir des paiements sans exposer votre clé administrateur.",
+  "copy_invoice_key": "Copier la clé",
+  "invoice_key_copied": "Clé de facturation copiée dans le presse-papiers"
 }

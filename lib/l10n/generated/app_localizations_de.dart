@@ -883,4 +883,18 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get deep_link_login_required_message =>
       'Sie müssen sich in Ihr LaChispa-Konto einloggen, um diese Zahlung zu verarbeiten.';
+
+  @override
+  String get invoice_key_qr_title => 'Rechnungsschlüssel QR';
+
+  @override
+  String get invoice_key_qr_description =>
+      'Verwenden Sie diesen QR-Code mit LaChispaPOS oder anderen Lightning-Apps, um Zahlungen zu empfangen, ohne Ihren Admin-Schlüssel preiszugeben.';
+
+  @override
+  String get copy_invoice_key => 'Schlüssel kopieren';
+
+  @override
+  String get invoice_key_copied =>
+      'Rechnungsschlüssel in die Zwischenablage kopiert';
 }
