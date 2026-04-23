@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
-import '1welcome_screen.dart';
+import '2start_screen.dart';
 import '6home_screen.dart';
 
 class AuthChecker extends StatefulWidget {
@@ -40,8 +40,8 @@ class _AuthCheckerState extends State<AuthChecker> {
           print('[AUTH_CHECKER] User is logged in, navigating to HomeScreen');
           _navigateToHome();
         } else {
-          print('[AUTH_CHECKER] User not logged in, navigating to WelcomeScreen');
-          _navigateToWelcome();
+          print('[AUTH_CHECKER] User not logged in, navigating to StartScreen');
+          _navigateToStart();
         }
       }
     } catch (e) {
@@ -50,7 +50,7 @@ class _AuthCheckerState extends State<AuthChecker> {
         setState(() {
           _isInitializing = false;
         });
-        _navigateToWelcome();
+        _navigateToStart();
       }
     }
   }
@@ -63,10 +63,10 @@ class _AuthCheckerState extends State<AuthChecker> {
     );
   }
 
-  void _navigateToWelcome() {
+  void _navigateToStart() {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => const WelcomeScreen(),
+        builder: (context) => const StartScreen(),
       ),
     );
   }

@@ -376,7 +376,7 @@ class _SendScreenState extends State<SendScreen> {
                         Text(
                           AppLocalizations.of(context)!.send_title,
                           style: TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: 'Manrope',
                             fontSize: isMobile ? 40 : 48,
                             fontWeight: FontWeight.w700,
                             color: Colors.white,

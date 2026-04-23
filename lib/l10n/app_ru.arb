@@ -3,6 +3,10 @@
   
   "welcome_title": "Добро пожаловать в La Chispa!",
   "welcome_subtitle": "Lightning для всех",
+  "welcome_hero_prefix": "Плати через",
+  "welcome_hero_tagline": "Lightning, в твоём кармане.",
+  "welcome_server_label": "СЕРВЕР",
+  "welcome_server_change": "Сменить",
   "get_started_button": "Начать",
   "tap_to_start_hint": "Просто как зажечь искру",
   

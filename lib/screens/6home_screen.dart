@@ -455,7 +455,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
           mainBalance,
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontFamily: 'Inter',
+            fontFamily: 'Manrope',
             fontSize: _getBalanceFontSize(isMobile, currencyProvider),
             fontWeight: FontWeight.bold,
             color: Colors.white,
@@ -468,7 +468,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
             secondaryBalance,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: 'Manrope',
               fontSize: isMobile ? 16 : 18,
               fontWeight: FontWeight.w500,
               color: Colors.white.withValues(alpha: 0.7),
@@ -907,7 +907,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                 child: Text(
                   'LaChispa',
                   style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: 'Manrope',
                     fontSize: 40,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -993,7 +993,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                         Text(
                           walletProvider.primaryWallet!.name,
                           style: const TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: 'Manrope',
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                             color: Colors.white,
@@ -1026,7 +1026,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                     Text(
                       AppLocalizations.of(context)!.loading_text,
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: 'Manrope',
                         fontSize: 12,
                         color: Colors.white70,
                       ),
@@ -1085,7 +1085,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                     Text(
                       AppLocalizations.of(context)!.balance_label,
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: 'Manrope',
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
                         color: Colors.white.withValues(alpha: 0.8),
@@ -1261,7 +1261,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                         Text(
                           AppLocalizations.of(context)!.send_button,
                           style: TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: 'Manrope',
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
@@ -1329,7 +1329,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                         Text(
                           AppLocalizations.of(context)!.receive_button,
                           style: TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: 'Manrope',
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             color: Colors.white,
@@ -1629,7 +1629,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                 Text(
                   AppLocalizations.of(context)!.history_title,
                   style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: 'Manrope',
                     fontSize: 16,
                     fontWeight: FontWeight.w500, // Weight for secondary buttons
                     color: _isInHistory ? const Color(0xFF5B73FF) : Colors.white,

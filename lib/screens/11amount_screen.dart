@@ -726,7 +726,7 @@ class _AmountScreenState extends State<AmountScreen> {
                             Text(
                               AppLocalizations.of(context)!.send_to_title,
                               style: TextStyle(
-                                fontFamily: 'Inter',
+                                fontFamily: 'Manrope',
                                 fontSize: isMobile ? 40 : 48,
                                 fontWeight: FontWeight.w700,
                                 color: Colors.white,
@@ -738,7 +738,7 @@ class _AmountScreenState extends State<AmountScreen> {
                             Text(
                               widget.destination,
                               style: TextStyle(
-                                fontFamily: 'Inter',
+                                fontFamily: 'Manrope',
                                 fontSize: isMobile ? 18 : 20,
                                 fontWeight: FontWeight.w400,
                                 color: Colors.white.withValues(alpha: 0.8),
@@ -779,7 +779,7 @@ class _AmountScreenState extends State<AmountScreen> {
                                   Text(
                                     _formatDisplayAmount(),
                                     style: TextStyle(
-                                      fontFamily: 'Inter',
+                                      fontFamily: 'Manrope',
                                       fontSize: isMobile ? 38 : 48,
                                       fontWeight: FontWeight.w700,
                                       color: Colors.white,
@@ -795,7 +795,7 @@ class _AmountScreenState extends State<AmountScreen> {
                                       Text(
                                         _formatDisplayAmount(),
                                         style: TextStyle(
-                                          fontFamily: 'Inter',
+                                          fontFamily: 'Manrope',
                                           fontSize: isMobile ? 38 : 48,
                                           fontWeight: FontWeight.w700,
                                           color: Colors.white,
@@ -807,7 +807,7 @@ class _AmountScreenState extends State<AmountScreen> {
                                             ? '(${AppLocalizations.of(context)!.calculating_text}...)'
                                             : '(≈ $_cachedSatsAmount sats)',
                                         style: TextStyle(
-                                          fontFamily: 'Inter',
+                                          fontFamily: 'Manrope',
                                           fontSize: isMobile ? 18 : 22,
                                           fontWeight: FontWeight.w400,
                                           color: Colors.white.withValues(alpha: 0.7),

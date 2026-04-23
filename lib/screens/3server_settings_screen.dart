@@ -215,7 +215,7 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
                           Text(
                             AppLocalizations.of(context)!.server_settings_title,
                             style: TextStyle(
-                              fontFamily: 'Inter',
+                              fontFamily: 'Manrope',
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
@@ -226,7 +226,7 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
                           Text(
                             AppLocalizations.of(context)!.server_url_label,
                             style: TextStyle(
-                              fontFamily: 'Inter',
+                              fontFamily: 'Manrope',
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                               color: Colors.white.withValues(alpha: 0.8),
@@ -290,7 +290,7 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
           Text(
             AppLocalizations.of(context)!.server_settings_title,
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: 'Manrope',
               fontSize: 20,
               fontWeight: FontWeight.w600,
               color: Colors.white,
@@ -344,7 +344,7 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
                             Text(
                               entry.key,
                               style: TextStyle(
-                                fontFamily: 'Inter',
+                                fontFamily: 'Manrope',
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
                                 color: isSelected 
@@ -356,7 +356,7 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
                             Text(
                               entry.value,
                               style: TextStyle(
-                                fontFamily: 'Inter',
+                                fontFamily: 'Manrope',
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
                                 color: isSelected 
@@ -412,7 +412,7 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
                 Text(
                   AppLocalizations.of(context)!.server_url_label,
                   style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: 'Manrope',
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                     color: _isCustomSelected 
@@ -429,14 +429,14 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
             onChanged: _onCustomServerChanged,
             onTap: _selectCustomServer,
             style: const TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: 'Manrope',
               fontSize: 16,
               color: Colors.white,
             ),
             decoration: InputDecoration(
               hintText: AppLocalizations.of(context)!.server_url_placeholder,
               hintStyle: TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: 'Manrope',
                 fontSize: 16,
                 color: Colors.white.withValues(alpha: 0.5),
               ),
@@ -467,7 +467,7 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
           Text(
             AppLocalizations.of(context)!.server_url_label,
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: 'Manrope',
               fontSize: 12,
               fontWeight: FontWeight.w400,
               color: Colors.white.withValues(alpha: 0.6),
@@ -521,7 +521,7 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
             : Text(
                 AppLocalizations.of(context)!.connect_button,
                 style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: 'Manrope',
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:dio/dio.dart';
+
+enum ServerHealth { checking, healthy, unhealthy }
 
 class ServerProvider with ChangeNotifier {
   String _selectedServer = 'https://lachispa.me';
   String _customServerUrl = '';
   bool _isLoading = false;
   String? _errorMessage;
+  ServerHealth _serverHealth = ServerHealth.checking;
 
   static const Map<String, String> _defaultServers = {
     'LaChispa': 'https://lachispa.me',
@@ -17,6 +21,26 @@ class ServerProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
   Map<String, String> get defaultServers => _defaultServers;
+  ServerHealth get serverHealth => _serverHealth;
+
+  Future<void> checkHealth() async {
+    _serverHealth = ServerHealth.checking;
+    notifyListeners();
+    try {
+      final dio = Dio(BaseOptions(
+        connectTimeout: const Duration(seconds: 3),
+        receiveTimeout: const Duration(seconds: 3),
+        validateStatus: (_) => true,
+      ));
+      final resp = await dio.get('$_selectedServer/api/v1/health');
+      _serverHealth = (resp.statusCode == 200)
+          ? ServerHealth.healthy
+          : ServerHealth.unhealthy;
+    } catch (_) {
+      _serverHealth = ServerHealth.unhealthy;
+    }
+    notifyListeners();
+  }
 
   String get serverDisplayName {
     return _getServerDisplayName(_selectedServer);

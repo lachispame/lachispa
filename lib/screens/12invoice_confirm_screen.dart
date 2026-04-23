@@ -234,7 +234,7 @@ class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
                         Text(
                           AppLocalizations.of(context)!.pay_button_confirm,
                           style: TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: 'Manrope',
                             fontSize: isMobile ? 40 : 48,
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
@@ -284,7 +284,7 @@ class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
                                         Text(
                                           _displayAmount,
                                           style: TextStyle(
-                                            fontFamily: 'Inter',
+                                            fontFamily: 'Manrope',
                                             fontSize: isMobile ? 36 : 48,
                                             fontWeight: FontWeight.w700,
                                             color: Colors.white,
@@ -487,7 +487,7 @@ class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
           child: Text(
             label,
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: 'Manrope',
               fontSize: 14,
               fontWeight: FontWeight.w600,
               color: Colors.white.withValues(alpha: 0.7),
@@ -500,7 +500,7 @@ class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
           child: Text(
             value,
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: 'Manrope',
               fontSize: 14,
               fontWeight: FontWeight.w400,
               color: valueColor ?? Colors.white,
@@ -529,7 +529,7 @@ class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
             Text(
               label,
               style: TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: 'Manrope',
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: Colors.white.withValues(alpha: 0.7),
@@ -552,7 +552,7 @@ class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
           child: Text(
             value,
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: 'Manrope',
               fontSize: 14,
               fontWeight: FontWeight.w400,
               color: valueColor ?? Colors.white,

@@ -319,7 +319,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           Text(
             AppLocalizations.of(context)!.receive_title,
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: 'Manrope',
               fontSize: isMobile ? 40 : 48,
               fontWeight: FontWeight.w700,
               color: Colors.white,
@@ -372,7 +372,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               style: TextStyle(
                 color: Colors.white.withValues(alpha: 0.8),
                 fontSize: 16,
-                fontFamily: 'Inter',
+                fontFamily: 'Manrope',
               ),
             ),
           ],
@@ -407,7 +407,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               color: Colors.white,
               fontSize: 18,
               fontWeight: FontWeight.w600,
-              fontFamily: 'Inter',
+              fontFamily: 'Manrope',
             ),
           ),
           const SizedBox(height: 8),
@@ -416,7 +416,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.8),
               fontSize: 14,
-              fontFamily: 'Inter',
+              fontFamily: 'Manrope',
             ),
             textAlign: TextAlign.center,
           ),
@@ -439,7 +439,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Manrope',
                 ),
               ),
             ),
@@ -475,7 +475,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               color: Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.w600,
-              fontFamily: 'Inter',
+              fontFamily: 'Manrope',
             ),
           ),
           const SizedBox(height: 12),
@@ -484,7 +484,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.8),
               fontSize: 16,
-              fontFamily: 'Inter',
+              fontFamily: 'Manrope',
             ),
             textAlign: TextAlign.center,
           ),
@@ -530,7 +530,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Manrope',
                     color: Colors.white,
                   ),
                 ),
@@ -618,7 +618,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                     color: Colors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Manrope',
                   ),
                 ),
                 const SizedBox(height: 2),
@@ -627,7 +627,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.7),
                     fontSize: 14,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Manrope',
                   ),
                 ),
               ],
@@ -662,7 +662,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                 color: Colors.white,
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
-                fontFamily: 'Inter',
+                fontFamily: 'Manrope',
               ),
               textAlign: TextAlign.center,
               softWrap: true,
@@ -732,7 +732,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             style: TextStyle(
               fontSize: 14, // Reduced from 16 to 14
               color: Colors.grey,
-              fontFamily: 'Inter',
+              fontFamily: 'Manrope',
             ),
           ),
         ],
@@ -841,7 +841,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              fontFamily: 'Inter',
+              fontFamily: 'Manrope',
               color: Colors.white,
             ),
           ),
@@ -915,7 +915,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           color: Color(0xFF4C63F7),
-                          fontFamily: 'Inter',
+                          fontFamily: 'Manrope',
                         ),
                       ),
                     ),
@@ -948,7 +948,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.white.withValues(alpha: 0.8),
-                      fontFamily: 'Inter',
+                      fontFamily: 'Manrope',
                       height: 1.4,
                     ),
                   ),
@@ -982,7 +982,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            fontFamily: 'Inter',
+            fontFamily: 'Manrope',
           ),
         ),
       ),
@@ -1009,7 +1009,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                   Text(
                     AppLocalizations.of(context)!.lightning_address_title,
                     style: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: 'Manrope',
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -1041,7 +1041,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            fontFamily: 'Inter',
+            fontFamily: 'Manrope',
           ),
         ),
       ),
@@ -1110,7 +1110,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                               color: Colors.white,
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
-                              fontFamily: 'Inter',
+                              fontFamily: 'Manrope',
                             ),
                           ),
                         ),
@@ -1147,7 +1147,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                       color: Colors.white.withValues(alpha: 0.8),
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
-                                      fontFamily: 'Inter',
+                                      fontFamily: 'Manrope',
                                     ),
                                   ),
                                   const SizedBox(height: 8),
@@ -1157,7 +1157,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 16,
-                                      fontFamily: 'Inter',
+                                      fontFamily: 'Manrope',
                                     ),
                                     decoration: InputDecoration(
                                       hintText: '0',
@@ -1206,7 +1206,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                     color: Colors.white.withValues(alpha: 0.8),
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
-                                    fontFamily: 'Inter',
+                                    fontFamily: 'Manrope',
                                   ),
                                 ),
                                 const SizedBox(height: 8),
@@ -1239,7 +1239,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                               color: Colors.white,
                                               fontSize: 14,
                                               fontWeight: FontWeight.w600,
-                                              fontFamily: 'Inter',
+                                              fontFamily: 'Manrope',
                                             ),
                                           ),
                                         ),
@@ -1264,7 +1264,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                 color: Colors.white.withValues(alpha: 0.8),
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
-                                fontFamily: 'Inter',
+                                fontFamily: 'Manrope',
                               ),
                             ),
                             const SizedBox(height: 8),
@@ -1273,7 +1273,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,
-                                fontFamily: 'Inter',
+                                fontFamily: 'Manrope',
                               ),
                               decoration: InputDecoration(
                                 hintText: AppLocalizations.of(context)!.payment_description_example,
@@ -1335,7 +1335,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
-                                      fontFamily: 'Inter',
+                                      fontFamily: 'Manrope',
                                     ),
                                   ),
                                 ),
@@ -1358,7 +1358,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
-                                      fontFamily: 'Inter',
+                                      fontFamily: 'Manrope',
                                     ),
                                   ),
                                 ),
@@ -1487,7 +1487,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                     Text(
                       conversionMessage.isNotEmpty ? conversionMessage : 'Factura: ${invoice.formattedAmount}',
                       style: const TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: 'Manrope',
                         fontWeight: FontWeight.w500,
                       ),
                       overflow: TextOverflow.ellipsis,
@@ -1533,7 +1533,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               child: Text(
                 message,
                 style: const TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: 'Manrope',
                   fontWeight: FontWeight.w500,
                 ),
                 overflow: TextOverflow.ellipsis,
@@ -1562,7 +1562,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             Text(
               message,
               style: const TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: 'Manrope',
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -1603,7 +1603,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               Text(
                 successMessage,
                 style: const TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: 'Manrope',
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -1665,7 +1665,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                         Text(
                           '${AppLocalizations.of(context)!.received_label}! ${invoice.formattedAmount}',
                           style: const TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: 'Manrope',
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -1718,7 +1718,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            fontFamily: 'Inter',
+            fontFamily: 'Manrope',
           ),
         ),
       ),
@@ -1740,7 +1740,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                 const Text(
                   'LNURL copiado',
                   style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: 'Manrope',
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -1766,7 +1766,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                 const Text(
                   'LNURL no disponible',
                   style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: 'Manrope',
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -1796,7 +1796,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               Text(
                 AppLocalizations.of(context)!.address_copied_message,
                 style: const TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: 'Manrope',
                   fontWeight: FontWeight.w500,
                 ),
               ),
