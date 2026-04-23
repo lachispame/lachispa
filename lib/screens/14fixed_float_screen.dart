@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'dart:io' show Platform;
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode;
 import 'package:url_launcher/url_launcher.dart';
 import '../l10n/generated/app_localizations.dart';
 
@@ -17,6 +17,7 @@ class _FixedFloatScreenState extends State<FixedFloatScreen> {
   bool _isLoading = true;
   bool _hasError = false;
   String? _errorMessage;
+  static const String _fixedFloatUrl = 'https://ff.io/BTCLN/BTC/?ref=setgskja';
 
   @override
   void initState() {
@@ -26,60 +27,77 @@ class _FixedFloatScreenState extends State<FixedFloatScreen> {
 
   void _initializeWebView() {
     try {
-      // Only initialize WebView on mobile platforms
-      if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) {
-        _controller = WebViewController()
-          ..setJavaScriptMode(JavaScriptMode.unrestricted)
-          ..setNavigationDelegate(
-            NavigationDelegate(
-              onPageStarted: (String url) {
-                if (mounted) {
-                  setState(() {
-                    _isLoading = true;
-                    _hasError = false;
-                  });
-                }
-              },
-              onPageFinished: (String url) {
-                if (mounted) {
-                  setState(() {
-                    _isLoading = false;
-                  });
-                }
-              },
-              onWebResourceError: (WebResourceError error) {
-                if (mounted) {
-                  setState(() {
-                    _isLoading = false;
-                    _hasError = true;
-                    _errorMessage = error.description;
-                  });
-                }
-              },
-            ),
-          )
-          ..loadRequest(Uri.parse('https://ff.io/BTCLN/BTC/?ref=setgskja'));
+      final bool isMobilePlatform = !kIsWeb && (Platform.isAndroid || Platform.isIOS);
+      final bool isDebug = kDebugMode;
+      
+      if (isMobilePlatform || isDebug) {
+        WebViewController controller = WebViewController();
+        
+        controller.setJavaScriptMode(JavaScriptMode.unrestricted);
+        
+        controller.setNavigationDelegate(
+          NavigationDelegate(
+            onPageStarted: (String url) {
+              if (mounted) {
+                setState(() {
+                  _isLoading = true;
+                  _hasError = false;
+                });
+              }
+            },
+            onPageFinished: (String url) {
+              if (mounted) {
+                setState(() {
+                  _isLoading = false;
+                });
+              }
+            },
+            onWebResourceError: (WebResourceError error) {
+              if (mounted) {
+                setState(() {
+                  _isLoading = false;
+                  _hasError = true;
+                  _errorMessage = 'Error: ${error.errorCode} - ${error.description}';
+                });
+                _openInBrowser();
+              }
+            },
+            onNavigationRequest: (NavigationRequest request) {
+              return NavigationDecision.navigate;
+            },
+          ),
+        );
+        
+        controller.loadRequest(Uri.parse(_fixedFloatUrl));
+        
+        _controller = controller;
       } else {
-        // For web and other platforms, show fallback
         setState(() {
           _isLoading = false;
           _hasError = true;
-          _errorMessage = 'WebView not supported on this platform';
         });
+        _openInBrowser();
       }
     } catch (e) {
       if (mounted) {
         setState(() {
           _isLoading = false;
           _hasError = true;
-          _errorMessage = e.toString();
+          _errorMessage = 'Exception: ${e.toString()}';
         });
+        _openInBrowser();
       }
     }
   }
 
+  Future<void> _openInBrowser() async {
+    try {
+      await _launchFixedFloat();
+    } catch (_) {}
+  }
+
   Future<void> _launchFixedFloat() async {
-    final Uri url = Uri.parse('https://ff.io/BTCLN/BTC/?ref=setgskja');
+    final Uri url = Uri.parse(_fixedFloatUrl);
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
       throw Exception('Could not launch $url');
     }

@@ -292,6 +292,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invoice_generation_error_prefix => 'Error generating invoice: ';
 
   @override
+  String get invoice_empty_response_error => 'Failed to generate invoice';
+
+  @override
   String get send_title => 'Send';
 
   @override

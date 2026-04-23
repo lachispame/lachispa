@@ -293,6 +293,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get invoice_generation_error_prefix => 'Ошибка создания счета: ';
 
   @override
+  String get invoice_empty_response_error => 'Error al generar la factura';
+
+  @override
   String get send_title => 'Отправить';
 
   @override

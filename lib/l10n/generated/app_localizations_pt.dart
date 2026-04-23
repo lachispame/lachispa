@@ -193,7 +193,7 @@ class AppLocalizationsPt extends AppLocalizations {
       'Erro ao carregar transações: ';
 
   @override
-  String get create_lnaddress_label => 'ou também pode criar um :';
+  String get create_lnaddress_label => 'ou também pode criar um:';
 
   @override
   String get lightning_address_title => 'Endereço Lightning';
@@ -294,6 +294,9 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get invoice_generation_error_prefix => 'Erro ao gerar fatura: ';
+
+  @override
+  String get invoice_empty_response_error => 'Falha ao gerar fatura';
 
   @override
   String get send_title => 'Enviar';

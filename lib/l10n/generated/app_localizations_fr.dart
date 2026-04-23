@@ -299,6 +299,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Erreur lors de la génération de la facture : ';
 
   @override
+  String get invoice_empty_response_error =>
+      'Échec de la génération de la facture';
+
+  @override
   String get send_title => 'Envoyer';
 
   @override
