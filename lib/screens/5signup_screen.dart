@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../providers/server_provider.dart';
 import '../l10n/generated/app_localizations.dart';
+import '../theme/app_tokens.dart';
 import '6home_screen.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -81,13 +82,13 @@ class _SignupScreenState extends State<SignupScreen>
       if (success && mounted) {
         // Show success message
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Cuenta creada exitosamente! Bienvenido.'),
-            backgroundColor: Color(0xFF2D3FE7),
-            duration: Duration(seconds: 1),
+          SnackBar(
+            content: const Text('Cuenta creada exitosamente! Bienvenido.'),
+            backgroundColor: context.tokens.accentSolid,
+            duration: const Duration(seconds: 1),
           ),
         );
-        
+
         // Navigate to HomeScreen and clear navigation stack
         Navigator.pushAndRemoveUntil(
           context,
@@ -109,24 +110,25 @@ class _SignupScreenState extends State<SignupScreen>
   }
 
   void _showErrorDialog(String message) {
+    final t = context.tokens;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1D47),
-        title: const Text(
+        backgroundColor: t.dialogBackground,
+        title: Text(
           'Error',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: t.textPrimary),
         ),
         content: Text(
           message,
-          style: TextStyle(color: Colors.white.withValues(alpha: 0.8)),
+          style: TextStyle(color: t.textPrimary.withValues(alpha: 0.8)),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text(
+            child: Text(
               'Cerrar',
-              style: TextStyle(color: Color(0xFF2D3FE7)),
+              style: TextStyle(color: t.accentSolid),
             ),
           ),
         ],
@@ -136,24 +138,15 @@ class _SignupScreenState extends State<SignupScreen>
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFF0F1419),
-              Color(0xFF1A1D47),
-              Color(0xFF2D3FE7),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
+        decoration: BoxDecoration(gradient: t.backgroundGradient),
         child: SafeArea(
           child: Column(
             children: [
               // Top navigation arrow
-              _buildTopNavigation(),
+              _buildTopNavigation(t),
               // Scrollable content
               Expanded(
                 child: SingleChildScrollView(
@@ -161,13 +154,13 @@ class _SignupScreenState extends State<SignupScreen>
                   child: Column(
                     children: [
                       const SizedBox(height: 20),
-                      _buildHeader(),
+                      _buildHeader(t),
                       const SizedBox(height: 40),
-                      _buildSignupForm(),
+                      _buildSignupForm(t),
                       const SizedBox(height: 20),
-                      _buildTermsCheckbox(),
+                      _buildTermsCheckbox(t),
                       const SizedBox(height: 20),
-                      _buildServerInfo(),
+                      _buildServerInfo(t),
                       const SizedBox(height: 40),
                     ],
                   ),
@@ -180,7 +173,7 @@ class _SignupScreenState extends State<SignupScreen>
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(AppTokens t) {
     return Column(
       children: [
         AnimatedBuilder(
@@ -190,7 +183,7 @@ class _SignupScreenState extends State<SignupScreen>
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF2D3FE7).withValues(alpha: _glowAnimation.value * 0.3),
+                    color: t.accentSolid.withValues(alpha: _glowAnimation.value * 0.3),
                     blurRadius: 20,
                     spreadRadius: 5,
                   ),
@@ -201,10 +194,10 @@ class _SignupScreenState extends State<SignupScreen>
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.w700,
-                  color: Colors.white,
+                  color: t.textPrimary,
                   shadows: [
                     Shadow(
-                      color: const Color(0xFF2D3FE7).withValues(alpha: _glowAnimation.value * 0.8),
+                      color: t.accentSolid.withValues(alpha: _glowAnimation.value * 0.8),
                       blurRadius: 10,
                       offset: const Offset(0, 2),
                     ),
@@ -220,20 +213,20 @@ class _SignupScreenState extends State<SignupScreen>
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 16,
-            color: Colors.white.withValues(alpha: 0.7),
+            color: t.textPrimary.withValues(alpha: 0.7),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildSignupForm() {
+  Widget _buildSignupForm(AppTokens t) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
+        color: t.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
+          color: t.outline,
         ),
       ),
       padding: const EdgeInsets.all(24),
@@ -242,20 +235,20 @@ class _SignupScreenState extends State<SignupScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _buildUsernameField(),
+            _buildUsernameField(t),
             const SizedBox(height: 20),
-            _buildPasswordField(),
+            _buildPasswordField(t),
             const SizedBox(height: 20),
-            _buildConfirmPasswordField(),
+            _buildConfirmPasswordField(t),
             const SizedBox(height: 32),
-            _buildSignupButton(),
+            _buildSignupButton(t),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildUsernameField() {
+  Widget _buildUsernameField(AppTokens t) {
     return TextFormField(
       controller: _usernameController,
       validator: (value) {
@@ -278,30 +271,30 @@ class _SignupScreenState extends State<SignupScreen>
       decoration: InputDecoration(
         labelText: AppLocalizations.of(context)!.signup_username_label,
         hintText: AppLocalizations.of(context)!.signup_username_placeholder,
-        labelStyle: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
-        hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
-        prefixIcon: Icon(Icons.person, color: Colors.white.withValues(alpha: 0.7)),
+        labelStyle: TextStyle(color: t.textPrimary.withValues(alpha: 0.7)),
+        hintStyle: TextStyle(color: t.textSecondary),
+        prefixIcon: Icon(Icons.person, color: t.textPrimary.withValues(alpha: 0.7)),
         filled: true,
-        fillColor: Colors.white.withValues(alpha: 0.05),
+        fillColor: t.inputFill,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+          borderSide: BorderSide(color: t.outline),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+          borderSide: BorderSide(color: t.outline),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF2D3FE7)),
+          borderSide: BorderSide(color: t.accentSolid),
         ),
       ),
-      style: const TextStyle(color: Colors.white),
+      style: TextStyle(color: t.textPrimary),
       textInputAction: TextInputAction.next,
     );
   }
 
-  Widget _buildPasswordField() {
+  Widget _buildPasswordField(AppTokens t) {
     return TextFormField(
       controller: _passwordController,
       validator: (value) {
@@ -328,13 +321,13 @@ class _SignupScreenState extends State<SignupScreen>
       decoration: InputDecoration(
         labelText: AppLocalizations.of(context)!.signup_password_label,
         hintText: AppLocalizations.of(context)!.signup_password_placeholder,
-        labelStyle: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
-        hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
-        prefixIcon: Icon(Icons.lock, color: Colors.white.withValues(alpha: 0.7)),
+        labelStyle: TextStyle(color: t.textPrimary.withValues(alpha: 0.7)),
+        hintStyle: TextStyle(color: t.textSecondary),
+        prefixIcon: Icon(Icons.lock, color: t.textPrimary.withValues(alpha: 0.7)),
         suffixIcon: IconButton(
           icon: Icon(
             _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-            color: Colors.white.withValues(alpha: 0.7),
+            color: t.textPrimary.withValues(alpha: 0.7),
           ),
           onPressed: () {
             setState(() {
@@ -343,26 +336,26 @@ class _SignupScreenState extends State<SignupScreen>
           },
         ),
         filled: true,
-        fillColor: Colors.white.withValues(alpha: 0.05),
+        fillColor: t.inputFill,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+          borderSide: BorderSide(color: t.outline),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+          borderSide: BorderSide(color: t.outline),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF2D3FE7)),
+          borderSide: BorderSide(color: t.accentSolid),
         ),
       ),
-      style: const TextStyle(color: Colors.white),
+      style: TextStyle(color: t.textPrimary),
       textInputAction: TextInputAction.next,
     );
   }
 
-  Widget _buildConfirmPasswordField() {
+  Widget _buildConfirmPasswordField(AppTokens t) {
     return TextFormField(
       controller: _confirmPasswordController,
       validator: (value) {
@@ -378,13 +371,13 @@ class _SignupScreenState extends State<SignupScreen>
       decoration: InputDecoration(
         labelText: AppLocalizations.of(context)!.confirm_password_label,
         hintText: AppLocalizations.of(context)!.confirm_password_placeholder,
-        labelStyle: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
-        hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
-        prefixIcon: Icon(Icons.lock_outline, color: Colors.white.withValues(alpha: 0.7)),
+        labelStyle: TextStyle(color: t.textPrimary.withValues(alpha: 0.7)),
+        hintStyle: TextStyle(color: t.textSecondary),
+        prefixIcon: Icon(Icons.lock_outline, color: t.textPrimary.withValues(alpha: 0.7)),
         suffixIcon: IconButton(
           icon: Icon(
             _isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
-            color: Colors.white.withValues(alpha: 0.7),
+            color: t.textPrimary.withValues(alpha: 0.7),
           ),
           onPressed: () {
             setState(() {
@@ -393,37 +386,33 @@ class _SignupScreenState extends State<SignupScreen>
           },
         ),
         filled: true,
-        fillColor: Colors.white.withValues(alpha: 0.05),
+        fillColor: t.inputFill,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+          borderSide: BorderSide(color: t.outline),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+          borderSide: BorderSide(color: t.outline),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF2D3FE7)),
+          borderSide: BorderSide(color: t.accentSolid),
         ),
       ),
-      style: const TextStyle(color: Colors.white),
+      style: TextStyle(color: t.textPrimary),
       textInputAction: TextInputAction.done,
       onFieldSubmitted: (_) => _handleSignup(),
     );
   }
 
-  Widget _buildSignupButton() {
+  Widget _buildSignupButton(AppTokens t) {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, child) {
         return Container(
           height: 56,
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF2D3FE7), Color(0xFF4C63F7)],
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-            ),
+            gradient: t.accentGradient,
             borderRadius: BorderRadius.circular(16),
           ),
           child: ElevatedButton(
@@ -436,20 +425,20 @@ class _SignupScreenState extends State<SignupScreen>
               ),
             ),
             child: (_isLoading || authProvider.isLoading)
-                ? const SizedBox(
+                ? SizedBox(
                     height: 20,
                     width: 20,
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      valueColor: AlwaysStoppedAnimation<Color>(t.accentForeground),
                     ),
                   )
                 : Text(
                     AppLocalizations.of(context)!.create_account_button,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                      color: t.accentForeground,
                     ),
                   ),
           ),
@@ -458,12 +447,12 @@ class _SignupScreenState extends State<SignupScreen>
     );
   }
 
-  Widget _buildTermsCheckbox() {
+  Widget _buildTermsCheckbox(AppTokens t) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
+        color: t.inputFill,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: t.outline),
       ),
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -471,14 +460,14 @@ class _SignupScreenState extends State<SignupScreen>
           Theme(
             data: Theme.of(context).copyWith(
               checkboxTheme: CheckboxThemeData(
-                fillColor: MaterialStateProperty.resolveWith<Color?>((states) {
-                  if (states.contains(MaterialState.selected)) {
-                    return const Color(0xFF2D3FE7);
+                fillColor: WidgetStateProperty.resolveWith<Color?>((states) {
+                  if (states.contains(WidgetState.selected)) {
+                    return t.accentSolid;
                   }
                   return Colors.transparent;
                 }),
-                checkColor: MaterialStateProperty.all(Colors.white),
-                side: BorderSide(color: Colors.white.withValues(alpha: 0.3)),
+                checkColor: WidgetStateProperty.all(t.accentForeground),
+                side: BorderSide(color: t.textPrimary.withValues(alpha: 0.3)),
               ),
             ),
             child: Checkbox(
@@ -496,7 +485,7 @@ class _SignupScreenState extends State<SignupScreen>
               'He anotado mi contraseña en un lugar seguro',
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.white.withValues(alpha: 0.8),
+                color: t.textPrimary.withValues(alpha: 0.8),
               ),
             ),
           ),
@@ -506,15 +495,15 @@ class _SignupScreenState extends State<SignupScreen>
   }
 
 
-  Widget _buildServerInfo() {
+  Widget _buildServerInfo(AppTokens t) {
     return Consumer<ServerProvider>(
       builder: (context, serverProvider, child) {
         return Container(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.05),
+            color: t.inputFill,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+            border: Border.all(color: t.outline),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -522,21 +511,21 @@ class _SignupScreenState extends State<SignupScreen>
               Icon(
                 Icons.dns,
                 size: 16,
-                color: Colors.white.withValues(alpha: 0.7),
+                color: t.textPrimary.withValues(alpha: 0.7),
               ),
               const SizedBox(width: 8),
               Text(
                 'Servidor: ',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.white.withValues(alpha: 0.7),
+                  color: t.textPrimary.withValues(alpha: 0.7),
                 ),
               ),
               Text(
                 serverProvider.serverDisplayName,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
-                  color: Colors.white,
+                  color: t.textPrimary,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -547,24 +536,24 @@ class _SignupScreenState extends State<SignupScreen>
     );
   }
 
-  Widget _buildTopNavigation() {
+  Widget _buildTopNavigation(AppTokens t) {
     return Padding(
       padding: const EdgeInsets.only(top: 16, left: 24, right: 24),
       child: Row(
         children: [
           Container(
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.08),
+              color: t.surface,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Colors.white.withValues(alpha: 0.1),
+                color: t.outline,
               ),
             ),
             child: IconButton(
               onPressed: () => Navigator.pop(context),
-              icon: const Icon(
+              icon: Icon(
                 Icons.arrow_back_ios,
-                color: Colors.white,
+                color: t.textPrimary,
                 size: 20,
               ),
               padding: const EdgeInsets.all(12),

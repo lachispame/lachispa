@@ -7,6 +7,7 @@ import '../providers/wallet_provider.dart';
 import '../services/invoice_service.dart';
 import '../models/wallet_info.dart';
 import '../l10n/generated/app_localizations.dart';
+import '../theme/app_tokens.dart';
 import '../widgets/universal_screen_wrapper.dart';
 import '../widgets/qr_scanner_widget.dart';
 
@@ -89,18 +90,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF0F1419),
-              Color(0xFF1A1D47),
-              Color(0xFF2D3FE7),
-            ],
-            stops: [0.0, 0.5, 1.0],
-          ),
-        ),
+        decoration: BoxDecoration(gradient: context.tokens.backgroundGradient),
         child: SafeArea(
           child: withBottomPadding(
             context,
@@ -161,10 +151,10 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.08),
+                  color: context.tokens.surface,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.1),
+                    color: context.tokens.outline,
                     width: 1,
                   ),
                   boxShadow: [
@@ -176,9 +166,9 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
                   ],
                 ),
                 child: IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.arrow_back,
-                    color: Colors.white,
+                    color: context.tokens.textPrimary,
                     size: 20,
                   ),
                   onPressed: () {
@@ -198,10 +188,9 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
           Text(
             AppLocalizations.of(context)!.voucher_scan_title,
             style: TextStyle(
-              fontFamily: 'Manrope',
-              fontSize: isMobile ? 32 : 40,
+                            fontSize: isMobile ? 32 : 40,
               fontWeight: FontWeight.w700,
-              color: Colors.white,
+              color: context.tokens.textPrimary,
               height: 1.1,
             ),
             textAlign: TextAlign.center,
@@ -215,38 +204,36 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
+        color: context.tokens.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
+          color: context.tokens.outline,
         ),
       ),
       child: Column(
         children: [
           Icon(
             Icons.qr_code_2,
-            color: const Color(0xFF4C63F7),
+            color: context.tokens.accentSolid,
             size: 48,
           ),
           const SizedBox(height: 16),
           Text(
             AppLocalizations.of(context)!.voucher_scan_instructions,
             style: TextStyle(
-              color: Colors.white,
+              color: context.tokens.textPrimary,
               fontSize: 16,
               fontWeight: FontWeight.w500,
-              fontFamily: 'Manrope',
-            ),
+                          ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
           Text(
             AppLocalizations.of(context)!.voucher_scan_subtitle,
             style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.7),
+              color: context.tokens.textPrimary.withValues(alpha: 0.7),
               fontSize: 14,
-              fontFamily: 'Manrope',
-            ),
+                          ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -266,8 +253,8 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  const Color(0xFF2D3FE7),
-                  const Color(0xFF4C63F7),
+                  context.tokens.accentSolid,
+                  context.tokens.accentSolid,
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -275,7 +262,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
               borderRadius: BorderRadius.circular(100),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF2D3FE7).withValues(alpha: 0.3),
+                  color: context.tokens.accentSolid.withValues(alpha: 0.3),
                   blurRadius: 20,
                   offset: const Offset(0, 8),
                 ),
@@ -290,7 +277,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(100),
                     border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.2),
+                      color: context.tokens.outlineStrong,
                       width: 2,
                     ),
                   ),
@@ -299,11 +286,11 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
                         ? Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const SizedBox(
+                              SizedBox(
                                 width: 40,
                                 height: 40,
                                 child: CircularProgressIndicator(
-                                  color: Colors.white,
+                                  color: context.tokens.textPrimary,
                                   strokeWidth: 3,
                                 ),
                               ),
@@ -311,10 +298,9 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
                               Text(
                                 AppLocalizations.of(context)!.voucher_processing,
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: context.tokens.textPrimary,
                                   fontSize: 14,
-                                  fontFamily: 'Manrope',
-                                  fontWeight: FontWeight.w500,
+                                                                    fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ],
@@ -324,17 +310,16 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
                             children: [
                               Icon(
                                 Icons.qr_code_scanner,
-                                color: Colors.white,
+                                color: context.tokens.textPrimary,
                                 size: 48,
                               ),
                               const SizedBox(height: 12),
                               Text(
                                 AppLocalizations.of(context)!.voucher_scan_button,
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: context.tokens.textPrimary,
                                   fontSize: 18,
-                                  fontFamily: 'Manrope',
-                                  fontWeight: FontWeight.w600,
+                                                                    fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ],
@@ -351,10 +336,9 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
           Text(
             AppLocalizations.of(context)!.voucher_tap_to_scan,
             style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.7),
+              color: context.tokens.textPrimary.withValues(alpha: 0.7),
               fontSize: 16,
-              fontFamily: 'Manrope',
-            ),
+                          ),
           ),
         ],
       ),
@@ -370,9 +354,9 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
           child: OutlinedButton.icon(
             onPressed: _showManualInputDialog,
             style: OutlinedButton.styleFrom(
-              foregroundColor: Colors.white,
+              foregroundColor: context.tokens.accentForeground,
               side: BorderSide(
-                color: Colors.white.withValues(alpha: 0.3),
+                color: context.tokens.textTertiary,
                 width: 1.5,
               ),
               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -386,8 +370,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                fontFamily: 'Manrope',
-              ),
+                              ),
             ),
           ),
         ),
@@ -524,16 +507,15 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1D47),
+        backgroundColor: context.tokens.dialogBackground,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
         title: Text(
           AppLocalizations.of(context)!.voucher_manual_input,
           style: TextStyle(
-            color: Colors.white,
-            fontFamily: 'Manrope',
-            fontWeight: FontWeight.w600,
+            color: context.tokens.textPrimary,
+                        fontWeight: FontWeight.w600,
           ),
         ),
         content: Column(
@@ -542,34 +524,32 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
             Text(
               AppLocalizations.of(context)!.voucher_manual_input_hint,
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.8),
-                fontFamily: 'Manrope',
-              ),
+                color: context.tokens.textPrimary.withValues(alpha: 0.8),
+                              ),
             ),
             const SizedBox(height: 16),
             TextFormField(
               controller: controller,
-              style: const TextStyle(
-                color: Colors.white,
-                fontFamily: 'Manrope',
-              ),
+              style: TextStyle(
+                color: context.tokens.textPrimary,
+                              ),
               decoration: InputDecoration(
                 hintText: AppLocalizations.of(context)!.voucher_manual_input_placeholder,
                 hintStyle: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.5),
+                  color: context.tokens.textSecondary,
                 ),
                 filled: true,
-                fillColor: Colors.white.withValues(alpha: 0.05),
+                fillColor: context.tokens.inputFill,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
-                    color: Colors.white.withValues(alpha: 0.1),
+                    color: context.tokens.outline,
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide(
-                    color: Colors.white.withValues(alpha: 0.1),
+                    color: context.tokens.outline,
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
@@ -589,9 +569,8 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
             child: Text(
               AppLocalizations.of(context)!.cancel_button,
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.7),
-                fontFamily: 'Manrope',
-              ),
+                color: context.tokens.textPrimary.withValues(alpha: 0.7),
+                              ),
             ),
           ),
           ElevatedButton(
@@ -603,7 +582,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
               }
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF4C63F7),
+              backgroundColor: context.tokens.accentSolid,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -611,9 +590,8 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
             child: Text(
               AppLocalizations.of(context)!.process_button,
               style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Manrope',
-                fontWeight: FontWeight.w600,
+                color: context.tokens.textPrimary,
+                                fontWeight: FontWeight.w600,
               ),
             ),
           ),
@@ -626,20 +604,19 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1D47),
+        backgroundColor: context.tokens.dialogBackground,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
         title: Row(
           children: [
-            Icon(Icons.error, color: Colors.red, size: 24),
+            Icon(Icons.error, color: context.tokens.statusUnhealthy, size: 24),
             const SizedBox(width: 12),
             Text(
               title,
               style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Manrope',
-                fontWeight: FontWeight.w600,
+                color: context.tokens.textPrimary,
+                                fontWeight: FontWeight.w600,
               ),
             ),
           ],
@@ -647,15 +624,14 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
         content: Text(
           message,
           style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.8),
-            fontFamily: 'Manrope',
-          ),
+            color: context.tokens.textPrimary.withValues(alpha: 0.8),
+                      ),
         ),
         actions: [
           ElevatedButton(
             onPressed: () => Navigator.pop(context),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF4C63F7),
+              backgroundColor: context.tokens.accentSolid,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -663,9 +639,8 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
             child: Text(
               'OK',
               style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Manrope',
-                fontWeight: FontWeight.w600,
+                color: context.tokens.textPrimary,
+                                fontWeight: FontWeight.w600,
               ),
             ),
           ),
@@ -689,21 +664,20 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1D47),
+        backgroundColor: context.tokens.dialogBackground,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
         title: Row(
           children: [
-            Icon(Icons.card_giftcard, color: const Color(0xFF4C63F7), size: 24),
+            Icon(Icons.card_giftcard, color: context.tokens.accentSolid, size: 24),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 AppLocalizations.of(context)!.voucher_detected_title,
                 style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'Manrope',
-                  fontWeight: FontWeight.w600,
+                  color: context.tokens.textPrimary,
+                                    fontWeight: FontWeight.w600,
                   fontSize: 18,
                 ),
               ),
@@ -719,23 +693,22 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.05),
+                  color: context.tokens.inputFill,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.1),
+                    color: context.tokens.outline,
                   ),
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.description, color: Colors.white.withValues(alpha: 0.7), size: 16),
+                    Icon(Icons.description, color: context.tokens.textPrimary.withValues(alpha: 0.7), size: 16),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
                         description,
                         style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.9),
-                          fontFamily: 'Manrope',
-                          fontSize: 14,
+                          color: context.tokens.textPrimary.withValues(alpha: 0.9),
+                                                    fontSize: 14,
                         ),
                       ),
                     ),
@@ -749,10 +722,10 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF4C63F7).withValues(alpha: 0.1),
+                  color: context.tokens.accentSolid.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: const Color(0xFF4C63F7).withValues(alpha: 0.2),
+                    color: context.tokens.accentSolid.withValues(alpha: 0.2),
                   ),
                 ),
                 child: Column(
@@ -760,14 +733,13 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.monetization_on, color: const Color(0xFF4C63F7), size: 20),
+                        Icon(Icons.monetization_on, color: context.tokens.accentSolid, size: 20),
                         const SizedBox(width: 8),
                         Text(
                           isFixedAmount ? AppLocalizations.of(context)!.voucher_fixed_amount : AppLocalizations.of(context)!.voucher_amount_range,
                           style: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Manrope',
-                            fontWeight: FontWeight.w600,
+                            color: context.tokens.textPrimary,
+                                                        fontWeight: FontWeight.w600,
                             fontSize: 14,
                           ),
                         ),
@@ -779,9 +751,8 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
                           ? '$maxSats sats'
                           : 'De $minSats a $maxSats sats',
                       style: TextStyle(
-                        color: const Color(0xFF4C63F7),
-                        fontFamily: 'Manrope',
-                        fontWeight: FontWeight.w700,
+                        color: context.tokens.accentSolid,
+                                                fontWeight: FontWeight.w700,
                         fontSize: 18,
                       ),
                     ),
@@ -795,42 +766,40 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
                 Text(
                   AppLocalizations.of(context)!.voucher_amount_to_claim,
                   style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.8),
+                    color: context.tokens.textPrimary.withValues(alpha: 0.8),
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    fontFamily: 'Manrope',
-                  ),
+                                      ),
                 ),
                 const SizedBox(height: 8),
                 TextFormField(
                   controller: amountController,
                   keyboardType: TextInputType.number,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: context.tokens.textPrimary,
                     fontSize: 16,
-                    fontFamily: 'Manrope',
-                  ),
+                                      ),
                   decoration: InputDecoration(
                     hintText: 'Ej: ${maxSats}',
                     hintStyle: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.5),
+                      color: context.tokens.textSecondary,
                     ),
                     suffixText: 'sats',
                     suffixStyle: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.7),
+                      color: context.tokens.textPrimary.withValues(alpha: 0.7),
                     ),
                     filled: true,
-                    fillColor: Colors.white.withValues(alpha: 0.05),
+                    fillColor: context.tokens.inputFill,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(
-                        color: Colors.white.withValues(alpha: 0.1),
+                        color: context.tokens.outline,
                       ),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide(
-                        color: Colors.white.withValues(alpha: 0.1),
+                        color: context.tokens.outline,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -849,10 +818,9 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
                 Text(
                   AppLocalizations.of(context)!.voucher_min_max_hint(minSats, maxSats),
                   style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.6),
+                    color: context.tokens.textSecondary,
                     fontSize: 12,
-                    fontFamily: 'Manrope',
-                  ),
+                                      ),
                 ),
               ],
             ],
@@ -870,9 +838,8 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
             child: Text(
               AppLocalizations.of(context)!.cancel_button,
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.7),
-                fontFamily: 'Manrope',
-              ),
+                color: context.tokens.textPrimary.withValues(alpha: 0.7),
+                              ),
             ),
           ),
           ElevatedButton(
@@ -885,7 +852,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(AppLocalizations.of(context)!.voucher_amount_invalid(minSats, maxSats)),
-                    backgroundColor: Colors.red,
+                    backgroundColor: context.tokens.statusUnhealthy,
                   ),
                 );
                 return;
@@ -895,7 +862,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
               _claimVoucher(voucherInfo, amount);
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF4C63F7),
+              backgroundColor: context.tokens.accentSolid,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -903,9 +870,8 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
             child: Text(
               AppLocalizations.of(context)!.voucher_claim_button,
               style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Manrope',
-                fontWeight: FontWeight.w600,
+                color: context.tokens.textPrimary,
+                                fontWeight: FontWeight.w600,
               ),
             ),
           ),
@@ -970,20 +936,19 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1D47),
+        backgroundColor: context.tokens.dialogBackground,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
         title: Row(
           children: [
-            Icon(Icons.check_circle, color: Colors.green, size: 24),
+            Icon(Icons.check_circle, color: context.tokens.statusHealthy, size: 24),
             const SizedBox(width: 12),
             Text(
               AppLocalizations.of(context)!.voucher_claimed_title,
               style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Manrope',
-                fontWeight: FontWeight.w600,
+                color: context.tokens.textPrimary,
+                                fontWeight: FontWeight.w600,
               ),
             ),
           ],
@@ -994,10 +959,10 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.green.withValues(alpha: 0.1),
+                color: context.tokens.statusHealthy.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: Colors.green.withValues(alpha: 0.2),
+                  color: context.tokens.statusHealthy.withValues(alpha: 0.2),
                 ),
               ),
               child: Column(
@@ -1005,20 +970,18 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
                   Text(
                     '$amount sats',
                     style: TextStyle(
-                      color: Colors.green,
+                      color: context.tokens.statusHealthy,
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
-                      fontFamily: 'Manrope',
-                    ),
+                                          ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     description,
                     style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.8),
+                      color: context.tokens.textPrimary.withValues(alpha: 0.8),
                       fontSize: 14,
-                      fontFamily: 'Manrope',
-                    ),
+                                          ),
                     textAlign: TextAlign.center,
                   ),
                 ],
@@ -1028,9 +991,8 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
             Text(
               AppLocalizations.of(context)!.voucher_claimed_subtitle,
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.8),
-                fontFamily: 'Manrope',
-              ),
+                color: context.tokens.textPrimary.withValues(alpha: 0.8),
+                              ),
               textAlign: TextAlign.center,
             ),
           ],
@@ -1042,7 +1004,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
               Navigator.pop(context); // Go back to receive screen
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
+              backgroundColor: context.tokens.statusHealthy,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -1050,9 +1012,8 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
             child: Text(
               'Continuar',
               style: TextStyle(
-                color: Colors.white,
-                fontFamily: 'Manrope',
-                fontWeight: FontWeight.w600,
+                color: context.tokens.textPrimary,
+                                fontWeight: FontWeight.w600,
               ),
             ),
           ),

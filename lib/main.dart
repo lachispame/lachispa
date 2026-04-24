@@ -14,6 +14,7 @@ import 'services/deep_link_service.dart';
 import 'screens/auth_checker.dart';
 import 'screens/10send_screen.dart';
 import 'l10n/generated/app_localizations.dart';
+import 'theme/themes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -101,10 +102,11 @@ class _LaChispaAppState extends State<LaChispaApp> {
   
   void _showLoginRequiredDialog(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        // No literal colors here; AlertDialog inherits from theme.
         return AlertDialog(
           title: Text(localizations.deep_link_login_required_title),
           content: Text(localizations.deep_link_login_required_message),
@@ -189,10 +191,7 @@ class _LaChispaAppState extends State<LaChispaApp> {
               return MaterialApp(
                 navigatorKey: _navigatorKey,
                 title: 'LaChispa',
-                theme: ThemeData(
-                  fontFamily: 'Manrope',
-                  useMaterial3: true,
-                ),
+                theme: chispaTheme(),
                 locale: languageProvider.currentLocale,
                 localizationsDelegates: const [
                   AppLocalizations.delegate,

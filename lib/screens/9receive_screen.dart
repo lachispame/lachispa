@@ -14,6 +14,7 @@ import '../services/transaction_detector.dart';
 import '../models/lightning_invoice.dart';
 import '../models/wallet_info.dart';
 import '../l10n/generated/app_localizations.dart';
+import '../theme/app_tokens.dart';
 import '../widgets/universal_screen_wrapper.dart';
 import '7ln_address_screen.dart';
 import 'voucher_scan_screen.dart';
@@ -187,18 +188,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF0F1419),
-              Color(0xFF1A1D47),
-              Color(0xFF2D3FE7),
-            ],
-            stops: [0.0, 0.5, 1.0],
-          ),
-        ),
+        decoration: BoxDecoration(gradient: context.tokens.backgroundGradient),
         child: SafeArea(
           child: withBottomPadding(
             context,
@@ -251,10 +241,10 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.08),
+                  color: context.tokens.surface,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.1),
+                    color: context.tokens.outline,
                     width: 1,
                   ),
                   boxShadow: [
@@ -266,9 +256,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                   ],
                 ),
                 child: IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.arrow_back,
-                    color: Colors.white,
+                    color: context.tokens.textPrimary,
                     size: 20,
                   ),
                   onPressed: () {
@@ -285,10 +275,10 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.08),
+                  color: context.tokens.surface,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.1),
+                    color: context.tokens.outline,
                     width: 1,
                   ),
                   boxShadow: [
@@ -300,9 +290,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                   ],
                 ),
                 child: IconButton(
-                  icon: const Icon(
+                  icon: Icon(
                     Icons.qr_code_scanner,
-                    color: Colors.white,
+                    color: context.tokens.textPrimary,
                     size: 20,
                   ),
                   onPressed: _navigateToVoucherScreen,
@@ -319,10 +309,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           Text(
             AppLocalizations.of(context)!.receive_title,
             style: TextStyle(
-              fontFamily: 'Manrope',
-              fontSize: isMobile ? 40 : 48,
+                            fontSize: isMobile ? 40 : 48,
               fontWeight: FontWeight.w700,
-              color: Colors.white,
+              color: context.tokens.textPrimary,
               height: 1.1,
             ),
             textAlign: TextAlign.center,
@@ -370,10 +359,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             Text(
               AppLocalizations.of(context)!.loading_address_text,
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.8),
+                color: context.tokens.textPrimary.withValues(alpha: 0.8),
                 fontSize: 16,
-                fontFamily: 'Manrope',
-              ),
+                              ),
             ),
           ],
         ),
@@ -385,10 +373,10 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
+        color: context.tokens.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
+          color: context.tokens.outline,
           width: 1,
         ),
       ),
@@ -397,27 +385,25 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         children: [
           Icon(
             Icons.error_outline,
-            color: Colors.red.withValues(alpha: 0.8),
+            color: context.tokens.statusUnhealthy.withValues(alpha: 0.8),
             size: 48,
           ),
           const SizedBox(height: 16),
           Text(
             AppLocalizations.of(context)!.loading_address_error_prefix,
             style: TextStyle(
-              color: Colors.white,
+              color: context.tokens.textPrimary,
               fontSize: 18,
               fontWeight: FontWeight.w600,
-              fontFamily: 'Manrope',
-            ),
+                          ),
           ),
           const SizedBox(height: 8),
           Text(
             error,
             style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.8),
+              color: context.tokens.textPrimary.withValues(alpha: 0.8),
               fontSize: 14,
-              fontFamily: 'Manrope',
-            ),
+                          ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 24),
@@ -426,8 +412,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             child: ElevatedButton(
               onPressed: () => context.read<LNAddressProvider>().refresh(),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF2D3FE7),
-                foregroundColor: Colors.white,
+                backgroundColor: context.tokens.accentSolid,
+                foregroundColor: context.tokens.accentForeground,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
@@ -439,8 +425,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  fontFamily: 'Manrope',
-                ),
+                                  ),
               ),
             ),
           ),
@@ -453,10 +438,10 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
+        color: context.tokens.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
+          color: context.tokens.outline,
           width: 1,
         ),
       ),
@@ -465,27 +450,25 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         children: [
           Icon(
             Icons.alternate_email,
-            color: Colors.white.withValues(alpha: 0.6),
+            color: context.tokens.textSecondary,
             size: 64,
           ),
           const SizedBox(height: 24),
           Text(
             AppLocalizations.of(context)!.not_available_text,
             style: TextStyle(
-              color: Colors.white,
+              color: context.tokens.textPrimary,
               fontSize: 20,
               fontWeight: FontWeight.w600,
-              fontFamily: 'Manrope',
-            ),
+                          ),
           ),
           const SizedBox(height: 12),
           Text(
             AppLocalizations.of(context)!.lightning_address_description,
             style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.8),
+              color: context.tokens.textPrimary.withValues(alpha: 0.8),
               fontSize: 16,
-              fontFamily: 'Manrope',
-            ),
+                          ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 32),
@@ -493,15 +476,15 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             width: double.infinity,
             child: Container(
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [Color(0xFF2D3FE7), Color(0xFF4C63F7)],
+                gradient: LinearGradient(
+                  colors: [context.tokens.accentSolid, context.tokens.accentSolid],
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                 ),
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF2D3FE7).withValues(alpha: 0.3),
+                    color: context.tokens.accentSolid.withValues(alpha: 0.3),
                     blurRadius: 12,
                     offset: const Offset(0, 6),
                   ),
@@ -524,14 +507,13 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
-                icon: const Icon(Icons.add, color: Colors.white),
+                icon: Icon(Icons.add, color: context.tokens.textPrimary),
                 label: Text(
                   AppLocalizations.of(context)!.lightning_address_title,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    fontFamily: 'Manrope',
-                    color: Colors.white,
+                                        color: context.tokens.textPrimary,
                   ),
                 ),
               ),
@@ -546,10 +528,10 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
+        color: context.tokens.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
+          color: context.tokens.outline,
           width: 1,
         ),
         boxShadow: [
@@ -587,10 +569,10 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
+        color: context.tokens.inputFill,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
+          color: context.tokens.outline,
         ),
       ),
       child: Row(
@@ -598,12 +580,12 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: const Color(0xFF2D3FE7),
+              color: context.tokens.accentSolid,
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.account_balance_wallet,
-              color: Colors.white,
+              color: context.tokens.textPrimary,
               size: 20,
             ),
           ),
@@ -614,21 +596,19 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               children: [
                 Text(
                   wallet.name,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: context.tokens.textPrimary,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    fontFamily: 'Manrope',
-                  ),
+                                      ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   'Balance: ${wallet.balanceFormatted}',
                   style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.7),
+                    color: context.tokens.textPrimary.withValues(alpha: 0.7),
                     fontSize: 14,
-                    fontFamily: 'Manrope',
-                  ),
+                                      ),
                 ),
               ],
             ),
@@ -643,10 +623,10 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
+        color: context.tokens.inputFill,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
+          color: context.tokens.outline,
         ),
       ),
       child: Column(
@@ -658,12 +638,11 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             width: double.infinity,
             child: Text(
               defaultAddress.fullAddress,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: context.tokens.textPrimary,
                 fontSize: 14,
                 fontWeight: FontWeight.w400,
-                fontFamily: 'Manrope',
-              ),
+                              ),
               textAlign: TextAlign.center,
               softWrap: true,
               overflow: TextOverflow.visible,
@@ -681,10 +660,10 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         // No fixed width, adjusts to content
         padding: const EdgeInsets.all(8), // Reduced to 8 for tighter frame
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.tokens.textPrimary,
           borderRadius: BorderRadius.circular(6), // More square: from 16 to 6
           border: Border.all(
-            color: Colors.white.withValues(alpha: 0.2),
+            color: context.tokens.outlineStrong,
           ),
         ),
         child: _buildQRCodeWithLNURL(defaultAddress),
@@ -722,7 +701,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             width: 32, // Reduced from 40 to 32
             height: 32, // Reduced from 40 to 32
             child: CircularProgressIndicator(
-              color: Color(0xFF2D3FE7),
+              color: context.tokens.accentSolid,
               strokeWidth: 3, // Reduced from 4 to 3
             ),
           ),
@@ -732,8 +711,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             style: TextStyle(
               fontSize: 14, // Reduced from 16 to 14
               color: Colors.grey,
-              fontFamily: 'Manrope',
-            ),
+                          ),
           ),
         ],
       ),
@@ -811,15 +789,15 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       width: double.infinity,
       child: Container(
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [Color(0xFF2D3FE7), Color(0xFF4C63F7)],
+          gradient: LinearGradient(
+            colors: [context.tokens.accentSolid, context.tokens.accentSolid],
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
           ),
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF2D3FE7).withValues(alpha: 0.3),
+              color: context.tokens.accentSolid.withValues(alpha: 0.3),
               blurRadius: 12,
               offset: const Offset(0, 6),
             ),
@@ -835,14 +813,13 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               borderRadius: BorderRadius.circular(16),
             ),
           ),
-          icon: const Icon(Icons.copy, color: Colors.white, size: 20),
+          icon: Icon(Icons.copy, color: context.tokens.textPrimary, size: 20),
           label: Text(
             _generatedInvoice != null ? AppLocalizations.of(context)!.copy_button : AppLocalizations.of(context)!.copy_lightning_address,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              fontFamily: 'Manrope',
-              color: Colors.white,
+                            color: context.tokens.textPrimary,
             ),
           ),
         ),
@@ -880,10 +857,10 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
   Widget _buildCollapsibleInfoSection() {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF2D3FE7).withValues(alpha: 0.1),
+        color: context.tokens.accentSolid.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: const Color(0xFF2D3FE7).withValues(alpha: 0.2),
+          color: context.tokens.accentSolid.withValues(alpha: 0.2),
         ),
       ),
       child: Column(
@@ -904,7 +881,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                   children: [
                     Icon(
                       Icons.info_outline,
-                      color: const Color(0xFF4C63F7),
+                      color: context.tokens.accentSolid,
                       size: 20,
                     ),
                     const SizedBox(width: 12),
@@ -915,13 +892,12 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           color: Color(0xFF4C63F7),
-                          fontFamily: 'Manrope',
-                        ),
+                                                  ),
                       ),
                     ),
                     Icon(
                       _isInfoExpanded ? Icons.expand_less : Icons.expand_more,
-                      color: const Color(0xFF4C63F7),
+                      color: context.tokens.accentSolid,
                       size: 24,
                     ),
                   ],
@@ -937,8 +913,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Divider(
-                    color: Color(0xFF2D3FE7),
+                  Divider(
+                    color: context.tokens.accentSolid,
                     thickness: 1,
                     height: 1,
                   ),
@@ -947,9 +923,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                     AppLocalizations.of(context)!.receive_info_text,
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.white.withValues(alpha: 0.8),
-                      fontFamily: 'Manrope',
-                      height: 1.4,
+                      color: context.tokens.textPrimary.withValues(alpha: 0.8),
+                                            height: 1.4,
                     ),
                   ),
                 ],
@@ -966,9 +941,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       child: OutlinedButton.icon(
         onPressed: _showRequestAmountModal,
         style: OutlinedButton.styleFrom(
-          foregroundColor: Colors.white,
+          foregroundColor: context.tokens.accentForeground,
           side: BorderSide(
-            color: Colors.white.withValues(alpha: 0.3),
+            color: context.tokens.textTertiary,
             width: 1.5,
           ),
           padding: const EdgeInsets.symmetric(vertical: 16),
@@ -982,8 +957,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            fontFamily: 'Manrope',
-          ),
+                      ),
         ),
       ),
     );
@@ -1004,18 +978,17 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             SnackBar(
               content: Row(
                 children: [
-                  Icon(Icons.refresh, color: Colors.white, size: 20),
+                  Icon(Icons.refresh, color: context.tokens.textPrimary, size: 20),
                   SizedBox(width: 12),
                   Text(
                     AppLocalizations.of(context)!.lightning_address_title,
                     style: TextStyle(
-                      fontFamily: 'Manrope',
-                      fontWeight: FontWeight.w500,
+                                            fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
               ),
-              backgroundColor: const Color(0xFF4C63F7),
+              backgroundColor: context.tokens.accentSolid,
               behavior: SnackBarBehavior.floating,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -1025,9 +998,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           );
         },
         style: OutlinedButton.styleFrom(
-          foregroundColor: Colors.white,
+          foregroundColor: context.tokens.accentForeground,
           side: BorderSide(
-            color: Colors.white.withValues(alpha: 0.3),
+            color: context.tokens.textTertiary,
             width: 1.5,
           ),
           padding: const EdgeInsets.symmetric(vertical: 16),
@@ -1041,8 +1014,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            fontFamily: 'Manrope',
-          ),
+                      ),
         ),
       ),
     );
@@ -1087,7 +1059,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.3),
+                      color: context.tokens.textTertiary,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -1107,18 +1079,17 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                           child: Text(
                             AppLocalizations.of(context)!.amount_sats_label,
                             style: TextStyle(
-                              color: Colors.white,
+                              color: context.tokens.textPrimary,
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
-                              fontFamily: 'Manrope',
-                            ),
+                                                          ),
                           ),
                         ),
                         IconButton(
                           onPressed: () => Navigator.pop(context),
                           icon: Icon(
                             Icons.close,
-                            color: Colors.white.withValues(alpha: 0.7),
+                            color: context.tokens.textPrimary.withValues(alpha: 0.7),
                           ),
                         ),
                       ],
@@ -1144,38 +1115,36 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                   Text(
                                     AppLocalizations.of(context)!.amount_label,
                                     style: TextStyle(
-                                      color: Colors.white.withValues(alpha: 0.8),
+                                      color: context.tokens.textPrimary.withValues(alpha: 0.8),
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
-                                      fontFamily: 'Manrope',
-                                    ),
+                                                                          ),
                                   ),
                                   const SizedBox(height: 8),
                                   TextFormField(
                                     controller: _amountController,
                                     keyboardType: TextInputType.number,
-                                    style: const TextStyle(
-                                      color: Colors.white,
+                                    style: TextStyle(
+                                      color: context.tokens.textPrimary,
                                       fontSize: 16,
-                                      fontFamily: 'Manrope',
-                                    ),
+                                                                          ),
                                     decoration: InputDecoration(
                                       hintText: '0',
                                       hintStyle: TextStyle(
-                                        color: Colors.white.withValues(alpha: 0.5),
+                                        color: context.tokens.textSecondary,
                                       ),
                                       filled: true,
-                                      fillColor: Colors.white.withValues(alpha: 0.05),
+                                      fillColor: context.tokens.inputFill,
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
                                         borderSide: BorderSide(
-                                          color: Colors.white.withValues(alpha: 0.1),
+                                          color: context.tokens.outline,
                                         ),
                                       ),
                                       enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
                                         borderSide: BorderSide(
-                                          color: Colors.white.withValues(alpha: 0.1),
+                                          color: context.tokens.outline,
                                         ),
                                       ),
                                       focusedBorder: OutlineInputBorder(
@@ -1203,18 +1172,17 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                 Text(
                                   AppLocalizations.of(context)!.currency_label,
                                   style: TextStyle(
-                                    color: Colors.white.withValues(alpha: 0.8),
+                                    color: context.tokens.textPrimary.withValues(alpha: 0.8),
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
-                                    fontFamily: 'Manrope',
-                                  ),
+                                                                      ),
                                 ),
                                 const SizedBox(height: 8),
                                 SizedBox(
                                   width: 80,
                                   height: 52,
                                   child: Material(
-                                    color: Colors.white.withValues(alpha: 0.05),
+                                    color: context.tokens.inputFill,
                                     borderRadius: BorderRadius.circular(12),
                                     child: InkWell(
                                       borderRadius: BorderRadius.circular(12),
@@ -1229,18 +1197,17 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(12),
                                           border: Border.all(
-                                            color: Colors.white.withValues(alpha: 0.1),
+                                            color: context.tokens.outline,
                                           ),
                                         ),
                                         child: Center(
                                           child: Text(
                                             _selectedCurrency,
-                                            style: const TextStyle(
-                                              color: Colors.white,
+                                            style: TextStyle(
+                                              color: context.tokens.textPrimary,
                                               fontSize: 14,
                                               fontWeight: FontWeight.w600,
-                                              fontFamily: 'Manrope',
-                                            ),
+                                                                                          ),
                                           ),
                                         ),
                                       ),
@@ -1261,37 +1228,35 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                             Text(
                               AppLocalizations.of(context)!.optional_description_label,
                               style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.8),
+                                color: context.tokens.textPrimary.withValues(alpha: 0.8),
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
-                                fontFamily: 'Manrope',
-                              ),
+                                                              ),
                             ),
                             const SizedBox(height: 8),
                             TextFormField(
                               controller: _noteController,
-                              style: const TextStyle(
-                                color: Colors.white,
+                              style: TextStyle(
+                                color: context.tokens.textPrimary,
                                 fontSize: 16,
-                                fontFamily: 'Manrope',
-                              ),
+                                                              ),
                               decoration: InputDecoration(
                                 hintText: AppLocalizations.of(context)!.payment_description_example,
                                 hintStyle: TextStyle(
-                                  color: Colors.white.withValues(alpha: 0.5),
+                                  color: context.tokens.textSecondary,
                                 ),
                                 filled: true,
-                                fillColor: Colors.white.withValues(alpha: 0.05),
+                                fillColor: context.tokens.inputFill,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: BorderSide(
-                                    color: Colors.white.withValues(alpha: 0.1),
+                                    color: context.tokens.outline,
                                   ),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: BorderSide(
-                                    color: Colors.white.withValues(alpha: 0.1),
+                                    color: context.tokens.outline,
                                   ),
                                 ),
                                 focusedBorder: OutlineInputBorder(
@@ -1321,9 +1286,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                 child: OutlinedButton(
                                   onPressed: () => Navigator.pop(context),
                                   style: OutlinedButton.styleFrom(
-                                    foregroundColor: Colors.white,
+                                    foregroundColor: context.tokens.accentForeground,
                                     side: BorderSide(
-                                      color: Colors.white.withValues(alpha: 0.3),
+                                      color: context.tokens.textTertiary,
                                     ),
                                     padding: const EdgeInsets.symmetric(vertical: 16),
                                     shape: RoundedRectangleBorder(
@@ -1335,8 +1300,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
-                                      fontFamily: 'Manrope',
-                                    ),
+                                                                          ),
                                   ),
                                 ),
                               ),
@@ -1345,8 +1309,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                 child: ElevatedButton(
                                   onPressed: () => _confirmRequestAmount(),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: const Color(0xFF2D3FE7),
-                                    foregroundColor: Colors.white,
+                                    backgroundColor: context.tokens.accentSolid,
+                                    foregroundColor: context.tokens.accentForeground,
                                     padding: const EdgeInsets.symmetric(vertical: 16),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
@@ -1358,8 +1322,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
-                                      fontFamily: 'Manrope',
-                                    ),
+                                                                          ),
                                   ),
                                 ),
                               ),
@@ -1477,7 +1440,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         SnackBar(
           content: Row(
             children: [
-              const Icon(Icons.check_circle, color: Colors.white, size: 20),
+              Icon(Icons.check_circle, color: context.tokens.textPrimary, size: 20),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -1487,8 +1450,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                     Text(
                       conversionMessage.isNotEmpty ? conversionMessage : 'Factura: ${invoice.formattedAmount}',
                       style: const TextStyle(
-                        fontFamily: 'Manrope',
-                        fontWeight: FontWeight.w500,
+                                                fontWeight: FontWeight.w500,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -1497,7 +1459,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               ),
             ],
           ),
-          backgroundColor: Colors.green,
+          backgroundColor: context.tokens.statusHealthy,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -1527,14 +1489,13 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.error, color: Colors.white, size: 20),
+            Icon(Icons.error, color: context.tokens.textPrimary, size: 20),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 message,
                 style: const TextStyle(
-                  fontFamily: 'Manrope',
-                  fontWeight: FontWeight.w500,
+                                    fontWeight: FontWeight.w500,
                 ),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
@@ -1542,7 +1503,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             ),
           ],
         ),
-        backgroundColor: Colors.red,
+        backgroundColor: context.tokens.statusUnhealthy,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -1557,18 +1518,17 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.info, color: Colors.white, size: 20),
+            Icon(Icons.info, color: context.tokens.textPrimary, size: 20),
             const SizedBox(width: 12),
             Text(
               message,
               style: const TextStyle(
-                fontFamily: 'Manrope',
-                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w500,
               ),
             ),
           ],
         ),
-        backgroundColor: const Color(0xFF4C63F7),
+        backgroundColor: context.tokens.accentSolid,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -1598,18 +1558,17 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         SnackBar(
           content: Row(
             children: [
-              const Icon(Icons.check_circle, color: Colors.white, size: 20),
+              Icon(Icons.check_circle, color: context.tokens.textPrimary, size: 20),
               const SizedBox(width: 12),
               Text(
                 successMessage,
                 style: const TextStyle(
-                  fontFamily: 'Manrope',
-                  fontWeight: FontWeight.w500,
+                                    fontWeight: FontWeight.w500,
                 ),
               ),
             ],
           ),
-          backgroundColor: const Color(0xFF2D3FE7),
+          backgroundColor: context.tokens.accentSolid,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
@@ -1660,18 +1619,17 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                   SnackBar(
                     content: Row(
                       children: [
-                        const Icon(Icons.check_circle, color: Colors.white, size: 20),
+                        Icon(Icons.check_circle, color: context.tokens.textPrimary, size: 20),
                         const SizedBox(width: 12),
                         Text(
                           '${AppLocalizations.of(context)!.received_label}! ${invoice.formattedAmount}',
                           style: const TextStyle(
-                            fontFamily: 'Manrope',
-                            fontWeight: FontWeight.w500,
+                                                        fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
                     ),
-                    backgroundColor: Colors.green,
+                    backgroundColor: context.tokens.statusHealthy,
                     behavior: SnackBarBehavior.floating,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -1702,9 +1660,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       child: OutlinedButton.icon(
         onPressed: () => _copyLNURL(defaultAddress),
         style: OutlinedButton.styleFrom(
-          foregroundColor: Colors.white,
+          foregroundColor: context.tokens.accentForeground,
           side: BorderSide(
-            color: Colors.white.withValues(alpha: 0.3),
+            color: context.tokens.textTertiary,
             width: 1.5,
           ),
           padding: const EdgeInsets.symmetric(vertical: 16),
@@ -1718,8 +1676,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            fontFamily: 'Manrope',
-          ),
+                      ),
         ),
       ),
     );
@@ -1735,18 +1692,17 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           SnackBar(
             content: Row(
               children: [
-                const Icon(Icons.check_circle, color: Colors.white, size: 20),
+                Icon(Icons.check_circle, color: context.tokens.textPrimary, size: 20),
                 const SizedBox(width: 12),
                 const Text(
                   'LNURL copiado',
                   style: TextStyle(
-                    fontFamily: 'Manrope',
-                    fontWeight: FontWeight.w500,
+                                        fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
             ),
-            backgroundColor: const Color(0xFF2D3FE7),
+            backgroundColor: context.tokens.accentSolid,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -1761,18 +1717,17 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           SnackBar(
             content: Row(
               children: [
-                const Icon(Icons.error, color: Colors.white, size: 20),
+                Icon(Icons.error, color: context.tokens.textPrimary, size: 20),
                 const SizedBox(width: 12),
                 const Text(
                   'LNURL no disponible',
                   style: TextStyle(
-                    fontFamily: 'Manrope',
-                    fontWeight: FontWeight.w500,
+                                        fontWeight: FontWeight.w500,
                   ),
                 ),
               ],
             ),
-            backgroundColor: Colors.red,
+            backgroundColor: context.tokens.statusUnhealthy,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -1791,18 +1746,17 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         SnackBar(
           content: Row(
             children: [
-              const Icon(Icons.check_circle, color: Colors.white, size: 20),
+              Icon(Icons.check_circle, color: context.tokens.textPrimary, size: 20),
               const SizedBox(width: 12),
               Text(
                 AppLocalizations.of(context)!.address_copied_message,
                 style: const TextStyle(
-                  fontFamily: 'Manrope',
-                  fontWeight: FontWeight.w500,
+                                    fontWeight: FontWeight.w500,
                 ),
               ),
             ],
           ),
-          backgroundColor: const Color(0xFF2D3FE7),
+          backgroundColor: context.tokens.accentSolid,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
