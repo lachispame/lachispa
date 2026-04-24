@@ -3,6 +3,10 @@
   
   "welcome_title": "Welcome to La Chispa!",
   "welcome_subtitle": "Lightning for everyone",
+  "welcome_hero_prefix": "Pay with",
+  "welcome_hero_tagline": "Lightning, in your pocket.",
+  "welcome_server_label": "SERVER",
+  "welcome_server_change": "Change",
   "get_started_button": "Get Started",
   "tap_to_start_hint": "As easy as lighting a spark",
   

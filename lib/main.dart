@@ -190,7 +190,7 @@ class _LaChispaAppState extends State<LaChispaApp> {
                 navigatorKey: _navigatorKey,
                 title: 'LaChispa',
                 theme: ThemeData(
-                  fontFamily: 'Inter',
+                  fontFamily: 'Manrope',
                   useMaterial3: true,
                 ),
                 locale: languageProvider.currentLocale,

@@ -252,7 +252,7 @@ class _QRScannerWidgetState extends State<QRScannerWidget> {
                     const Text(
                       'Escanear QR',
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: 'Manrope',
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
                         color: Colors.white,
@@ -298,7 +298,7 @@ class _QRScannerWidgetState extends State<QRScannerWidget> {
                     child: const Text(
                       'Point the camera at the QR code\nto scan the invoice or address',
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: 'Manrope',
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                         color: Colors.white,

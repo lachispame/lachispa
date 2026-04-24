@@ -135,7 +135,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: Text(
               AppLocalizations.of(context)!.settings_screen_title,
               style: TextStyle(
-                fontFamily: 'Inter',
+                fontFamily: 'Manrope',
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
                 color: Colors.white,
@@ -188,7 +188,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Text(
                     title,
                     style: const TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: 'Manrope',
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
@@ -199,7 +199,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     Text(
                       subtitle,
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: 'Manrope',
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                         color: Colors.white.withValues(alpha: 0.6),

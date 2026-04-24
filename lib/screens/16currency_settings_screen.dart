@@ -320,7 +320,7 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                 Text(
                   AppLocalizations.of(context)!.currency_settings_title ?? 'Currency Settings',
                   style: const TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: 'Manrope',
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -330,7 +330,7 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                 Text(
                   AppLocalizations.of(context)!.currency_settings_subtitle ?? 'Select your preferred currencies',
                   style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: 'Manrope',
                     fontSize: 14,
                     color: Colors.white.withValues(alpha: 0.7),
                   ),
@@ -390,7 +390,7 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
               Text(
                 AppLocalizations.of(context)!.available_currencies ?? 'Add Currency',
                 style: const TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: 'Manrope',
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
@@ -578,7 +578,7 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
               Text(
                 AppLocalizations.of(context)!.selected_currencies ?? 'Selected Currencies',
                 style: const TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: 'Manrope',
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
@@ -588,7 +588,7 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
               Text(
                 '${selectedCurrencies.length + 1}', // +1 for sats
                 style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: 'Manrope',
                   fontSize: 14,
                   color: Colors.white.withValues(alpha: 0.7),
                 ),
@@ -701,7 +701,7 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                         Text(
                           currency,
                           style: TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: 'Manrope',
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
                             color: isAlreadySelected 
@@ -713,7 +713,7 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                         Text(
                           name,
                           style: TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: 'Manrope',
                             fontSize: 12,
                             color: isAlreadySelected 
                                 ? Colors.white.withValues(alpha: 0.4)
@@ -726,7 +726,7 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                       Text(
                         country,
                         style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: 'Manrope',
                           fontSize: 11,
                           color: isAlreadySelected 
                               ? Colors.white.withValues(alpha: 0.3)
@@ -849,7 +849,7 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                           Text(
                             currency,
                             style: TextStyle(
-                              fontFamily: 'Inter',
+                              fontFamily: 'Manrope',
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: isSelected ? const Color(0xFF2D3FE7) : Colors.white,
@@ -867,7 +867,7 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                             child: Text(
                               currencyInfo?.symbol ?? currency,
                               style: TextStyle(
-                                fontFamily: 'Inter',
+                                fontFamily: 'Manrope',
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                                 color: isSelected 
@@ -882,7 +882,7 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                       Text(
                         name,
                         style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: 'Manrope',
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: isSelected 
@@ -895,7 +895,7 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                         Text(
                           country,
                           style: TextStyle(
-                            fontFamily: 'Inter',
+                            fontFamily: 'Manrope',
                             fontSize: 12,
                             color: isSelected 
                                 ? const Color(0xFF2D3FE7).withValues(alpha: 0.6)
@@ -985,7 +985,7 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                     Text(
                       currency.toUpperCase(),
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: 'Manrope',
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: isFirst ? const Color(0xFFFFD700) : Colors.white,
@@ -1003,7 +1003,7 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                       child: Text(
                         symbol,
                         style: TextStyle(
-                          fontFamily: 'Inter',
+                          fontFamily: 'Manrope',
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                           color: isFirst 
@@ -1018,7 +1018,7 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                 Text(
                   name,
                   style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: 'Manrope',
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: isFirst 
@@ -1031,7 +1031,7 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                   Text(
                     country,
                     style: TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: 'Manrope',
                       fontSize: 12,
                       color: isFirst 
                           ? const Color(0xFFFFD700).withValues(alpha: 0.6)

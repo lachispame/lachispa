@@ -93,7 +93,7 @@ class _BoltzScreenState extends State<BoltzScreen> {
         title: const Text(
           'Boltz',
           style: TextStyle(
-            fontFamily: 'Inter',
+            fontFamily: 'Manrope',
             fontSize: 20,
             fontWeight: FontWeight.w600,
             color: Colors.white,
@@ -180,7 +180,7 @@ class _BoltzScreenState extends State<BoltzScreen> {
                   Text(
                     AppLocalizations.of(context)!.boltz_loading,
                     style: const TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: 'Manrope',
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
                       color: Colors.white,
@@ -225,7 +225,7 @@ class _BoltzScreenState extends State<BoltzScreen> {
           const Text(
             'Boltz',
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: 'Manrope',
               fontSize: 28,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -239,7 +239,7 @@ class _BoltzScreenState extends State<BoltzScreen> {
             AppLocalizations.of(context)!.boltz_description,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: 'Manrope',
               fontSize: 16,
               fontWeight: FontWeight.w400,
               color: Colors.white.withValues(alpha: 0.8),
@@ -262,7 +262,7 @@ class _BoltzScreenState extends State<BoltzScreen> {
                 AppLocalizations.of(context)!.boltz_webview_error,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontFamily: 'Inter',
+                  fontFamily: 'Manrope',
                   fontSize: 14,
                   color: Colors.orange.shade200,
                 ),
@@ -306,7 +306,7 @@ class _BoltzScreenState extends State<BoltzScreen> {
                   Text(
                     AppLocalizations.of(context)!.boltz_open_button,
                     style: const TextStyle(
-                      fontFamily: 'Inter',
+                      fontFamily: 'Manrope',
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -330,7 +330,7 @@ class _BoltzScreenState extends State<BoltzScreen> {
                 : AppLocalizations.of(context)!.boltz_within_app,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: 'Manrope',
               fontSize: 12,
               fontWeight: FontWeight.w400,
               color: Colors.white.withValues(alpha: 0.6),

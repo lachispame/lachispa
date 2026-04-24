@@ -198,7 +198,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
           Text(
             AppLocalizations.of(context)!.voucher_scan_title,
             style: TextStyle(
-              fontFamily: 'Inter',
+              fontFamily: 'Manrope',
               fontSize: isMobile ? 32 : 40,
               fontWeight: FontWeight.w700,
               color: Colors.white,
@@ -235,7 +235,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
               color: Colors.white,
               fontSize: 16,
               fontWeight: FontWeight.w500,
-              fontFamily: 'Inter',
+              fontFamily: 'Manrope',
             ),
             textAlign: TextAlign.center,
           ),
@@ -245,7 +245,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.7),
               fontSize: 14,
-              fontFamily: 'Inter',
+              fontFamily: 'Manrope',
             ),
             textAlign: TextAlign.center,
           ),
@@ -313,7 +313,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,
-                                  fontFamily: 'Inter',
+                                  fontFamily: 'Manrope',
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -333,7 +333,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 18,
-                                  fontFamily: 'Inter',
+                                  fontFamily: 'Manrope',
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -353,7 +353,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.7),
               fontSize: 16,
-              fontFamily: 'Inter',
+              fontFamily: 'Manrope',
             ),
           ),
         ],
@@ -386,7 +386,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                fontFamily: 'Inter',
+                fontFamily: 'Manrope',
               ),
             ),
           ),
@@ -532,7 +532,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
           AppLocalizations.of(context)!.voucher_manual_input,
           style: TextStyle(
             color: Colors.white,
-            fontFamily: 'Inter',
+            fontFamily: 'Manrope',
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -543,7 +543,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
               AppLocalizations.of(context)!.voucher_manual_input_hint,
               style: TextStyle(
                 color: Colors.white.withValues(alpha: 0.8),
-                fontFamily: 'Inter',
+                fontFamily: 'Manrope',
               ),
             ),
             const SizedBox(height: 16),
@@ -551,7 +551,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
               controller: controller,
               style: const TextStyle(
                 color: Colors.white,
-                fontFamily: 'Inter',
+                fontFamily: 'Manrope',
               ),
               decoration: InputDecoration(
                 hintText: AppLocalizations.of(context)!.voucher_manual_input_placeholder,
@@ -590,7 +590,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
               AppLocalizations.of(context)!.cancel_button,
               style: TextStyle(
                 color: Colors.white.withValues(alpha: 0.7),
-                fontFamily: 'Inter',
+                fontFamily: 'Manrope',
               ),
             ),
           ),
@@ -612,7 +612,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
               AppLocalizations.of(context)!.process_button,
               style: TextStyle(
                 color: Colors.white,
-                fontFamily: 'Inter',
+                fontFamily: 'Manrope',
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -638,7 +638,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
               title,
               style: TextStyle(
                 color: Colors.white,
-                fontFamily: 'Inter',
+                fontFamily: 'Manrope',
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -648,7 +648,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
           message,
           style: TextStyle(
             color: Colors.white.withValues(alpha: 0.8),
-            fontFamily: 'Inter',
+            fontFamily: 'Manrope',
           ),
         ),
         actions: [
@@ -664,7 +664,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
               'OK',
               style: TextStyle(
                 color: Colors.white,
-                fontFamily: 'Inter',
+                fontFamily: 'Manrope',
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -702,7 +702,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
                 AppLocalizations.of(context)!.voucher_detected_title,
                 style: TextStyle(
                   color: Colors.white,
-                  fontFamily: 'Inter',
+                  fontFamily: 'Manrope',
                   fontWeight: FontWeight.w600,
                   fontSize: 18,
                 ),
@@ -734,7 +734,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
                         description,
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.9),
-                          fontFamily: 'Inter',
+                          fontFamily: 'Manrope',
                           fontSize: 14,
                         ),
                       ),
@@ -766,7 +766,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
                           isFixedAmount ? AppLocalizations.of(context)!.voucher_fixed_amount : AppLocalizations.of(context)!.voucher_amount_range,
                           style: TextStyle(
                             color: Colors.white,
-                            fontFamily: 'Inter',
+                            fontFamily: 'Manrope',
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
                           ),
@@ -780,7 +780,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
                           : 'De $minSats a $maxSats sats',
                       style: TextStyle(
                         color: const Color(0xFF4C63F7),
-                        fontFamily: 'Inter',
+                        fontFamily: 'Manrope',
                         fontWeight: FontWeight.w700,
                         fontSize: 18,
                       ),
@@ -798,7 +798,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
                     color: Colors.white.withValues(alpha: 0.8),
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Manrope',
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -808,7 +808,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Manrope',
                   ),
                   decoration: InputDecoration(
                     hintText: 'Ej: ${maxSats}',
@@ -851,7 +851,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.6),
                     fontSize: 12,
-                    fontFamily: 'Inter',
+                    fontFamily: 'Manrope',
                   ),
                 ),
               ],
@@ -871,7 +871,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
               AppLocalizations.of(context)!.cancel_button,
               style: TextStyle(
                 color: Colors.white.withValues(alpha: 0.7),
-                fontFamily: 'Inter',
+                fontFamily: 'Manrope',
               ),
             ),
           ),
@@ -904,7 +904,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
               AppLocalizations.of(context)!.voucher_claim_button,
               style: TextStyle(
                 color: Colors.white,
-                fontFamily: 'Inter',
+                fontFamily: 'Manrope',
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -982,7 +982,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
               AppLocalizations.of(context)!.voucher_claimed_title,
               style: TextStyle(
                 color: Colors.white,
-                fontFamily: 'Inter',
+                fontFamily: 'Manrope',
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -1008,7 +1008,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
                       color: Colors.green,
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
-                      fontFamily: 'Inter',
+                      fontFamily: 'Manrope',
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -1017,7 +1017,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
                     style: TextStyle(
                       color: Colors.white.withValues(alpha: 0.8),
                       fontSize: 14,
-                      fontFamily: 'Inter',
+                      fontFamily: 'Manrope',
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -1029,7 +1029,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
               AppLocalizations.of(context)!.voucher_claimed_subtitle,
               style: TextStyle(
                 color: Colors.white.withValues(alpha: 0.8),
-                fontFamily: 'Inter',
+                fontFamily: 'Manrope',
               ),
               textAlign: TextAlign.center,
             ),
@@ -1051,7 +1051,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
               'Continuar',
               style: TextStyle(
                 color: Colors.white,
-                fontFamily: 'Inter',
+                fontFamily: 'Manrope',
                 fontWeight: FontWeight.w600,
               ),
             ),

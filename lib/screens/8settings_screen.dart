@@ -187,7 +187,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                 return Text(
                   AppLocalizations.of(context)!.settings_title,
                   style: TextStyle(
-                    fontFamily: 'Inter',
+                    fontFamily: 'Manrope',
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
