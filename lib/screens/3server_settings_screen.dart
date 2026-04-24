@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'dart:async';
 import '../providers/server_provider.dart';
 import '../l10n/generated/app_localizations.dart';
+import '../theme/app_tokens.dart';
 
 class ServerSettingsScreen extends StatefulWidget {
   const ServerSettingsScreen({super.key});
@@ -12,7 +13,7 @@ class ServerSettingsScreen extends StatefulWidget {
   State<ServerSettingsScreen> createState() => _ServerSettingsScreenState();
 }
 
-class _ServerSettingsScreenState extends State<ServerSettingsScreen> 
+class _ServerSettingsScreenState extends State<ServerSettingsScreen>
     with TickerProviderStateMixin {
   late String _selectedServer;
   final _customServerController = TextEditingController();
@@ -48,15 +49,15 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
 
   void _createRandomSpark() {
     if (!mounted) return;
-    
+
     final sparkCount = _random.nextInt(3) + 2; // 2-4 sparks
-    
+
     for (int spark = 0; spark < sparkCount; spark++) {
       final screenSize = MediaQuery.of(context).size;
       final x = _random.nextDouble() * screenSize.width;
       final y = _random.nextDouble() * screenSize.height;
       final particleCount = _random.nextInt(20) + 10; // 10-30 particles
-      
+
       for (int i = 0; i < particleCount; i++) {
         _particles.add(Particle(x, y, _random));
       }
@@ -66,7 +67,7 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
   void _initializeServerSelection() {
     final serverProvider = context.read<ServerProvider>();
     _selectedServer = serverProvider.selectedServer;
-    
+
     // Check if the current server is not in the default list
     bool isInDefaultList = serverProvider.defaultServers.values
         .any((url) => url == _selectedServer);
@@ -100,14 +101,14 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
 
   Future<void> _saveServer() async {
     if (_isSaving) return;
-    
+
     setState(() {
       _isSaving = true;
     });
 
     final serverProvider = context.read<ServerProvider>();
-    
-    String serverToSave = _isCustomSelected 
+
+    String serverToSave = _isCustomSelected
         ? _customServerController.text.trim()
         : _selectedServer;
 
@@ -121,13 +122,13 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
 
     try {
       await serverProvider.selectServer(serverToSave);
-      
+
       if (mounted) {
         _showMessage('${AppLocalizations.of(context)!.server_settings_title}: ${serverProvider.serverDisplayName}', isError: false);
-        
+
         // Wait a moment for the user to see the message
         await Future.delayed(const Duration(seconds: 1));
-        
+
         // Return to the previous screen
         if (mounted) {
           Navigator.pop(context);
@@ -146,11 +147,12 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
 
   void _showMessage(String message, {required bool isError}) {
     if (!mounted) return;
-    
+    final t = context.tokens;
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: isError ? Colors.red : const Color(0xFF2D3FE7),
+        backgroundColor: isError ? t.statusUnhealthy : t.accentSolid,
         duration: const Duration(seconds: 3),
       ),
     );
@@ -166,22 +168,12 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Scaffold(
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF0F1419),
-              Color(0xFF1A1D47),
-              Color(0xFF2D3FE7),
-            ],
-            stops: [0.0, 0.5, 1.0],
-          ),
-        ),
+        decoration: BoxDecoration(gradient: t.backgroundGradient),
         child: Stack(
           children: [
             // Animated spark effects
@@ -194,14 +186,14 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
                 );
               },
             ),
-            
+
             // Main content
             SafeArea(
               child: Column(
                 children: [
                   // Header with back button
-                  _buildHeader(),
-                  
+                  _buildHeader(t),
+
                   // Content
                   Expanded(
                     child: Padding(
@@ -210,48 +202,46 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 32),
-                          
+
                           // Title
                           Text(
                             AppLocalizations.of(context)!.server_settings_title,
                             style: TextStyle(
-                              fontFamily: 'Manrope',
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
-                              color: Colors.white,
+                              color: t.textPrimary,
                             ),
                           ),
                           const SizedBox(height: 8),
-                          
+
                           Text(
                             AppLocalizations.of(context)!.server_url_label,
                             style: TextStyle(
-                              fontFamily: 'Manrope',
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
-                              color: Colors.white.withValues(alpha: 0.8),
+                              color: t.textPrimary.withValues(alpha: 0.8),
                             ),
                           ),
                           const SizedBox(height: 32),
-                          
+
                           // Server list
                           Expanded(
                             child: SingleChildScrollView(
                               child: Column(
                                 children: [
                                   // Predefined servers
-                                  _buildDefaultServers(),
+                                  _buildDefaultServers(t),
                                   const SizedBox(height: 24),
-                                  
+
                                   // Custom server
-                                  _buildCustomServerSection(),
+                                  _buildCustomServerSection(t),
                                 ],
                               ),
                             ),
                           ),
-                          
+
                           // Save button
-                          _buildSaveButton(),
+                          _buildSaveButton(t),
                           const SizedBox(height: 32),
                         ],
                       ),
@@ -266,7 +256,7 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(AppTokens t) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: Row(
@@ -276,12 +266,13 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
             child: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.1),
+                color: t.surface,
                 borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: t.outline, width: 1),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.arrow_back,
-                color: Colors.white,
+                color: t.textPrimary,
                 size: 24,
               ),
             ),
@@ -290,10 +281,9 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
           Text(
             AppLocalizations.of(context)!.server_settings_title,
             style: TextStyle(
-              fontFamily: 'Manrope',
               fontSize: 20,
               fontWeight: FontWeight.w600,
-              color: Colors.white,
+              color: t.textPrimary,
             ),
           ),
         ],
@@ -301,13 +291,13 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
     );
   }
 
-  Widget _buildDefaultServers() {
+  Widget _buildDefaultServers(AppTokens t) {
     return Consumer<ServerProvider>(
       builder: (context, serverProvider, child) {
         return Column(
           children: serverProvider.defaultServers.entries.map((entry) {
             final isSelected = _selectedServer == entry.value && !_isCustomSelected;
-            
+
             return Padding(
               padding: const EdgeInsets.only(bottom: 12),
               child: GestureDetector(
@@ -316,14 +306,14 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
                   width: double.infinity,
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: isSelected 
-                        ? const Color(0xFF2D3FE7).withValues(alpha: 0.3)
-                        : Colors.white.withValues(alpha: 0.08),
+                    color: isSelected
+                        ? t.accentSolid.withValues(alpha: 0.3)
+                        : t.surface,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: isSelected 
-                          ? const Color(0xFF2D3FE7)
-                          : Colors.white.withValues(alpha: 0.2),
+                      color: isSelected
+                          ? t.accentSolid
+                          : t.outlineStrong,
                       width: isSelected ? 2 : 1,
                     ),
                   ),
@@ -332,9 +322,9 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
                       Icon(
                         isSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
                         size: 24,
-                        color: isSelected 
-                            ? const Color(0xFF4C63F7) 
-                            : Colors.white.withValues(alpha: 0.5),
+                        color: isSelected
+                            ? t.accentSolid
+                            : t.textSecondary,
                       ),
                       const SizedBox(width: 16),
                       Expanded(
@@ -344,24 +334,22 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
                             Text(
                               entry.key,
                               style: TextStyle(
-                                fontFamily: 'Manrope',
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                color: isSelected 
-                                    ? Colors.white 
-                                    : Colors.white.withValues(alpha: 0.9),
+                                color: isSelected
+                                    ? t.textPrimary
+                                    : t.textPrimary.withValues(alpha: 0.9),
                               ),
                             ),
                             const SizedBox(height: 4),
                             Text(
                               entry.value,
                               style: TextStyle(
-                                fontFamily: 'Manrope',
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
-                                color: isSelected 
-                                    ? Colors.white.withValues(alpha: 0.8)
-                                    : Colors.white.withValues(alpha: 0.6),
+                                color: isSelected
+                                    ? t.textPrimary.withValues(alpha: 0.8)
+                                    : t.textSecondary,
                               ),
                             ),
                           ],
@@ -378,19 +366,19 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
     );
   }
 
-  Widget _buildCustomServerSection() {
+  Widget _buildCustomServerSection(AppTokens t) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: _isCustomSelected 
-            ? const Color(0xFF2D3FE7).withValues(alpha: 0.3)
-            : Colors.white.withValues(alpha: 0.08),
+        color: _isCustomSelected
+            ? t.accentSolid.withValues(alpha: 0.3)
+            : t.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: _isCustomSelected 
-              ? const Color(0xFF2D3FE7)
-              : Colors.white.withValues(alpha: 0.2),
+          color: _isCustomSelected
+              ? t.accentSolid
+              : t.outlineStrong,
           width: _isCustomSelected ? 2 : 1,
         ),
       ),
@@ -404,20 +392,19 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
                 Icon(
                   _isCustomSelected ? Icons.radio_button_checked : Icons.radio_button_unchecked,
                   size: 24,
-                  color: _isCustomSelected 
-                      ? const Color(0xFF4C63F7) 
-                      : Colors.white.withValues(alpha: 0.5),
+                  color: _isCustomSelected
+                      ? t.accentSolid
+                      : t.textSecondary,
                 ),
                 const SizedBox(width: 16),
                 Text(
                   AppLocalizations.of(context)!.server_url_label,
                   style: TextStyle(
-                    fontFamily: 'Manrope',
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: _isCustomSelected 
-                        ? Colors.white 
-                        : Colors.white.withValues(alpha: 0.9),
+                    color: _isCustomSelected
+                        ? t.textPrimary
+                        : t.textPrimary.withValues(alpha: 0.9),
                   ),
                 ),
               ],
@@ -428,36 +415,34 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
             controller: _customServerController,
             onChanged: _onCustomServerChanged,
             onTap: _selectCustomServer,
-            style: const TextStyle(
-              fontFamily: 'Manrope',
+            style: TextStyle(
               fontSize: 16,
-              color: Colors.white,
+              color: t.textPrimary,
             ),
             decoration: InputDecoration(
               hintText: AppLocalizations.of(context)!.server_url_placeholder,
               hintStyle: TextStyle(
-                fontFamily: 'Manrope',
                 fontSize: 16,
-                color: Colors.white.withValues(alpha: 0.5),
+                color: t.textSecondary,
               ),
               filled: true,
-              fillColor: Colors.white.withValues(alpha: 0.1),
+              fillColor: t.inputFill,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
-                  color: Colors.white.withValues(alpha: 0.2),
+                  color: t.outlineStrong,
                 ),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(
-                  color: Colors.white.withValues(alpha: 0.2),
+                  color: t.outlineStrong,
                 ),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(
-                  color: Color(0xFF2D3FE7),
+                borderSide: BorderSide(
+                  color: t.accentSolid,
                   width: 2,
                 ),
               ),
@@ -467,10 +452,9 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
           Text(
             AppLocalizations.of(context)!.server_url_label,
             style: TextStyle(
-              fontFamily: 'Manrope',
               fontSize: 12,
               fontWeight: FontWeight.w400,
-              color: Colors.white.withValues(alpha: 0.6),
+              color: t.textSecondary,
             ),
           ),
         ],
@@ -478,23 +462,16 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
     );
   }
 
-  Widget _buildSaveButton() {
+  Widget _buildSaveButton(AppTokens t) {
     return Container(
       width: double.infinity,
       height: 56,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [
-            Color(0xFF2D3FE7),
-            Color(0xFF4C63F7),
-          ],
-        ),
+        gradient: t.accentGradient,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF2D3FE7).withValues(alpha: 0.3),
+            color: t.accentSolid.withValues(alpha: 0.3),
             blurRadius: 12,
             offset: const Offset(0, 6),
           ),
@@ -510,21 +487,20 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
           ),
         ),
         child: _isSaving
-            ? const SizedBox(
+            ? SizedBox(
                 width: 20,
                 height: 20,
                 child: CircularProgressIndicator(
-                  color: Colors.white,
+                  color: t.accentForeground,
                   strokeWidth: 2,
                 ),
               )
             : Text(
                 AppLocalizations.of(context)!.connect_button,
                 style: TextStyle(
-                  fontFamily: 'Manrope',
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  color: t.accentForeground,
                 ),
               ),
       ),
@@ -565,7 +541,7 @@ class Particle {
   }
 
   bool get isAlive => life > 0;
-  
+
   // Use smooth curve for fade out
   double get opacity {
     final normalizedLife = life / 100;
@@ -589,7 +565,7 @@ class SparkPainter extends CustomPainter {
 
     // Get devicePixelRatio for high density screens
     final devicePixelRatio = 1.0; // Can be obtained from context if needed
-    
+
     // Draw particles
     for (final particle in particles) {
       final alpha = particle.opacity;
@@ -597,8 +573,8 @@ class SparkPainter extends CustomPainter {
 
       final center = Offset(particle.x, particle.y);
       final scaledSize = particle.size * devicePixelRatio;
-      
-      // More saturated and bright colors
+
+      // Particle effect colors are intrinsic to the visual (kept literal)
       const primaryColor = Color(0xFF5B73FF); // Brighter
       const secondaryColor = Color(0xFF4C63F7); // Original
 
@@ -606,20 +582,20 @@ class SparkPainter extends CustomPainter {
       final glowPaint2 = Paint()
         ..color = primaryColor.withValues(alpha: alpha * 0.4)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.0);
-      
+
       canvas.drawCircle(center, scaledSize * 2, glowPaint2);
 
       // 2. Inner glow (smaller)
       final glowPaint1 = Paint()
         ..color = secondaryColor.withValues(alpha: alpha * 0.8)
         ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.0);
-      
+
       canvas.drawCircle(center, scaledSize * 1.5, glowPaint1);
 
       // 3. Main particle (solid, brighter)
       final particlePaint = Paint()
         ..color = primaryColor.withValues(alpha: alpha * 0.9);
-      
+
       canvas.drawCircle(center, scaledSize, particlePaint);
     }
   }

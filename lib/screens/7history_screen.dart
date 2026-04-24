@@ -7,6 +7,7 @@ import '../providers/wallet_provider.dart';
 import '../services/wallet_service.dart';
 import '../models/transaction_info.dart';
 import '../l10n/generated/app_localizations.dart';
+import '../theme/app_tokens.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -175,19 +176,10 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFF0F1419),
-              Color(0xFF1A1D47),
-              Color(0xFF2D3FE7),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
+        decoration: BoxDecoration(gradient: t.backgroundGradient),
         child: SafeArea(
           child: Column(
             children: [
@@ -201,12 +193,12 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                     ).animate(_headerAnimation),
                     child: FadeTransition(
                       opacity: _headerAnimation,
-                      child: _buildHeader(),
+                      child: _buildHeader(t),
                     ),
                   );
                 },
               ),
-              
+
               AnimatedBuilder(
                 animation: _headerAnimation,
                 builder: (context, child) {
@@ -217,12 +209,12 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                     ).animate(_headerAnimation),
                     child: FadeTransition(
                       opacity: _headerAnimation,
-                      child: _buildFilters(),
+                      child: _buildFilters(t),
                     ),
                   );
                 },
               ),
-              
+
               Expanded(
                 child: AnimatedBuilder(
                   animation: _listAnimation,
@@ -234,7 +226,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                       ).animate(_listAnimation),
                       child: FadeTransition(
                         opacity: _listAnimation,
-                        child: _buildTransactionsList(),
+                        child: _buildTransactionsList(t),
                       ),
                     );
                   },
@@ -247,24 +239,24 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(AppTokens t) {
     return Container(
       padding: const EdgeInsets.all(24),
       child: Row(
         children: [
           Container(
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.08),
+              color: t.surface,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Colors.white.withValues(alpha: 0.1),
+                color: t.outline,
               ),
             ),
             child: IconButton(
               onPressed: () => Navigator.pop(context),
-              icon: const Icon(
+              icon: Icon(
                 Icons.arrow_back_ios,
-                color: Colors.white,
+                color: t.textPrimary,
                 size: 20,
               ),
               padding: const EdgeInsets.all(12),
@@ -274,9 +266,9 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
               ),
             ),
           ),
-          
+
           const SizedBox(width: 16),
-          
+
           Expanded(
             child: AnimatedBuilder(
               animation: _glowAnimation,
@@ -285,7 +277,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
-                        color: const Color(0xFF2D3FE7).withValues(alpha: _glowAnimation.value * 0.3),
+                        color: t.accentSolid.withValues(alpha: _glowAnimation.value * 0.3),
                         blurRadius: 20,
                         spreadRadius: 2,
                       ),
@@ -296,10 +288,10 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.w700,
-                      color: Colors.white,
+                      color: t.textPrimary,
                       shadows: [
                         Shadow(
-                          color: const Color(0xFF2D3FE7).withValues(alpha: _glowAnimation.value * 0.8),
+                          color: t.accentSolid.withValues(alpha: _glowAnimation.value * 0.8),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -310,29 +302,29 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
               },
             ),
           ),
-          
+
           Container(
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.08),
+              color: t.surface,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Colors.white.withValues(alpha: 0.1),
+                color: t.outline,
               ),
             ),
             child: IconButton(
               onPressed: _isLoading ? null : _loadTransactions,
               icon: _isLoading
-                  ? const SizedBox(
+                  ? SizedBox(
                       width: 20,
                       height: 20,
                       child: CircularProgressIndicator(
                         strokeWidth: 2,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        valueColor: AlwaysStoppedAnimation<Color>(t.textPrimary),
                       ),
                     )
-                  : const Icon(
+                  : Icon(
                       Icons.refresh,
-                      color: Colors.white,
+                      color: t.textPrimary,
                       size: 20,
                     ),
               padding: const EdgeInsets.all(12),
@@ -347,7 +339,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
     );
   }
 
-  Widget _buildFilters() {
+  Widget _buildFilters(AppTokens t) {
     return Container(
       height: 50,
       margin: const EdgeInsets.symmetric(horizontal: 24),
@@ -361,7 +353,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                   final isSelected = _currentFilter == filter;
                   return Padding(
                     padding: const EdgeInsets.only(right: 12),
-                    child: _buildFilterChip(filter, isSelected),
+                    child: _buildFilterChip(filter, isSelected, t),
                   );
                 }).toList(),
               ),
@@ -372,7 +364,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
     );
   }
 
-  Widget _buildFilterChip(TransactionFilter filter, bool isSelected) {
+  Widget _buildFilterChip(TransactionFilter filter, bool isSelected, AppTokens t) {
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -383,14 +375,14 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected 
-              ? const Color(0xFF2D3FE7).withValues(alpha: 0.3)
-              : Colors.white.withValues(alpha: 0.05),
+          color: isSelected
+              ? t.accentSolid.withValues(alpha: 0.3)
+              : t.inputFill,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected 
-                ? const Color(0xFF2D3FE7)
-                : Colors.white.withValues(alpha: 0.1),
+            color: isSelected
+                ? t.accentSolid
+                : t.outline,
           ),
         ),
         child: Row(
@@ -399,7 +391,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
             Icon(
               _getFilterIcon(filter),
               size: 16,
-              color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.7),
+              color: isSelected ? t.textPrimary : t.textPrimary.withValues(alpha: 0.7),
             ),
             const SizedBox(width: 8),
             Text(
@@ -407,7 +399,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
               style: TextStyle(
                 fontSize: 14,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.7),
+                color: isSelected ? t.textPrimary : t.textPrimary.withValues(alpha: 0.7),
               ),
             ),
           ],
@@ -488,39 +480,39 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
   }
 
   /// Determine appropriate color for transaction based on status and type
-  Color _getTransactionIconColor(TransactionInfo transaction) {
-    // Show orange color for pending transactions regardless of type
+  Color _getTransactionIconColor(TransactionInfo transaction, AppTokens t) {
+    // Show warning color for pending transactions regardless of type
     if (transaction.isPending) {
-      return Colors.orange;
+      return t.statusWarning;
     }
-    
-    // Show red color for failed transactions
+
+    // Show error color for failed transactions
     if (transaction.isFailed) {
-      return Colors.red;
+      return t.statusUnhealthy;
     }
-    
+
     // Show color based on direction for completed transactions
     if (transaction.isIncoming) {
-      return Colors.green;
+      return t.statusHealthy;
     } else {
-      return Colors.red;
+      return t.statusUnhealthy;
     }
   }
 
-  Widget _buildTransactionsList() {
+  Widget _buildTransactionsList(AppTokens t) {
     if (_isLoading) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF2D3FE7)),
+              valueColor: AlwaysStoppedAnimation<Color>(t.accentSolid),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Text(
               AppLocalizations.of(context)!.loading_transactions_text,
               style: TextStyle(
-                color: Colors.white,
+                color: t.textPrimary,
                 fontSize: 16,
               ),
             ),
@@ -537,13 +529,13 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
             Icon(
               Icons.error_outline,
               size: 64,
-              color: Colors.red.withValues(alpha: 0.7),
+              color: t.statusUnhealthy.withValues(alpha: 0.7),
             ),
             const SizedBox(height: 16),
             Text(
               AppLocalizations.of(context)!.loading_transactions_error_prefix,
               style: TextStyle(
-                color: Colors.white,
+                color: t.textPrimary,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
@@ -553,7 +545,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
               _errorMessage,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.7),
+                color: t.textPrimary.withValues(alpha: 0.7),
                 fontSize: 14,
               ),
             ),
@@ -561,8 +553,8 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
             ElevatedButton(
               onPressed: _loadTransactions,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF2D3FE7),
-                foregroundColor: Colors.white,
+                backgroundColor: t.accentSolid,
+                foregroundColor: t.accentForeground,
               ),
               child: Text(AppLocalizations.of(context)!.connect_button),
             ),
@@ -581,13 +573,13 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
             Icon(
               Icons.receipt_long,
               size: 64,
-              color: Colors.white.withValues(alpha: 0.3),
+              color: t.textPrimary.withValues(alpha: 0.3),
             ),
             const SizedBox(height: 16),
             Text(
               AppLocalizations.of(context)!.no_transactions_text,
               style: TextStyle(
-                color: Colors.white,
+                color: t.textPrimary,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
               ),
@@ -597,7 +589,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
               AppLocalizations.of(context)!.no_transactions_description,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.7),
+                color: t.textPrimary.withValues(alpha: 0.7),
                 fontSize: 14,
               ),
             ),
@@ -608,27 +600,28 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
 
     return RefreshIndicator(
       onRefresh: _loadTransactions,
-      color: const Color(0xFF2D3FE7),
+      color: t.accentSolid,
       child: ListView.builder(
         controller: _scrollController,
         padding: const EdgeInsets.all(24),
         itemCount: filteredTransactions.length,
         itemBuilder: (context, index) {
           final transaction = filteredTransactions[index];
-          return _buildTransactionCard(transaction, index);
+          return _buildTransactionCard(transaction, index, t);
         },
       ),
     );
   }
 
-  Widget _buildTransactionCard(TransactionInfo transaction, int index) {
+  Widget _buildTransactionCard(TransactionInfo transaction, int index, AppTokens t) {
+    final iconColor = _getTransactionIconColor(transaction, t);
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
+        color: t.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
+          color: t.outline,
         ),
       ),
       child: InkWell(
@@ -643,18 +636,18 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: _getTransactionIconColor(transaction).withValues(alpha: 0.2),
+                  color: iconColor.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   _getTransactionIcon(transaction),
-                  color: _getTransactionIconColor(transaction),
+                  color: iconColor,
                   size: 24,
                 ),
               ),
-              
+
               const SizedBox(width: 16),
-              
+
               // Content
               Expanded(
                 child: Column(
@@ -662,8 +655,8 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                   children: [
                     Text(
                       transaction.memo.isEmpty ? AppLocalizations.of(context)!.no_description_text : transaction.memo,
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: t.textPrimary,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -673,7 +666,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                     Text(
                       transaction.formattedDate,
                       style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.6),
+                        color: t.textSecondary,
                         fontSize: 12,
                       ),
                     ),
@@ -685,7 +678,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                             width: 8,
                             height: 8,
                             decoration: BoxDecoration(
-                              color: Colors.orange,
+                              color: t.statusWarning,
                               borderRadius: BorderRadius.circular(4),
                             ),
                           ),
@@ -693,7 +686,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                           Text(
                             AppLocalizations.of(context)!.pending_label,
                             style: TextStyle(
-                              color: Colors.orange,
+                              color: t.statusWarning,
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                             ),
@@ -704,7 +697,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                   ],
                 ),
               ),
-              
+
               // Amount column
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -712,7 +705,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                   Text(
                     transaction.displayAmount.split('\n').first, // Show sats amount
                     style: TextStyle(
-                      color: _getTransactionIconColor(transaction),
+                      color: iconColor,
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
                     ),
@@ -721,7 +714,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                     Text(
                       '${transaction.type == TransactionType.incoming ? '+' : '-'}${transaction.fiatAmount!.toStringAsFixed(2)} ${transaction.fiatCurrency}',
                       style: TextStyle(
-                        color: _getTransactionIconColor(transaction).withValues(alpha: 0.8),
+                        color: iconColor.withValues(alpha: 0.8),
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -730,7 +723,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                     Text(
                       '${transaction.originalFiatAmount!.toStringAsFixed(2)} ${transaction.originalFiatCurrency}',
                       style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.7),
+                        color: t.textPrimary.withValues(alpha: 0.7),
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
@@ -745,6 +738,8 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
   }
 
   void _showTransactionDetails(TransactionInfo transaction) {
+    final t = context.tokens;
+    final iconColor = _getTransactionIconColor(transaction, t);
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -754,9 +749,9 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
         maxChildSize: 0.9,
         minChildSize: 0.5,
         builder: (context, scrollController) => Container(
-          decoration: const BoxDecoration(
-            color: Color(0xFF1A1D47),
-            borderRadius: BorderRadius.only(
+          decoration: BoxDecoration(
+            color: t.dialogBackground,
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
             ),
@@ -775,12 +770,12 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: _getTransactionIconColor(transaction).withValues(alpha: 0.2),
+                    color: iconColor.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
                     _getTransactionIcon(transaction),
-                    color: _getTransactionIconColor(transaction),
+                    color: iconColor,
                     size: 24,
                   ),
                 ),
@@ -791,8 +786,8 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                     children: [
                       Text(
                         _getTransactionStatusLabel(transaction),
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: t.textPrimary,
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                         ),
@@ -803,7 +798,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                           Text(
                             transaction.displayAmount.split('\n').first, // Show sats amount
                             style: TextStyle(
-                              color: _getTransactionIconColor(transaction),
+                              color: iconColor,
                               fontSize: 24,
                               fontWeight: FontWeight.w700,
                             ),
@@ -812,7 +807,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                             Text(
                               '${transaction.type == TransactionType.incoming ? '+' : '-'}${transaction.fiatAmount!.toStringAsFixed(2)} ${transaction.fiatCurrency}',
                               style: TextStyle(
-                                color: _getTransactionIconColor(transaction).withValues(alpha: 0.8),
+                                color: iconColor.withValues(alpha: 0.8),
                                 fontSize: 18,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -821,7 +816,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                             Text(
                               '${transaction.originalFiatAmount!.toStringAsFixed(2)} ${transaction.originalFiatCurrency}',
                               style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.6),
+                                color: t.textSecondary,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400,
                               ),
@@ -833,37 +828,37 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 24),
-            
-            _buildDetailRow('Date', transaction.formattedDate),
-            _buildDetailRow('Description', transaction.memo.isEmpty ? AppLocalizations.of(context)!.no_description_text : transaction.memo),
+
+            _buildDetailRow(t, 'Date', transaction.formattedDate),
+            _buildDetailRow(t, 'Description', transaction.memo.isEmpty ? AppLocalizations.of(context)!.no_description_text : transaction.memo),
             if (transaction.originalFiatAmount != null && transaction.originalFiatCurrency != null) ...[
-              _buildDetailRow('Original Amount', '${transaction.originalFiatAmount!.toStringAsFixed(2)} ${transaction.originalFiatCurrency}'),
+              _buildDetailRow(t, 'Original Amount', '${transaction.originalFiatAmount!.toStringAsFixed(2)} ${transaction.originalFiatCurrency}'),
               if (transaction.originalFiatRate != null)
-                _buildDetailRow('Original Rate', '${transaction.originalFiatRate!.toStringAsFixed(4)} sats/${transaction.originalFiatCurrency}'),
+                _buildDetailRow(t, 'Original Rate', '${transaction.originalFiatRate!.toStringAsFixed(4)} sats/${transaction.originalFiatCurrency}'),
             ],
             if (transaction.fiatAmount != null && transaction.fiatCurrency != null) ...[
-              _buildDetailRow('Wallet Amount', '${transaction.fiatAmount!.toStringAsFixed(2)} ${transaction.fiatCurrency}'),
+              _buildDetailRow(t, 'Wallet Amount', '${transaction.fiatAmount!.toStringAsFixed(2)} ${transaction.fiatCurrency}'),
               if (transaction.fiatRate != null)
-                _buildDetailRow('Wallet Rate', '${transaction.fiatRate!.toStringAsFixed(2)} sats/${transaction.fiatCurrency}'),
+                _buildDetailRow(t, 'Wallet Rate', '${transaction.fiatRate!.toStringAsFixed(2)} sats/${transaction.fiatCurrency}'),
             ],
             if (transaction.paymentHash != null)
-              _buildDetailRow('Hash', transaction.paymentHash!, copyable: true),
+              _buildDetailRow(t, 'Hash', transaction.paymentHash!, copyable: true),
             if (transaction.fee != null)
-              _buildDetailRow('Fee', '${transaction.fee} msat'),
-            _buildDetailRow(AppLocalizations.of(context)!.invoice_status_label, _getTransactionStatus(transaction)),
-            
+              _buildDetailRow(t, 'Fee', '${transaction.fee} msat'),
+            _buildDetailRow(t, AppLocalizations.of(context)!.invoice_status_label, _getTransactionStatus(transaction)),
+
             const SizedBox(height: 16),
-            
+
             // Close button
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
                 onPressed: () => Navigator.pop(context),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF2D3FE7),
-                  foregroundColor: Colors.white,
+                  backgroundColor: t.accentSolid,
+                  foregroundColor: t.accentForeground,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -881,7 +876,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
     );
   }
 
-  Widget _buildDetailRow(String label, String value, {bool copyable = false}) {
+  Widget _buildDetailRow(AppTokens t, String label, String value, {bool copyable = false}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
@@ -892,7 +887,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
             child: Text(
               label,
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.6),
+                color: t.textSecondary,
                 fontSize: 14,
               ),
             ),
@@ -908,7 +903,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
               child: Text(
                 value,
                 style: TextStyle(
-                  color: Colors.white,
+                  color: t.textPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
                   decoration: copyable ? TextDecoration.underline : null,

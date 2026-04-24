@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/language_provider.dart';
 import '../providers/currency_settings_provider.dart';
 import '../l10n/generated/app_localizations.dart';
+import '../theme/app_tokens.dart';
 import '7ln_address_screen.dart';
 import '16currency_settings_screen.dart';
 import '18language_selection_screen.dart';
@@ -17,28 +18,18 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Scaffold(
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF0F1419),
-              Color(0xFF1A1D47),
-              Color(0xFF2D3FE7),
-            ],
-            stops: [0.0, 0.5, 1.0],
-          ),
-        ),
+        decoration: BoxDecoration(gradient: t.backgroundGradient),
         child: SafeArea(
           child: Column(
             children: [
               // Header with back button
-              _buildHeader(),
-              
+              _buildHeader(t),
+
               // Settings list
               Expanded(
                 child: ListView(
@@ -46,8 +37,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   children: [
                     // Lightning Address
                     _buildSettingsItem(
+                      t: t,
                       icon: Icons.alternate_email,
-                      iconColor: const Color(0xFF4C63F7),
+                      iconColor: t.accentSolid,
                       title: AppLocalizations.of(context)!.lightning_address_title,
                       onTap: () {
                         Navigator.push(
@@ -58,15 +50,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         );
                       },
                     ),
-                    
+
                     const SizedBox(height: 12),
-                    
+
                     // Currency Settings
                     Consumer<CurrencySettingsProvider>(
                       builder: (context, currencyProvider, child) {
                         return _buildSettingsItem(
+                          t: t,
                           icon: Icons.attach_money,
-                          iconColor: const Color(0xFF4C63F7),
+                          iconColor: t.accentSolid,
                           title: AppLocalizations.of(context)!.currency_settings_title,
                           subtitle: '${currencyProvider.availableCurrencies.length} currencies',
                           onTap: () {
@@ -80,15 +73,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         );
                       },
                     ),
-                    
+
                     const SizedBox(height: 12),
-                    
+
                     // Language Settings
                     Consumer<LanguageProvider>(
                       builder: (context, languageProvider, child) {
                         return _buildSettingsItem(
+                          t: t,
                           icon: Icons.language,
-                          iconColor: const Color(0xFF4C63F7),
+                          iconColor: t.accentSolid,
                           title: AppLocalizations.of(context)!.language_selector_title,
                           subtitle: languageProvider.getCurrentLanguageName(),
                           onTap: () => Navigator.push(
@@ -110,7 +104,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(AppTokens t) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: Row(
@@ -120,12 +114,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.1),
+                color: t.surface,
                 borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: t.outline, width: 1),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.arrow_back,
-                color: Colors.white,
+                color: t.textPrimary,
                 size: 24,
               ),
             ),
@@ -135,10 +130,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: Text(
               AppLocalizations.of(context)!.settings_screen_title,
               style: TextStyle(
-                fontFamily: 'Manrope',
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
-                color: Colors.white,
+                color: t.textPrimary,
               ),
             ),
           ),
@@ -148,6 +142,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildSettingsItem({
+    required AppTokens t,
     required IconData icon,
     required Color iconColor,
     required String title,
@@ -159,10 +154,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.08),
+          color: t.surface,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: Colors.white.withValues(alpha: 0.1),
+            color: t.outline,
             width: 1,
           ),
         ),
@@ -187,11 +182,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
-                      fontFamily: 'Manrope',
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                      color: t.textPrimary,
                     ),
                   ),
                   if (subtitle != null) ...[
@@ -199,10 +193,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     Text(
                       subtitle,
                       style: TextStyle(
-                        fontFamily: 'Manrope',
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
-                        color: Colors.white.withValues(alpha: 0.6),
+                        color: t.textSecondary,
                       ),
                     ),
                   ],
@@ -212,7 +205,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Icon(
               Icons.arrow_forward_ios,
               size: 16,
-              color: Colors.white.withValues(alpha: 0.5),
+              color: t.textSecondary,
             ),
           ],
         ),

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/server_provider.dart';
 import '../providers/language_provider.dart';
 import '../l10n/generated/app_localizations.dart';
+import '../theme/app_tokens.dart';
 import '3server_settings_screen.dart';
 import '4login_screen.dart';
 import '5signup_screen.dart';
@@ -57,22 +58,12 @@ class _StartScreenState extends State<StartScreen>
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final t = context.tokens;
     return Scaffold(
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF0F1419),
-              Color(0xFF1A1D47),
-              Color(0xFF2D3FE7),
-            ],
-            stops: [0.0, 0.5, 1.0],
-          ),
-        ),
+        decoration: BoxDecoration(gradient: t.backgroundGradient),
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -82,13 +73,13 @@ class _StartScreenState extends State<StartScreen>
                 const SizedBox(height: 8),
                 _buildTopBar(),
                 const SizedBox(height: 28),
-                _buildHero(l),
+                _buildHero(l, t),
                 const SizedBox(height: 14),
-                _buildTagline(l),
+                _buildTagline(l, t),
                 const Spacer(),
-                _buildCtas(l),
+                _buildCtas(l, t),
                 const SizedBox(height: 10),
-                _buildServerChangeChip(l),
+                _buildServerChangeChip(l, t),
                 const SizedBox(height: 12),
               ],
             ),
@@ -111,6 +102,7 @@ class _StartScreenState extends State<StartScreen>
   }
 
   Widget _buildLanguageSelector() {
+    final t = context.tokens;
     return Consumer<LanguageProvider>(
       builder: (context, lang, _) {
         return InkWell(
@@ -134,7 +126,7 @@ class _StartScreenState extends State<StartScreen>
                 Icon(
                   Icons.keyboard_arrow_down,
                   size: 14,
-                  color: Colors.white.withValues(alpha: 0.6),
+                  color: t.textSecondary,
                 ),
               ],
             ),
@@ -144,7 +136,7 @@ class _StartScreenState extends State<StartScreen>
     );
   }
 
-  Widget _buildHero(AppLocalizations l) {
+  Widget _buildHero(AppLocalizations l, AppTokens t) {
     return FadeTransition(
       opacity: _heroAnim,
       child: SlideTransition(
@@ -157,24 +149,22 @@ class _StartScreenState extends State<StartScreen>
           children: [
             Text(
               l.welcome_hero_prefix,
-              style: const TextStyle(
-                fontFamily: 'Manrope',
+              style: TextStyle(
                 fontSize: 34,
                 fontWeight: FontWeight.w600,
                 height: 1.1,
                 letterSpacing: -0.8,
-                color: Colors.white,
+                color: t.textPrimary,
               ),
             ),
-            const Text(
+            Text(
               'LaChispa',
               style: TextStyle(
-                fontFamily: 'Manrope',
                 fontSize: 34,
                 fontWeight: FontWeight.w800,
                 height: 1.1,
                 letterSpacing: -0.8,
-                color: Colors.white,
+                color: t.textPrimary,
               ),
             ),
           ],
@@ -183,31 +173,30 @@ class _StartScreenState extends State<StartScreen>
     );
   }
 
-  Widget _buildTagline(AppLocalizations l) {
+  Widget _buildTagline(AppLocalizations l, AppTokens t) {
     return FadeTransition(
       opacity: _bodyAnim,
       child: Text(
         l.welcome_hero_tagline,
         style: TextStyle(
-          fontFamily: 'Manrope',
           fontSize: 14,
           fontWeight: FontWeight.w400,
           height: 1.5,
-          color: Colors.white.withValues(alpha: 0.55),
+          color: t.textSecondary,
         ),
       ),
     );
   }
 
-  Widget _buildServerChangeChip(AppLocalizations l) {
+  Widget _buildServerChangeChip(AppLocalizations l, AppTokens t) {
     return FadeTransition(
       opacity: _ctaAnim,
       child: Consumer<ServerProvider>(
         builder: (context, server, _) {
           final dotColor = switch (server.serverHealth) {
-            ServerHealth.healthy => const Color(0xFF4ADE80),
-            ServerHealth.unhealthy => const Color(0xFFEF4444),
-            ServerHealth.checking => Colors.white.withValues(alpha: 0.25),
+            ServerHealth.healthy => t.statusHealthy,
+            ServerHealth.unhealthy => t.statusUnhealthy,
+            ServerHealth.checking => t.statusChecking,
           };
           return SizedBox(
             width: double.infinity,
@@ -225,11 +214,8 @@ class _StartScreenState extends State<StartScreen>
                 });
               },
               style: OutlinedButton.styleFrom(
-                backgroundColor: Colors.white.withValues(alpha: 0.05),
-                side: BorderSide(
-                  color: Colors.white.withValues(alpha: 0.1),
-                  width: 1,
-                ),
+                backgroundColor: t.surface,
+                side: BorderSide(color: t.outline, width: 1),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -249,11 +235,10 @@ class _StartScreenState extends State<StartScreen>
                   Expanded(
                     child: Text(
                       server.serverDisplayName,
-                      style: const TextStyle(
-                        fontFamily: 'Manrope',
+                      style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
-                        color: Colors.white,
+                        color: t.textPrimary,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -262,17 +247,16 @@ class _StartScreenState extends State<StartScreen>
                   Text(
                     l.welcome_server_change,
                     style: TextStyle(
-                      fontFamily: 'Manrope',
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
-                      color: Colors.white.withValues(alpha: 0.55),
+                      color: t.textSecondary,
                     ),
                   ),
                   const SizedBox(width: 6),
                   Icon(
                     Icons.settings_outlined,
                     size: 15,
-                    color: Colors.white.withValues(alpha: 0.55),
+                    color: t.textSecondary,
                   ),
                 ],
               ),
@@ -283,12 +267,13 @@ class _StartScreenState extends State<StartScreen>
     );
   }
 
-  Widget _buildCtas(AppLocalizations l) {
+  Widget _buildCtas(AppLocalizations l, AppTokens t) {
     return FadeTransition(
       opacity: _ctaAnim,
       child: Column(
         children: [
           _primaryCta(
+            t: t,
             icon: Icons.login_rounded,
             label: l.login_title,
             onPressed: () => Navigator.push(
@@ -298,6 +283,7 @@ class _StartScreenState extends State<StartScreen>
           ),
           const SizedBox(height: 12),
           _secondaryCta(
+            t: t,
             icon: Icons.person_add_alt_1_rounded,
             label: l.create_account_title,
             onPressed: () => Navigator.push(
@@ -311,6 +297,7 @@ class _StartScreenState extends State<StartScreen>
   }
 
   Widget _primaryCta({
+    required AppTokens t,
     required IconData icon,
     required String label,
     required VoidCallback onPressed,
@@ -319,15 +306,11 @@ class _StartScreenState extends State<StartScreen>
       width: double.infinity,
       height: 54,
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [Color(0xFF2D3FE7), Color(0xFF4C63F7)],
-        ),
+        gradient: t.accentGradient,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.35),
+            color: t.ctaShadow,
             blurRadius: 18,
             offset: const Offset(0, 8),
           ),
@@ -341,15 +324,14 @@ class _StartScreenState extends State<StartScreen>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 18, color: Colors.white),
+              Icon(icon, size: 18, color: t.accentForeground),
               const SizedBox(width: 10),
               Text(
                 label,
-                style: const TextStyle(
-                  fontFamily: 'Manrope',
+                style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
-                  color: Colors.white,
+                  color: t.accentForeground,
                 ),
               ),
             ],
@@ -360,6 +342,7 @@ class _StartScreenState extends State<StartScreen>
   }
 
   Widget _secondaryCta({
+    required AppTokens t,
     required IconData icon,
     required String label,
     required VoidCallback onPressed,
@@ -370,10 +353,7 @@ class _StartScreenState extends State<StartScreen>
       child: OutlinedButton(
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
-          side: BorderSide(
-            color: Colors.white.withValues(alpha: 0.18),
-            width: 1,
-          ),
+          side: BorderSide(color: t.outlineStrong, width: 1),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
@@ -381,15 +361,14 @@ class _StartScreenState extends State<StartScreen>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 18, color: Colors.white.withValues(alpha: 0.9)),
+            Icon(icon, size: 18, color: t.textPrimary),
             const SizedBox(width: 10),
             Text(
               label,
-              style: const TextStyle(
-                fontFamily: 'Manrope',
+              style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
-                color: Colors.white,
+                color: t.textPrimary,
               ),
             ),
           ],

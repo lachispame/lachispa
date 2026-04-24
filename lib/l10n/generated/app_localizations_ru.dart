@@ -727,6 +727,25 @@ class AppLocalizationsRu extends AppLocalizations {
   String get lightning_address_set_default => 'Установить по умолчанию';
 
   @override
+  String get lightning_address_delete_title => 'Удалить Lightning-адрес';
+
+  @override
+  String lightning_address_delete_confirm(String address) {
+    return 'Вы уверены, что хотите удалить $address?';
+  }
+
+  @override
+  String get lightning_address_created_success => 'Lightning-адрес создан';
+
+  @override
+  String get lightning_address_deleted_success => 'Lightning-адрес удалён';
+
+  @override
+  String lightning_address_set_default_success(String address) {
+    return '$address теперь ваш Lightning-адрес по умолчанию';
+  }
+
+  @override
   String get create_new_wallet_help => 'Создать новый кошелек';
 
   @override

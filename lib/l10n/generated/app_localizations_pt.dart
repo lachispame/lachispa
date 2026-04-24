@@ -733,6 +733,26 @@ class AppLocalizationsPt extends AppLocalizations {
   String get lightning_address_set_default => 'Definir como por defeito';
 
   @override
+  String get lightning_address_delete_title => 'Eliminar endereço Lightning';
+
+  @override
+  String lightning_address_delete_confirm(String address) {
+    return 'Tem a certeza de que deseja eliminar $address?';
+  }
+
+  @override
+  String get lightning_address_created_success => 'Endereço Lightning criado';
+
+  @override
+  String get lightning_address_deleted_success =>
+      'Endereço Lightning eliminado';
+
+  @override
+  String lightning_address_set_default_success(String address) {
+    return '$address é agora o seu endereço Lightning por defeito';
+  }
+
+  @override
   String get create_new_wallet_help => 'Criar nova carteira';
 
   @override

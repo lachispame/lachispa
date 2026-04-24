@@ -8,10 +8,11 @@ import '../providers/auth_provider.dart';
 import '../providers/wallet_provider.dart';
 import '../widgets/qr_scanner_widget.dart';
 import '../l10n/generated/app_localizations.dart';
+import '../theme/app_tokens.dart';
 
 class SendScreen extends StatefulWidget {
   final String? initialPaymentData;
-  
+
   const SendScreen({super.key, this.initialPaymentData});
 
   @override
@@ -28,7 +29,7 @@ class _SendScreenState extends State<SendScreen> {
     super.initState();
     // Listen to text changes for automatic validation
     _inputController.addListener(_onTextChanged);
-    
+
     // Set initial payment data if provided from deep link
     if (widget.initialPaymentData != null) {
       print('[SendScreen] Received initial payment data: ${widget.initialPaymentData}');
@@ -55,7 +56,7 @@ class _SendScreenState extends State<SendScreen> {
     _invoiceService.dispose();
     super.dispose();
   }
-  
+
   void _onTextChanged() {
     // Update button state when text changes
     setState(() {});
@@ -80,10 +81,10 @@ class _SendScreenState extends State<SendScreen> {
           onScanned: (String scannedData) {
             // Close the scanner
             Navigator.pop(context);
-            
+
             // Update input field with scanned data
             _inputController.text = scannedData;
-            
+
             // Process automatically if valid input is detected
             if (_hasValidInput()) {
               _processPayment();
@@ -93,7 +94,7 @@ class _SendScreenState extends State<SendScreen> {
       ),
     );
   }
-  
+
   String _cleanLightningInput(String input) {
     String cleaned = input.toLowerCase().trim();
     if (cleaned.startsWith('lightning:')) {
@@ -101,46 +102,46 @@ class _SendScreenState extends State<SendScreen> {
     }
     return cleaned;
   }
-  
+
   bool _hasValidInput() {
     final text = _inputController.text.trim();
     return text.isNotEmpty && (_isValidBolt11(text) || _isValidLNURL(text) || _isValidLightningAddress(text));
   }
-  
+
   bool _isValidBolt11(String text) {
     // Normalize text by removing common prefixes
     String normalizedText = _cleanLightningInput(text);
-    
+
     // Basic Lightning BOLT11 invoice validation
-    return normalizedText.startsWith('lnbc') || 
-           normalizedText.startsWith('lntb') || 
+    return normalizedText.startsWith('lnbc') ||
+           normalizedText.startsWith('lntb') ||
            normalizedText.startsWith('lnbcrt');
   }
-  
+
   bool _isValidLNURL(String text) {
     // Normalize text by removing common prefixes
     String normalizedText = _cleanLightningInput(text);
-    
+
     // Basic LNURL validation
     return normalizedText.startsWith('lnurl') ||
            (text.startsWith('http') && text.contains('lnurl'));
   }
-  
+
   bool _isValidLightningAddress(String text) {
     // Use enhanced validation method from InvoiceService
     return InvoiceService.isValidLightningAddress(text);
   }
-  
+
   Future<void> _processPayment() async {
     if (_isProcessing) return;
-    
+
     setState(() {
       _isProcessing = true;
     });
-    
+
     try {
       final input = _inputController.text.trim();
-      
+
       if (_isValidBolt11(input)) {
         await _processBolt11Payment(input);
       } else if (_isValidLNURL(input)) {
@@ -148,7 +149,7 @@ class _SendScreenState extends State<SendScreen> {
       } else if (_isValidLightningAddress(input)) {
         await _processLightningAddressPayment(input);
       }
-      
+
     } catch (e) {
       _showErrorSnackBar('${AppLocalizations.of(context)!.send_error_prefix}$e');
     } finally {
@@ -157,7 +158,7 @@ class _SendScreenState extends State<SendScreen> {
       });
     }
   }
-  
+
   Future<void> _processBolt11Payment(String bolt11) async {
     setState(() {
       _isProcessing = true;
@@ -166,7 +167,7 @@ class _SendScreenState extends State<SendScreen> {
     try {
       final authProvider = context.read<AuthProvider>();
       final walletProvider = context.read<WalletProvider>();
-      
+
       if (authProvider.sessionData == null) {
         throw Exception(AppLocalizations.of(context)!.invalid_session_error);
       }
@@ -231,14 +232,14 @@ class _SendScreenState extends State<SendScreen> {
       }
     }
   }
-  
+
   Future<void> _processLNURLPayment(String lnurl) async {
     // Clean LNURL by removing prefixes if they exist
     String cleanLnurl = lnurl.trim();
     if (cleanLnurl.toLowerCase().startsWith('lightning:')) {
       cleanLnurl = cleanLnurl.substring(10);
     }
-    
+
     // Navigate to amount screen for LNURL payment
     Navigator.push(
       context,
@@ -250,7 +251,7 @@ class _SendScreenState extends State<SendScreen> {
       ),
     );
   }
-  
+
   Future<void> _processLightningAddressPayment(String address) async {
     // Navigate to amount screen for Lightning Address payment
     Navigator.push(
@@ -263,13 +264,16 @@ class _SendScreenState extends State<SendScreen> {
       ),
     );
   }
-  
+
+  // ignore: unused_element
   void _showSuccessSnackBar(String message) {
+    final t = context.tokens;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.check_circle, color: Colors.green),
+            // White content on saturated status background; not a themable surface.
+            const Icon(Icons.check_circle, color: Colors.white),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
@@ -280,18 +284,20 @@ class _SendScreenState extends State<SendScreen> {
             ),
           ],
         ),
-        backgroundColor: Colors.green.withValues(alpha: 0.9),
+        backgroundColor: t.statusHealthy.withValues(alpha: 0.9),
         duration: const Duration(seconds: 3),
       ),
     );
   }
-  
+
   void _showErrorSnackBar(String message) {
+    final t = context.tokens;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.error, color: Colors.red),
+            // White content on saturated status background; not a themable surface.
+            const Icon(Icons.error, color: Colors.white),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
@@ -302,7 +308,7 @@ class _SendScreenState extends State<SendScreen> {
             ),
           ],
         ),
-        backgroundColor: Colors.red.withValues(alpha: 0.9),
+        backgroundColor: t.statusUnhealthy.withValues(alpha: 0.9),
         duration: const Duration(seconds: 4),
       ),
     );
@@ -310,15 +316,17 @@ class _SendScreenState extends State<SendScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
           final screenWidth = constraints.maxWidth;
           final isMobile = screenWidth < 768;
-          
+
           return Container(
             width: double.infinity,
             height: double.infinity,
+            // 2-stop variant of the brand gradient on send-flow screens
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
@@ -342,10 +350,10 @@ class _SendScreenState extends State<SendScreen> {
                               width: 40,
                               height: 40,
                               decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.08),
+                                color: t.surface,
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                  color: Colors.white.withValues(alpha: 0.1),
+                                  color: t.outline,
                                   width: 1,
                                 ),
                                 boxShadow: [
@@ -357,9 +365,9 @@ class _SendScreenState extends State<SendScreen> {
                                 ],
                               ),
                               child: IconButton(
-                                icon: const Icon(
+                                icon: Icon(
                                   Icons.arrow_back,
-                                  color: Colors.white,
+                                  color: t.textPrimary,
                                   size: 20,
                                 ),
                                 onPressed: () {
@@ -370,16 +378,15 @@ class _SendScreenState extends State<SendScreen> {
                             ),
                           ],
                         ),
-                        
+
                         SizedBox(height: isMobile ? 0 : 4),
-                        
+
                         Text(
                           AppLocalizations.of(context)!.send_title,
                           style: TextStyle(
-                            fontFamily: 'Manrope',
                             fontSize: isMobile ? 40 : 48,
                             fontWeight: FontWeight.w700,
-                            color: Colors.white,
+                            color: t.textPrimary,
                             height: 1.1,
                           ),
                           textAlign: TextAlign.center,
@@ -387,7 +394,7 @@ class _SendScreenState extends State<SendScreen> {
                       ],
                     ),
                   ),
-                  
+
                   Expanded(
                     child: Padding(
                       padding: EdgeInsets.symmetric(
@@ -398,7 +405,7 @@ class _SendScreenState extends State<SendScreen> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(height: isMobile ? 20 : 40),
-                          
+
                           Flexible(
                             child: Container(
                               width: double.infinity,
@@ -407,10 +414,10 @@ class _SendScreenState extends State<SendScreen> {
                                 maxHeight: isMobile ? 150 : 200,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.08),
+                                color: t.surface,
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
-                                  color: Colors.white.withValues(alpha: 0.1),
+                                  color: t.outline,
                                   width: 1,
                                 ),
                                 boxShadow: [
@@ -426,14 +433,14 @@ class _SendScreenState extends State<SendScreen> {
                                 child: TextField(
                                   controller: _inputController,
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: t.textPrimary,
                                     fontSize: isMobile ? 14 : 16,
                                     fontWeight: FontWeight.w400,
                                   ),
                                   decoration: InputDecoration(
                                     hintText: AppLocalizations.of(context)!.paste_input_hint,
                                     hintStyle: TextStyle(
-                                      color: Colors.white.withValues(alpha: 0.6),
+                                      color: t.textPrimary.withValues(alpha: 0.6),
                                       fontSize: isMobile ? 14 : 16,
                                       fontWeight: FontWeight.w400,
                                     ),
@@ -451,26 +458,26 @@ class _SendScreenState extends State<SendScreen> {
                               ),
                             ),
                           ),
-                          
+
                           SizedBox(height: isMobile ? 16 : 24),
-                          
+
                           Column(
                             children: [
                               Row(
                                 children: [
                                   Expanded(
-                                    child: Container(
+                                    child: SizedBox(
                                       height: isMobile ? 48 : 56,
                                       child: ElevatedButton(
                                         onPressed: _pasteFromClipboard,
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.white.withValues(alpha: 0.08),
-                                          foregroundColor: Colors.white,
+                                          backgroundColor: t.surface,
+                                          foregroundColor: t.textPrimary,
                                           elevation: 0,
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(16),
                                             side: BorderSide(
-                                              color: Colors.white.withValues(alpha: 0.1),
+                                              color: t.outline,
                                               width: 1,
                                             ),
                                           ),
@@ -483,13 +490,13 @@ class _SendScreenState extends State<SendScreen> {
                                               width: 20,
                                               height: 20,
                                               decoration: BoxDecoration(
-                                                color: Colors.white.withValues(alpha: 0.2),
+                                                color: t.textPrimary.withValues(alpha: 0.2),
                                                 borderRadius: BorderRadius.circular(4),
                                               ),
-                                              child: const Icon(
+                                              child: Icon(
                                                 Icons.content_paste,
                                                 size: 14,
-                                                color: Colors.white,
+                                                color: t.textPrimary,
                                               ),
                                             ),
                                             const SizedBox(width: 8),
@@ -498,7 +505,7 @@ class _SendScreenState extends State<SendScreen> {
                                               style: TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w500,
-                                                color: Colors.white,
+                                                color: t.textPrimary,
                                               ),
                                             ),
                                           ],
@@ -506,22 +513,22 @@ class _SendScreenState extends State<SendScreen> {
                                       ),
                                     ),
                                   ),
-                                  
+
                                   const SizedBox(width: 16),
-                                  
+
                                   Expanded(
-                                    child: Container(
+                                    child: SizedBox(
                                       height: isMobile ? 48 : 56,
                                       child: ElevatedButton(
                                         onPressed: _scanQR,
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.white.withValues(alpha: 0.08),
-                                          foregroundColor: Colors.white,
+                                          backgroundColor: t.surface,
+                                          foregroundColor: t.textPrimary,
                                           elevation: 0,
                                           shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(16),
                                             side: BorderSide(
-                                              color: Colors.white.withValues(alpha: 0.1),
+                                              color: t.outline,
                                               width: 1,
                                             ),
                                           ),
@@ -534,13 +541,13 @@ class _SendScreenState extends State<SendScreen> {
                                               width: 20,
                                               height: 20,
                                               decoration: BoxDecoration(
-                                                color: Colors.white.withValues(alpha: 0.2),
+                                                color: t.textPrimary.withValues(alpha: 0.2),
                                                 borderRadius: BorderRadius.circular(4),
                                               ),
-                                              child: const Icon(
+                                              child: Icon(
                                                 Icons.qr_code_scanner,
                                                 size: 14,
-                                                color: Colors.white,
+                                                color: t.textPrimary,
                                               ),
                                             ),
                                             const SizedBox(width: 8),
@@ -549,7 +556,7 @@ class _SendScreenState extends State<SendScreen> {
                                               style: TextStyle(
                                                 fontSize: 14,
                                                 fontWeight: FontWeight.w500,
-                                                color: Colors.white,
+                                                color: t.textPrimary,
                                               ),
                                             ),
                                           ],
@@ -559,31 +566,31 @@ class _SendScreenState extends State<SendScreen> {
                                   ),
                                 ],
                               ),
-                              
+
                               SizedBox(height: isMobile ? 16 : 24),
-                              
-                              Container(
+
+                              SizedBox(
                                 width: double.infinity,
                                 height: isMobile ? 52 : 64,
                                 child: ElevatedButton(
                                   onPressed: (_hasValidInput() && !_isProcessing) ? _processPayment : null,
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: _hasValidInput() 
-                                        ? const Color(0xFF2D3FE7)
-                                        : Colors.white.withValues(alpha: 0.08),
-                                    foregroundColor: Colors.white,
+                                    backgroundColor: _hasValidInput()
+                                        ? t.accentSolid
+                                        : t.surface,
+                                    foregroundColor: t.accentForeground,
                                     elevation: _hasValidInput() ? 8 : 0,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(16),
                                       side: BorderSide(
                                         color: _hasValidInput()
-                                            ? const Color(0xFF4C63F7)
-                                            : Colors.white.withValues(alpha: 0.1),
+                                            ? t.accentSolid
+                                            : t.outline,
                                         width: 1,
                                       ),
                                     ),
-                                    shadowColor: _hasValidInput() 
-                                        ? const Color(0xFF2D3FE7).withValues(alpha: 0.3)
+                                    shadowColor: _hasValidInput()
+                                        ? t.accentSolid.withValues(alpha: 0.3)
                                         : Colors.transparent,
                                   ),
                                   child: _isProcessing
@@ -595,7 +602,7 @@ class _SendScreenState extends State<SendScreen> {
                                               height: 20,
                                               child: CircularProgressIndicator(
                                                 strokeWidth: 2,
-                                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                                valueColor: AlwaysStoppedAnimation<Color>(t.accentForeground),
                                               ),
                                             ),
                                             const SizedBox(width: 12),
@@ -604,7 +611,7 @@ class _SendScreenState extends State<SendScreen> {
                                               style: TextStyle(
                                                 fontSize: 16,
                                                 fontWeight: FontWeight.w700,
-                                                color: Colors.white,
+                                                color: t.accentForeground,
                                               ),
                                             ),
                                           ],
@@ -614,22 +621,22 @@ class _SendScreenState extends State<SendScreen> {
                                           style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w700,
-                                            color: _hasValidInput() 
-                                                ? Colors.white 
-                                                : Colors.white.withValues(alpha: 0.4),
+                                            color: _hasValidInput()
+                                                ? t.accentForeground
+                                                : t.textPrimary.withValues(alpha: 0.4),
                                           ),
                                         ),
                                 ),
                               ),
                             ],
                           ),
-                          
+
                           // Flexible spacer to push info to bottom
                           Expanded(
                             flex: 1,
                             child: Container(),
                           ),
-                          
+
                           // Additional information (only if there's space)
                           if (isMobile) ...[
                             Padding(
@@ -637,7 +644,7 @@ class _SendScreenState extends State<SendScreen> {
                               child: Text(
                                 AppLocalizations.of(context)!.paste_input_hint,
                                 style: TextStyle(
-                                  color: Colors.white.withValues(alpha: 0.6),
+                                  color: t.textPrimary.withValues(alpha: 0.6),
                                   fontSize: 12,
                                   fontWeight: FontWeight.w400,
                                 ),

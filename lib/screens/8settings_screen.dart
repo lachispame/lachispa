@@ -5,6 +5,7 @@ import '../providers/wallet_provider.dart';
 import '../providers/server_provider.dart';
 import '../providers/language_provider.dart';
 import '../l10n/generated/app_localizations.dart';
+import '../theme/app_tokens.dart';
 import '3server_settings_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -14,9 +15,9 @@ class SettingsScreen extends StatefulWidget {
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> 
+class _SettingsScreenState extends State<SettingsScreen>
     with TickerProviderStateMixin {
-  
+
   // Animation controllers
   late AnimationController _staggerController;
   late AnimationController _glowController;
@@ -37,13 +38,13 @@ class _SettingsScreenState extends State<SettingsScreen>
       duration: const Duration(milliseconds: 1600),
       vsync: this,
     );
-    
+
     // Glow controller
     _glowController = AnimationController(
       duration: const Duration(milliseconds: 2000),
       vsync: this,
     )..repeat(reverse: true);
-    
+
     // Specific animations
     _headerAnimation = Tween<double>(
       begin: 0.0,
@@ -52,7 +53,7 @@ class _SettingsScreenState extends State<SettingsScreen>
       parent: _staggerController,
       curve: const Interval(0.0, 0.4, curve: Curves.easeOutCubic),
     ));
-    
+
     _contentAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -60,7 +61,7 @@ class _SettingsScreenState extends State<SettingsScreen>
       parent: _staggerController,
       curve: const Interval(0.3, 0.7, curve: Curves.easeOutCubic),
     ));
-    
+
     _glowAnimation = Tween<double>(
       begin: 0.3,
       end: 1.0,
@@ -84,6 +85,7 @@ class _SettingsScreenState extends State<SettingsScreen>
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Consumer4<AuthProvider, WalletProvider, ServerProvider, LanguageProvider>(
       builder: (context, authProvider, walletProvider, serverProvider, languageProvider, child) {
         return Scaffold(
@@ -91,18 +93,7 @@ class _SettingsScreenState extends State<SettingsScreen>
           body: Container(
             width: double.infinity,
             height: double.infinity,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF0F1419),
-                  Color(0xFF1A1D47),
-                  Color(0xFF2D3FE7),
-                ],
-                stops: [0.0, 0.5, 1.0],
-              ),
-            ),
+            decoration: BoxDecoration(gradient: t.backgroundGradient),
             child: SafeArea(
               child: Column(
                 children: [
@@ -117,12 +108,12 @@ class _SettingsScreenState extends State<SettingsScreen>
                         ).animate(_headerAnimation),
                         child: FadeTransition(
                           opacity: _headerAnimation,
-                          child: _buildHeader(),
+                          child: _buildHeader(t),
                         ),
                       );
                     },
                   ),
-                  
+
                   // Main content
                   Expanded(
                     child: AnimatedBuilder(
@@ -135,7 +126,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                           ).animate(_contentAnimation),
                           child: FadeTransition(
                             opacity: _contentAnimation,
-                            child: _buildContent(authProvider, walletProvider, serverProvider, languageProvider),
+                            child: _buildContent(authProvider, walletProvider, serverProvider, languageProvider, t),
                           ),
                         );
                       },
@@ -150,7 +141,7 @@ class _SettingsScreenState extends State<SettingsScreen>
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(AppTokens t) {
     return Container(
       padding: const EdgeInsets.all(24),
       child: Row(
@@ -160,25 +151,25 @@ class _SettingsScreenState extends State<SettingsScreen>
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.08),
+              color: t.surface,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Colors.white.withValues(alpha: 0.1),
+                color: t.outline,
                 width: 1,
               ),
             ),
             child: IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.arrow_back,
-                color: Colors.white,
+                color: t.textPrimary,
                 size: 24,
               ),
               onPressed: () => Navigator.pop(context),
             ),
           ),
-          
+
           const SizedBox(width: 16),
-          
+
           // Title with glow
           Expanded(
             child: AnimatedBuilder(
@@ -187,15 +178,14 @@ class _SettingsScreenState extends State<SettingsScreen>
                 return Text(
                   AppLocalizations.of(context)!.settings_title,
                   style: TextStyle(
-                    fontFamily: 'Manrope',
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: t.textPrimary,
                     shadows: [
                       Shadow(
                         offset: const Offset(0, 0),
                         blurRadius: 20 + (10 * _glowAnimation.value),
-                        color: const Color(0xFF2D3FE7).withValues(
+                        color: t.accentSolid.withValues(
                           alpha: 0.3 + (0.4 * _glowAnimation.value),
                         ),
                       ),
@@ -210,48 +200,48 @@ class _SettingsScreenState extends State<SettingsScreen>
     );
   }
 
-  Widget _buildContent(AuthProvider authProvider, WalletProvider walletProvider, ServerProvider serverProvider, LanguageProvider languageProvider) {
+  Widget _buildContent(AuthProvider authProvider, WalletProvider walletProvider, ServerProvider serverProvider, LanguageProvider languageProvider, AppTokens t) {
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         children: [
           // User section
-          _buildUserSection(authProvider),
-          
+          _buildUserSection(authProvider, t),
+
           const SizedBox(height: 24),
-          
+
           // Server section
-          _buildServerSection(authProvider, serverProvider),
-          
+          _buildServerSection(authProvider, serverProvider, t),
+
           const SizedBox(height: 24),
-          
+
           // Wallet section
-          _buildWalletSection(walletProvider),
-          
+          _buildWalletSection(walletProvider, t),
+
           const SizedBox(height: 24),
-          
+
           // Language section
-          _buildLanguageSection(languageProvider),
-          
+          _buildLanguageSection(languageProvider, t),
+
           const SizedBox(height: 24),
-          
+
           // Information section
-          _buildInfoSection(),
-          
+          _buildInfoSection(t),
+
           const SizedBox(height: 32),
         ],
       ),
     );
   }
 
-  Widget _buildUserSection(AuthProvider authProvider) {
+  Widget _buildUserSection(AuthProvider authProvider, AppTokens t) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
+        color: t.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
+          color: t.outline,
           width: 1,
         ),
       ),
@@ -264,12 +254,12 @@ class _SettingsScreenState extends State<SettingsScreen>
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF2D3FE7),
+                  color: t.accentSolid,
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.person,
-                  color: Colors.white,
+                  color: t.accentForeground,
                   size: 24,
                 ),
               ),
@@ -280,10 +270,10 @@ class _SettingsScreenState extends State<SettingsScreen>
                   children: [
                     Text(
                       authProvider.currentUser ?? 'User',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
-                        color: Colors.white,
+                        color: t.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -291,7 +281,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                       AppLocalizations.of(context)!.login_title,
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.white.withValues(alpha: 0.7),
+                        color: t.textPrimary.withValues(alpha: 0.7),
                       ),
                     ),
                   ],
@@ -304,14 +294,14 @@ class _SettingsScreenState extends State<SettingsScreen>
     );
   }
 
-  Widget _buildServerSection(AuthProvider authProvider, ServerProvider serverProvider) {
+  Widget _buildServerSection(AuthProvider authProvider, ServerProvider serverProvider, AppTokens t) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
+        color: t.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
+          color: t.outline,
           width: 1,
         ),
       ),
@@ -320,18 +310,18 @@ class _SettingsScreenState extends State<SettingsScreen>
         children: [
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.dns,
-                color: Color(0xFF4C63F7),
+                color: t.accentSolid,
                 size: 24,
               ),
               const SizedBox(width: 12),
               Text(
                 AppLocalizations.of(context)!.server_settings_title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  color: t.textPrimary,
                 ),
               ),
             ],
@@ -340,7 +330,7 @@ class _SettingsScreenState extends State<SettingsScreen>
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.05),
+              color: t.inputFill,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
@@ -350,16 +340,16 @@ class _SettingsScreenState extends State<SettingsScreen>
                   AppLocalizations.of(context)!.server_settings_title,
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.white.withValues(alpha: 0.7),
+                    color: t.textPrimary.withValues(alpha: 0.7),
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   _extractDomain(authProvider.currentServer ?? ''),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w500,
-                    color: Colors.white,
+                    color: t.textPrimary,
                   ),
                 ),
               ],
@@ -378,8 +368,8 @@ class _SettingsScreenState extends State<SettingsScreen>
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF4C63F7),
-                foregroundColor: Colors.white,
+                backgroundColor: t.accentSolid,
+                foregroundColor: t.accentForeground,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -399,14 +389,14 @@ class _SettingsScreenState extends State<SettingsScreen>
     );
   }
 
-  Widget _buildWalletSection(WalletProvider walletProvider) {
+  Widget _buildWalletSection(WalletProvider walletProvider, AppTokens t) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
+        color: t.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
+          color: t.outline,
           width: 1,
         ),
       ),
@@ -415,18 +405,18 @@ class _SettingsScreenState extends State<SettingsScreen>
         children: [
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.account_balance_wallet,
-                color: Color(0xFF5B73FF),
+                color: t.accentBright,
                 size: 24,
               ),
               const SizedBox(width: 12),
               Text(
                 AppLocalizations.of(context)!.wallet_title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  color: t.textPrimary,
                 ),
               ),
             ],
@@ -436,7 +426,7 @@ class _SettingsScreenState extends State<SettingsScreen>
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.05),
+                color: t.inputFill,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
@@ -446,24 +436,24 @@ class _SettingsScreenState extends State<SettingsScreen>
                     AppLocalizations.of(context)!.wallet_title,
                     style: TextStyle(
                       fontSize: 12,
-                      color: Colors.white.withValues(alpha: 0.7),
+                      color: t.textPrimary.withValues(alpha: 0.7),
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     walletProvider.primaryWallet!.name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color: Colors.white,
+                      color: t.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     walletProvider.primaryWallet!.balanceFormatted,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 14,
-                      color: Color(0xFF5B73FF),
+                      color: t.accentBright,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -474,26 +464,26 @@ class _SettingsScreenState extends State<SettingsScreen>
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.orange.withValues(alpha: 0.1),
+                color: t.statusWarning.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: Colors.orange.withValues(alpha: 0.3),
+                  color: t.statusWarning.withValues(alpha: 0.3),
                 ),
               ),
               child: Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.warning,
-                    color: Colors.orange,
+                    color: t.statusWarning,
                     size: 20,
                   ),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
                       AppLocalizations.of(context)!.wallet_title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
-                        color: Colors.orange,
+                        color: t.statusWarning,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -507,14 +497,14 @@ class _SettingsScreenState extends State<SettingsScreen>
     );
   }
 
-  Widget _buildLanguageSection(LanguageProvider languageProvider) {
+  Widget _buildLanguageSection(LanguageProvider languageProvider, AppTokens t) {
     return Container(
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.08),
+            color: t.surface,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: Colors.white.withValues(alpha: 0.1),
+              color: t.outline,
               width: 1,
             ),
           ),
@@ -523,38 +513,38 @@ class _SettingsScreenState extends State<SettingsScreen>
             children: [
               Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.language,
-                    color: Color(0xFF4C63F7),
+                    color: t.accentSolid,
                     size: 24,
                   ),
                   const SizedBox(width: 12),
                   Text(
                     AppLocalizations.of(context)!.language_selector_title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                      color: t.textPrimary,
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 16),
-              
+
               // Language selector
-              _buildLanguageSelector(languageProvider),
+              _buildLanguageSelector(languageProvider, t),
             ],
           ),
         );
   }
 
-  Widget _buildLanguageSelector(LanguageProvider languageProvider) {
+  Widget _buildLanguageSelector(LanguageProvider languageProvider, AppTokens t) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
+        color: t.inputFill,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
+          color: t.outline,
           width: 1,
         ),
       ),
@@ -578,17 +568,17 @@ class _SettingsScreenState extends State<SettingsScreen>
                     children: [
                       Text(
                         languageProvider.getCurrentLanguageName(),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
-                          color: Colors.white,
+                          color: t.textPrimary,
                         ),
                       ),
                       Text(
                         AppLocalizations.of(context)!.language_selector_description,
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.white.withValues(alpha: 0.7),
+                          color: t.textPrimary.withValues(alpha: 0.7),
                         ),
                       ),
                     ],
@@ -596,7 +586,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                 ),
                 Icon(
                   Icons.keyboard_arrow_right,
-                  color: Colors.white.withValues(alpha: 0.7),
+                  color: t.textPrimary.withValues(alpha: 0.7),
                   size: 20,
                 ),
               ],
@@ -608,13 +598,15 @@ class _SettingsScreenState extends State<SettingsScreen>
   }
 
   void _showLanguageSelector(LanguageProvider languageProvider) {
+    final t = context.tokens;
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       builder: (modalContext) => Consumer<LanguageProvider>(
         builder: (context, langProvider, child) => Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
+        decoration: BoxDecoration(
+          // Modal-specific darker gradient kept literal — unique to this sheet
+          gradient: const LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
@@ -623,7 +615,7 @@ class _SettingsScreenState extends State<SettingsScreen>
               Color(0xFF0F0F23),
             ],
           ),
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
@@ -637,24 +629,24 @@ class _SettingsScreenState extends State<SettingsScreen>
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.3),
+                color: t.textPrimary.withValues(alpha: 0.3),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-            
+
             // Title
             Padding(
               padding: const EdgeInsets.all(20),
               child: Text(
                 AppLocalizations.of(context)!.select_language,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: t.textPrimary,
                 ),
               ),
             ),
-            
+
             // Language options
             ...langProvider.getAvailableLanguages().map((language) {
               final isSelected = langProvider.currentLocale.languageCode == language['code'];
@@ -682,14 +674,14 @@ class _SettingsScreenState extends State<SettingsScreen>
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                              color: isSelected ? const Color(0xFF4C63F7) : Colors.white,
+                              color: isSelected ? t.accentSolid : t.textPrimary,
                             ),
                           ),
                         ),
                         if (isSelected)
-                          const Icon(
+                          Icon(
                             Icons.check_circle,
-                            color: Color(0xFF4C63F7),
+                            color: t.accentSolid,
                             size: 24,
                           ),
                       ],
@@ -698,7 +690,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                 ),
               );
             }).toList(),
-            
+
             const SizedBox(height: 20),
           ],
         ),
@@ -707,14 +699,14 @@ class _SettingsScreenState extends State<SettingsScreen>
     );
   }
 
-  Widget _buildInfoSection() {
+  Widget _buildInfoSection(AppTokens t) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
+        color: t.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
+          color: t.outline,
           width: 1,
         ),
       ),
@@ -723,26 +715,27 @@ class _SettingsScreenState extends State<SettingsScreen>
         children: [
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.info,
-                color: Color(0xFF4C63F7),
+                color: t.accentSolid,
                 size: 24,
               ),
               const SizedBox(width: 12),
               Text(
                 AppLocalizations.of(context)!.settings_title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  color: t.textPrimary,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 16),
-          
+
           // About the app
           _buildSettingItem(
+            t: t,
             icon: Icons.info_outline,
             title: AppLocalizations.of(context)!.settings_title,
             subtitle: AppLocalizations.of(context)!.settings_title,
@@ -750,11 +743,12 @@ class _SettingsScreenState extends State<SettingsScreen>
               _showAboutDialog();
             },
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Help
           _buildSettingItem(
+            t: t,
             icon: Icons.help_outline,
             title: AppLocalizations.of(context)!.settings_title,
             subtitle: AppLocalizations.of(context)!.settings_title,
@@ -772,6 +766,7 @@ class _SettingsScreenState extends State<SettingsScreen>
   }
 
   Widget _buildSettingItem({
+    required AppTokens t,
     required IconData icon,
     required String title,
     required String subtitle,
@@ -782,14 +777,14 @@ class _SettingsScreenState extends State<SettingsScreen>
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.05),
+          color: t.inputFill,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
           children: [
             Icon(
               icon,
-              color: const Color(0xFF5B73FF),
+              color: t.accentBright,
               size: 20,
             ),
             const SizedBox(width: 12),
@@ -799,10 +794,10 @@ class _SettingsScreenState extends State<SettingsScreen>
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color: Colors.white,
+                      color: t.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -810,15 +805,15 @@ class _SettingsScreenState extends State<SettingsScreen>
                     subtitle,
                     style: TextStyle(
                       fontSize: 12,
-                      color: Colors.white.withValues(alpha: 0.7),
+                      color: t.textPrimary.withValues(alpha: 0.7),
                     ),
                   ),
                 ],
               ),
             ),
-            const Icon(
+            Icon(
               Icons.chevron_right,
-              color: Colors.white54,
+              color: t.textTertiary,
               size: 20,
             ),
           ],
@@ -828,13 +823,14 @@ class _SettingsScreenState extends State<SettingsScreen>
   }
 
   void _showAboutDialog() {
+    final t = context.tokens;
     final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
     final currentLanguage = languageProvider.currentLocale.languageCode;
-    
+
     String subtitle;
     String description;
     String closeText;
-    
+
     switch (currentLanguage) {
       case 'en':
         subtitle = 'Lightning Wallet';
@@ -872,11 +868,11 @@ class _SettingsScreenState extends State<SettingsScreen>
         closeText = 'Cerrar';
         break;
     }
-    
+
     showDialog(
         context: context,
         builder: (dialogContext) => AlertDialog(
-          backgroundColor: const Color(0xFF1A1D47),
+          backgroundColor: t.dialogBackground,
           title: Row(
             children: [
               Container(
@@ -896,9 +892,9 @@ class _SettingsScreenState extends State<SettingsScreen>
                 ),
               ),
               const SizedBox(width: 12),
-              const Text(
+              Text(
                 'LaChispa',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: t.textPrimary),
               ),
             ],
           ),
@@ -908,8 +904,8 @@ class _SettingsScreenState extends State<SettingsScreen>
             children: [
               Text(
                 subtitle,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: t.textPrimary,
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
@@ -917,8 +913,8 @@ class _SettingsScreenState extends State<SettingsScreen>
               const SizedBox(height: 8),
               Text(
                 description,
-                style: const TextStyle(
-                  color: Colors.white70,
+                style: TextStyle(
+                  color: t.textPrimary.withValues(alpha: 0.7),
                   fontSize: 14,
                 ),
               ),
@@ -926,21 +922,21 @@ class _SettingsScreenState extends State<SettingsScreen>
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF2D3FE7).withValues(alpha: 0.2),
+                  color: t.accentSolid.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Row(
+                child: Row(
                   children: [
                     Icon(
                       Icons.code,
-                      color: Color(0xFF5B73FF),
+                      color: t.accentBright,
                       size: 16,
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Text(
                       'Version: 0.0.1',
                       style: TextStyle(
-                        color: Color(0xFF5B73FF),
+                        color: t.accentBright,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),
@@ -955,7 +951,7 @@ class _SettingsScreenState extends State<SettingsScreen>
               onPressed: () => Navigator.pop(dialogContext),
               child: Text(
                 closeText,
-                style: const TextStyle(color: Color(0xFF5B73FF)),
+                style: TextStyle(color: t.accentBright),
               ),
             ),
           ],

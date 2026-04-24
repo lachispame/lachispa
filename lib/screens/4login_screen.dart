@@ -5,6 +5,7 @@ import '../providers/server_provider.dart';
 import '../services/user_credentials_service.dart';
 import '../models/saved_user.dart';
 import '../l10n/generated/app_localizations.dart';
+import '../theme/app_tokens.dart';
 import '5signup_screen.dart';
 import '6home_screen.dart';
 
@@ -203,6 +204,7 @@ class _LoginScreenState extends State<LoginScreen>
     
     print('[LoginScreen] Creating overlay with ${_usernameSuggestions.length} suggestions');
     
+    final t = context.tokens;
     _overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
         left: 24,
@@ -214,7 +216,7 @@ class _LoginScreenState extends State<LoginScreen>
           child: Material(
             elevation: 8,
             borderRadius: BorderRadius.circular(12),
-            color: const Color(0xFF1A1D47),
+            color: t.dialogBackground,
             child: Container(
               constraints: const BoxConstraints(maxHeight: 200),
               child: Column(
@@ -231,30 +233,30 @@ class _LoginScreenState extends State<LoginScreen>
                       decoration: BoxDecoration(
                         border: Border(
                           bottom: BorderSide(
-                            color: Colors.white.withValues(alpha: 0.1),
+                            color: t.outline,
                             width: 1,
                           ),
                         ),
                       ),
                       child: Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.person,
-                            color: Colors.white,
+                            color: t.textPrimary,
                             size: 16,
                           ),
                           const SizedBox(width: 8),
                           Text(
                             username,
-                            style: const TextStyle(
-                              color: Colors.white,
+                            style: TextStyle(
+                              color: t.textPrimary,
                               fontSize: 16,
                             ),
                           ),
                           const Spacer(),
-                          const Icon(
+                          Icon(
                             Icons.login,
-                            color: Colors.white54,
+                            color: t.textTertiary,
                             size: 16,
                           ),
                         ],
@@ -378,7 +380,7 @@ class _LoginScreenState extends State<LoginScreen>
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(AppLocalizations.of(context)!.credentials_found_message),
-                backgroundColor: Colors.green,
+                backgroundColor: context.tokens.statusHealthy,
                 duration: const Duration(seconds: 2),
               ),
             );
@@ -423,7 +425,7 @@ class _LoginScreenState extends State<LoginScreen>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(AppLocalizations.of(context)!.password_will_be_remembered),
-          backgroundColor: Colors.green,
+          backgroundColor: context.tokens.statusHealthy,
           duration: const Duration(seconds: 2),
         ),
       );
@@ -432,43 +434,44 @@ class _LoginScreenState extends State<LoginScreen>
   
   // Show warning about credential deletion
   Future<bool> _showCredentialDeletionWarning() async {
+    final t = context.tokens;
     final result = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1D47),
+        backgroundColor: t.dialogBackground,
         title: Row(
           children: [
-            const Icon(Icons.warning, color: Colors.orange),
+            Icon(Icons.warning, color: t.statusWarning),
             const SizedBox(width: 8),
             Text(
               AppLocalizations.of(context)!.delete_credentials_title,
-              style: const TextStyle(color: Colors.white),
+              style: TextStyle(color: t.textPrimary),
             ),
           ],
         ),
         content: Text(
           AppLocalizations.of(context)!.delete_credentials_message,
-          style: const TextStyle(color: Colors.white70),
+          style: TextStyle(color: t.textPrimary.withValues(alpha: 0.7)),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
             child: Text(
               AppLocalizations.of(context)!.delete_credentials_cancel,
-              style: const TextStyle(color: Colors.white54),
+              style: TextStyle(color: t.textTertiary),
             ),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             child: Text(
               AppLocalizations.of(context)!.delete_credentials_confirm,
-              style: const TextStyle(color: Colors.red),
+              style: TextStyle(color: t.statusUnhealthy),
             ),
           ),
         ],
       ),
     );
-    
+
     return result ?? false;
   }
 
@@ -536,10 +539,10 @@ class _LoginScreenState extends State<LoginScreen>
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text(result 
+                  content: Text(result
                     ? AppLocalizations.of(context)!.password_saved_successfully
                     : AppLocalizations.of(context)!.password_save_failed),
-                  backgroundColor: const Color(0xFF2D3FE7),
+                  backgroundColor: context.tokens.accentSolid,
                   duration: const Duration(seconds: 2),
                 ),
               );
@@ -590,24 +593,15 @@ class _LoginScreenState extends State<LoginScreen>
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFF0F1419),
-              Color(0xFF1A1D47),
-              Color(0xFF2D3FE7),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
+        decoration: BoxDecoration(gradient: t.backgroundGradient),
         child: SafeArea(
           child: Column(
             children: [
               // Top navigation arrow
-              _buildTopNavigation(),
+              _buildTopNavigation(t),
               // Contenido scrolleable
               Expanded(
                 child: SingleChildScrollView(
@@ -615,13 +609,13 @@ class _LoginScreenState extends State<LoginScreen>
                   child: Column(
                     children: [
                       const SizedBox(height: 8),
-                      _buildHeader(),
+                      _buildHeader(t),
                       const SizedBox(height: 32),
-                      _buildLoginForm(),
+                      _buildLoginForm(t),
                       const SizedBox(height: 16),
-                      _buildHelpInfo(),
+                      _buildHelpInfo(t),
                       const SizedBox(height: 16),
-                      _buildServerInfo(),
+                      _buildServerInfo(t),
                       const SizedBox(height: 16),
                     ],
                   ),
@@ -634,7 +628,7 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(AppTokens t) {
     return Column(
       children: [
         AnimatedBuilder(
@@ -644,7 +638,7 @@ class _LoginScreenState extends State<LoginScreen>
               decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF2D3FE7).withValues(alpha: _glowAnimation.value * 0.3),
+                    color: t.accentSolid.withValues(alpha: _glowAnimation.value * 0.3),
                     blurRadius: 20,
                     spreadRadius: 5,
                   ),
@@ -655,10 +649,10 @@ class _LoginScreenState extends State<LoginScreen>
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.w700,
-                  color: Colors.white,
+                  color: t.textPrimary,
                   shadows: [
                     Shadow(
-                      color: const Color(0xFF2D3FE7).withValues(alpha: _glowAnimation.value * 0.8),
+                      color: t.accentSolid.withValues(alpha: _glowAnimation.value * 0.8),
                       blurRadius: 10,
                       offset: const Offset(0, 2),
                     ),
@@ -674,20 +668,20 @@ class _LoginScreenState extends State<LoginScreen>
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 16,
-            color: Colors.white.withValues(alpha: 0.7),
+            color: t.textPrimary.withValues(alpha: 0.7),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildLoginForm() {
+  Widget _buildLoginForm(AppTokens t) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
+        color: t.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
+          color: t.outline,
         ),
       ),
       padding: const EdgeInsets.all(24),
@@ -696,20 +690,20 @@ class _LoginScreenState extends State<LoginScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            _buildUsernameField(),
+            _buildUsernameField(t),
             const SizedBox(height: 20),
-            _buildPasswordField(),
+            _buildPasswordField(t),
             const SizedBox(height: 16),
-            _buildRememberPasswordCheckbox(),
+            _buildRememberPasswordCheckbox(t),
             const SizedBox(height: 32),
-            _buildLoginButton(),
+            _buildLoginButton(t),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildUsernameField() {
+  Widget _buildUsernameField(AppTokens t) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -728,33 +722,33 @@ class _LoginScreenState extends State<LoginScreen>
           decoration: InputDecoration(
             labelText: AppLocalizations.of(context)!.username_label,
             hintText: AppLocalizations.of(context)!.username_placeholder,
-            labelStyle: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
-            hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
-            prefixIcon: Icon(Icons.person, color: Colors.white.withValues(alpha: 0.7)),
-            suffixIcon: _usernameSuggestions.isNotEmpty 
-                ? Icon(Icons.arrow_drop_down, color: Colors.white.withValues(alpha: 0.7))
+            labelStyle: TextStyle(color: t.textPrimary.withValues(alpha: 0.7)),
+            hintStyle: TextStyle(color: t.textSecondary),
+            prefixIcon: Icon(Icons.person, color: t.textPrimary.withValues(alpha: 0.7)),
+            suffixIcon: _usernameSuggestions.isNotEmpty
+                ? Icon(Icons.arrow_drop_down, color: t.textPrimary.withValues(alpha: 0.7))
                 : null,
             filled: true,
-            fillColor: Colors.white.withValues(alpha: 0.05),
+            fillColor: t.inputFill,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+              borderSide: BorderSide(color: t.outline),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+              borderSide: BorderSide(color: t.outline),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF2D3FE7)),
+              borderSide: BorderSide(color: t.accentSolid),
             ),
           ),
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: t.textPrimary),
           textInputAction: TextInputAction.next,
           onTap: () async {
             print('[LoginScreen] Username field tapped, reloading users...');
             await _loadInitialUsers();
-            
+
             if (_usernameSuggestions.isNotEmpty) {
               print('[LoginScreen] Activating dropdown with ${_usernameSuggestions.length} suggestions');
               setState(() {
@@ -773,10 +767,10 @@ class _LoginScreenState extends State<LoginScreen>
           Container(
             margin: const EdgeInsets.only(top: 4),
             decoration: BoxDecoration(
-              color: const Color(0xFF1A1D47),
+              color: t.dialogBackground,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Colors.white.withValues(alpha: 0.1),
+                color: t.outline,
               ),
             ),
             child: Column(
@@ -787,23 +781,23 @@ class _LoginScreenState extends State<LoginScreen>
                   decoration: BoxDecoration(
                     border: Border(
                       bottom: BorderSide(
-                        color: Colors.white.withValues(alpha: 0.1),
+                        color: t.outline,
                         width: 1,
                       ),
                     ),
                   ),
                   child: Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.account_circle,
-                        color: Colors.white,
+                        color: t.textPrimary,
                         size: 16,
                       ),
                       const SizedBox(width: 8),
                       Text(
                         AppLocalizations.of(context)!.saved_users_header,
                         style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.8),
+                          color: t.textPrimary.withValues(alpha: 0.8),
                           fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
@@ -818,7 +812,7 @@ class _LoginScreenState extends State<LoginScreen>
                         },
                         icon: Icon(
                           Icons.close,
-                          color: Colors.white.withValues(alpha: 0.6),
+                          color: t.textSecondary,
                           size: 16,
                         ),
                         padding: EdgeInsets.zero,
@@ -848,12 +842,12 @@ class _LoginScreenState extends State<LoginScreen>
                             Container(
                               padding: const EdgeInsets.all(6),
                               decoration: BoxDecoration(
-                                color: const Color(0xFF2D3FE7),
+                                color: t.accentSolid,
                                 borderRadius: BorderRadius.circular(8),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.person,
-                                color: Colors.white,
+                                color: t.accentForeground,
                                 size: 14,
                               ),
                             ),
@@ -864,8 +858,8 @@ class _LoginScreenState extends State<LoginScreen>
                                 children: [
                                   Text(
                                     username,
-                                    style: const TextStyle(
-                                      color: Colors.white,
+                                    style: TextStyle(
+                                      color: t.textPrimary,
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -873,16 +867,16 @@ class _LoginScreenState extends State<LoginScreen>
                                   Text(
                                     AppLocalizations.of(context)!.tap_to_autocomplete_hint,
                                     style: TextStyle(
-                                      color: Colors.white.withValues(alpha: 0.6),
+                                      color: t.textSecondary,
                                       fontSize: 12,
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            const Icon(
+                            Icon(
                               Icons.arrow_forward_ios,
-                              color: Colors.white54,
+                              color: t.textTertiary,
                               size: 14,
                             ),
                           ],
@@ -898,7 +892,7 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget _buildPasswordField() {
+  Widget _buildPasswordField(AppTokens t) {
     return TextFormField(
       controller: _passwordController,
       validator: (value) {
@@ -914,13 +908,13 @@ class _LoginScreenState extends State<LoginScreen>
       decoration: InputDecoration(
         labelText: AppLocalizations.of(context)!.password_label,
         hintText: AppLocalizations.of(context)!.password_placeholder,
-        labelStyle: TextStyle(color: Colors.white.withValues(alpha: 0.7)),
-        hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.5)),
-        prefixIcon: Icon(Icons.lock, color: Colors.white.withValues(alpha: 0.7)),
+        labelStyle: TextStyle(color: t.textPrimary.withValues(alpha: 0.7)),
+        hintStyle: TextStyle(color: t.textSecondary),
+        prefixIcon: Icon(Icons.lock, color: t.textPrimary.withValues(alpha: 0.7)),
         suffixIcon: IconButton(
           icon: Icon(
             _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-            color: Colors.white.withValues(alpha: 0.7),
+            color: t.textPrimary.withValues(alpha: 0.7),
           ),
           onPressed: () {
             setState(() {
@@ -929,27 +923,27 @@ class _LoginScreenState extends State<LoginScreen>
           },
         ),
         filled: true,
-        fillColor: Colors.white.withValues(alpha: 0.05),
+        fillColor: t.inputFill,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+          borderSide: BorderSide(color: t.outline),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
+          borderSide: BorderSide(color: t.outline),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: Color(0xFF2D3FE7)),
+          borderSide: BorderSide(color: t.accentSolid),
         ),
       ),
-      style: const TextStyle(color: Colors.white),
+      style: TextStyle(color: t.textPrimary),
       textInputAction: TextInputAction.done,
       onFieldSubmitted: (_) => _handleLogin(),
     );
   }
 
-  Widget _buildRememberPasswordCheckbox() {
+  Widget _buildRememberPasswordCheckbox(AppTokens t) {
     return Row(
       children: [
         Checkbox(
@@ -957,10 +951,10 @@ class _LoginScreenState extends State<LoginScreen>
           onChanged: (value) {
             _handleRememberPasswordChange(value ?? false);
           },
-          activeColor: const Color(0xFF2D3FE7),
-          checkColor: Colors.white,
+          activeColor: t.accentSolid,
+          checkColor: t.accentForeground,
           side: BorderSide(
-            color: Colors.white.withValues(alpha: 0.3),
+            color: t.textPrimary.withValues(alpha: 0.3),
             width: 2,
           ),
         ),
@@ -972,7 +966,7 @@ class _LoginScreenState extends State<LoginScreen>
           child: Text(
             AppLocalizations.of(context)!.remember_password_label,
             style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.8),
+              color: t.textPrimary.withValues(alpha: 0.8),
               fontSize: 16,
             ),
           ),
@@ -981,17 +975,13 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget _buildLoginButton() {
+  Widget _buildLoginButton(AppTokens t) {
     return Consumer<AuthProvider>(
       builder: (context, authProvider, child) {
         return Container(
           height: 56,
           decoration: BoxDecoration(
-            gradient: const LinearGradient(
-              colors: [Color(0xFF2D3FE7), Color(0xFF4C63F7)],
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-            ),
+            gradient: t.accentGradient,
             borderRadius: BorderRadius.circular(16),
           ),
           child: ElevatedButton(
@@ -1007,31 +997,31 @@ class _LoginScreenState extends State<LoginScreen>
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const SizedBox(
+                      SizedBox(
                         height: 20,
                         width: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          valueColor: AlwaysStoppedAnimation<Color>(t.accentForeground),
                         ),
                       ),
                       const SizedBox(width: 12),
                       Text(
                         AppLocalizations.of(context)!.logging_in_button,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                          color: t.accentForeground,
                         ),
                       ),
                     ],
                   )
                 : Text(
                     AppLocalizations.of(context)!.login_button,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white,
+                      color: t.accentForeground,
                     ),
                   ),
           ),
@@ -1041,7 +1031,7 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
 
-  Widget _buildServerInfo() {
+  Widget _buildServerInfo(AppTokens t) {
     return Consumer<ServerProvider>(
       builder: (context, serverProvider, child) {
         // Update server URL if it has changed
@@ -1054,13 +1044,13 @@ class _LoginScreenState extends State<LoginScreen>
             _loadInitialUsers();
           });
         }
-        
+
         return Container(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.05),
+            color: t.inputFill,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+            border: Border.all(color: t.outline),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -1069,22 +1059,22 @@ class _LoginScreenState extends State<LoginScreen>
               Icon(
                 Icons.dns,
                 size: 16,
-                color: Colors.white.withValues(alpha: 0.7),
+                color: t.textPrimary.withValues(alpha: 0.7),
               ),
               const SizedBox(width: 8),
               Text(
                 AppLocalizations.of(context)!.server_prefix,
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.white.withValues(alpha: 0.7),
+                  color: t.textPrimary.withValues(alpha: 0.7),
                 ),
               ),
               Flexible(
                 child: Text(
                   serverProvider.serverDisplayName,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
-                    color: Colors.white,
+                    color: t.textPrimary,
                     fontWeight: FontWeight.w500,
                   ),
                   overflow: TextOverflow.ellipsis,
@@ -1098,13 +1088,13 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget _buildHelpInfo() {
+  Widget _buildHelpInfo(AppTokens t) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.05),
+        color: t.inputFill,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
+        border: Border.all(color: t.outline),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -1113,7 +1103,7 @@ class _LoginScreenState extends State<LoginScreen>
             AppLocalizations.of(context)!.no_account_question,
             style: TextStyle(
               fontSize: 16,
-              color: Colors.white.withValues(alpha: 0.7),
+              color: t.textPrimary.withValues(alpha: 0.7),
             ),
           ),
           GestureDetector(
@@ -1125,12 +1115,12 @@ class _LoginScreenState extends State<LoginScreen>
             },
             child: Text(
               AppLocalizations.of(context)!.register_link,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16,
-                color: Colors.white,
+                color: t.textPrimary,
                 fontWeight: FontWeight.w600,
                 decoration: TextDecoration.underline,
-                decorationColor: Colors.white,
+                decorationColor: t.textPrimary,
               ),
             ),
           ),
@@ -1139,24 +1129,24 @@ class _LoginScreenState extends State<LoginScreen>
     );
   }
 
-  Widget _buildTopNavigation() {
+  Widget _buildTopNavigation(AppTokens t) {
     return Padding(
       padding: const EdgeInsets.only(top: 16, left: 24, right: 24),
       child: Row(
         children: [
           Container(
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.08),
+              color: t.surface,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Colors.white.withValues(alpha: 0.1),
+                color: t.outline,
               ),
             ),
             child: IconButton(
               onPressed: () => Navigator.pop(context),
-              icon: const Icon(
+              icon: Icon(
                 Icons.arrow_back_ios,
-                color: Colors.white,
+                color: t.textPrimary,
                 size: 20,
               ),
               padding: const EdgeInsets.all(12),
@@ -1174,24 +1164,25 @@ class _LoginScreenState extends State<LoginScreen>
 
 // Show authentication errors
 void _showErrorDialog(BuildContext context, String error) {
+  final t = context.tokens;
   showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      backgroundColor: const Color(0xFF1A1D47),
+      backgroundColor: t.dialogBackground,
       title: Text(
         AppLocalizations.of(context)!.login_error_prefix.replaceAll(': ', ''),
-        style: const TextStyle(color: Colors.white),
+        style: TextStyle(color: t.textPrimary),
       ),
       content: Text(
         error,
-        style: TextStyle(color: Colors.white.withValues(alpha: 0.8)),
+        style: TextStyle(color: t.textPrimary.withValues(alpha: 0.8)),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
           child: Text(
             AppLocalizations.of(context)!.close_dialog,
-            style: const TextStyle(color: Color(0xFF2D3FE7)),
+            style: TextStyle(color: t.accentSolid),
           ),
         ),
       ],

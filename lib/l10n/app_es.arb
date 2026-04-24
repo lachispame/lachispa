@@ -263,6 +263,25 @@
   "lightning_address_delete": "Eliminar",
   "lightning_address_is_default": "Es por defecto",
   "lightning_address_set_default": "Establecer como por defecto",
+  "lightning_address_delete_title": "Eliminar dirección Lightning",
+  "lightning_address_delete_confirm": "¿Seguro que quieres eliminar {address}?",
+  "@lightning_address_delete_confirm": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "lightning_address_created_success": "Dirección Lightning creada",
+  "lightning_address_deleted_success": "Dirección Lightning eliminada",
+  "lightning_address_set_default_success": "{address} es ahora tu dirección Lightning por defecto",
+  "@lightning_address_set_default_success": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
   "create_new_wallet_help": "Crear nueva billetera",
   "create_wallet_short_description": "Para crear una nueva billetera, accede a tu panel LNBits desde el navegador y usa la opción \"Crear billetera\".",
   "create_wallet_detailed_instructions": "Para crear una nueva billetera:\\n\\n1. Abre tu navegador web\\n2. Accede a tu servidor LNBits\\n3. Inicia sesión con tu cuenta\\n4. Busca el botón \"Crear billetera\"\\n5. Asigna un nombre a tu nueva billetera\\n6. Regresa a LaChispa y actualiza tus billeteras\\n\\nLa nueva billetera aparecerá automáticamente en tu lista.",

@@ -1470,6 +1470,36 @@ abstract class AppLocalizations {
   /// **'Establecer como por defecto'**
   String get lightning_address_set_default;
 
+  /// No description provided for @lightning_address_delete_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar dirección Lightning'**
+  String get lightning_address_delete_title;
+
+  /// No description provided for @lightning_address_delete_confirm.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Seguro que quieres eliminar {address}?'**
+  String lightning_address_delete_confirm(String address);
+
+  /// No description provided for @lightning_address_created_success.
+  ///
+  /// In es, this message translates to:
+  /// **'Dirección Lightning creada'**
+  String get lightning_address_created_success;
+
+  /// No description provided for @lightning_address_deleted_success.
+  ///
+  /// In es, this message translates to:
+  /// **'Dirección Lightning eliminada'**
+  String get lightning_address_deleted_success;
+
+  /// No description provided for @lightning_address_set_default_success.
+  ///
+  /// In es, this message translates to:
+  /// **'{address} es ahora tu dirección Lightning por defecto'**
+  String lightning_address_set_default_success(String address);
+
   /// No description provided for @create_new_wallet_help.
   ///
   /// In es, this message translates to:

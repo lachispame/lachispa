@@ -9,6 +9,7 @@ import '../services/transaction_detector.dart';
 import '../providers/currency_settings_provider.dart';
 import '../services/app_info_service.dart';
 import '../l10n/generated/app_localizations.dart';
+import '../theme/app_tokens.dart';
 import '7history_screen.dart';
 import '7ln_address_screen.dart';
 import '9receive_screen.dart';
@@ -327,12 +328,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
             SnackBar(
               content: Row(
                 children: [
-                  const Icon(Icons.check_circle, color: Colors.green),
+                  // White content on saturated status background; not a themable surface.
+                  const Icon(Icons.check_circle, color: Colors.white),
                   const SizedBox(width: 8),
                   Text('${AppLocalizations.of(context)!.received_label}! +$difference sats'),
                 ],
               ),
-              backgroundColor: Colors.green.withValues(alpha: 0.9),
+              backgroundColor: context.tokens.statusHealthy.withValues(alpha: 0.9),
               duration: const Duration(seconds: 3),
             ),
           );
@@ -455,10 +457,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
           mainBalance,
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontFamily: 'Manrope',
-            fontSize: _getBalanceFontSize(isMobile, currencyProvider),
+                        fontSize: _getBalanceFontSize(isMobile, currencyProvider),
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: context.tokens.textPrimary,
           ),
         ),
         // Secondary balance (sats) when not in sats mode
@@ -468,10 +469,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
             secondaryBalance,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontFamily: 'Manrope',
-              fontSize: isMobile ? 16 : 18,
+                            fontSize: isMobile ? 16 : 18,
               fontWeight: FontWeight.w500,
-              color: Colors.white.withValues(alpha: 0.7),
+              color: context.tokens.textPrimary.withValues(alpha: 0.7),
             ),
           ),
         ],
@@ -711,18 +711,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
         return Scaffold(
           backgroundColor: Colors.transparent,
           body: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF0F1419), // Azul oscuro profundo
-                  Color(0xFF1A1D47), // Azul medio
-                  Color(0xFF2D3FE7), // Azul vibrante
-                ],
-                stops: [0.0, 0.5, 1.0],
-              ),
-            ),
+            decoration: BoxDecoration(gradient: context.tokens.backgroundGradient),
             child: Column(
               children: [
                 // Main content
@@ -879,17 +868,17 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.08),
+              color: context.tokens.surface,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Colors.white.withValues(alpha: 0.1),
+                color: context.tokens.outline,
                 width: 1,
               ),
             ),
             child: IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.menu,
-                color: Colors.white,
+                color: context.tokens.textPrimary,
                 size: 24,
               ),
               onPressed: () => Scaffold.of(context).openDrawer(),
@@ -907,22 +896,21 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                 child: Text(
                   'LaChispa',
                   style: TextStyle(
-                    fontFamily: 'Manrope',
-                    fontSize: 40,
+                                        fontSize: 40,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: context.tokens.textPrimary,
                   shadows: [
                     Shadow(
                       offset: const Offset(0, 0),
                       blurRadius: 20 + (10 * _glowAnimation.value), // 20-30px blur
-                      color: const Color(0xFF2D3FE7).withValues(
+                      color: context.tokens.accentSolid.withValues(
                         alpha: 0.3 + (0.4 * _glowAnimation.value), // More intensity
                       ),
                     ),
                     Shadow(
                       offset: const Offset(0, 0),
                       blurRadius: 10 + (5 * _glowAnimation.value), // Glow adicional
-                      color: const Color(0xFF4C63F7).withValues(
+                      color: context.tokens.accentSolid.withValues(
                         alpha: 0.2 + (0.3 * _glowAnimation.value),
                       ),
                     ),
@@ -940,17 +928,17 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.08),
+              color: context.tokens.surface,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Colors.white.withValues(alpha: 0.1),
+                color: context.tokens.outline,
                 width: 1,
               ),
             ),
             child: IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.auto_awesome,
-                color: Colors.orange,
+                color: context.tokens.statusWarning,
                 size: 24,
               ),
               onPressed: _triggerTestSpark,
@@ -975,35 +963,34 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.1),
+                      color: context.tokens.surface,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.2),
+                        color: context.tokens.outline,
                       ),
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.account_balance_wallet,
                           size: 14,
-                          color: Colors.white70,
+                          color: context.tokens.textPrimary.withValues(alpha: 0.7),
                         ),
                         const SizedBox(width: 6),
                         Text(
                           walletProvider.primaryWallet!.name,
-                          style: const TextStyle(
-                            fontFamily: 'Manrope',
-                            fontSize: 12,
+                          style: TextStyle(
+                                                        fontSize: 12,
                             fontWeight: FontWeight.w500,
-                            color: Colors.white,
+                            color: context.tokens.textPrimary,
                           ),
                         ),
                         const SizedBox(width: 6),
-                        const Icon(
+                        Icon(
                           Icons.keyboard_arrow_down,
                           size: 16,
-                          color: Colors.white70,
+                          color: context.tokens.textPrimary.withValues(alpha: 0.7),
                         ),
                       ],
                     ),
@@ -1019,16 +1006,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                       height: 12,
                       child: CircularProgressIndicator(
                         strokeWidth: 1,
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white70),
+                        valueColor: AlwaysStoppedAnimation<Color>(context.tokens.textPrimary.withValues(alpha: 0.7)),
                       ),
                     ),
                     SizedBox(width: 8),
                     Text(
                       AppLocalizations.of(context)!.loading_text,
                       style: TextStyle(
-                        fontFamily: 'Manrope',
-                        fontSize: 12,
-                        color: Colors.white70,
+                                                fontSize: 12,
+                        color: context.tokens.textPrimary.withValues(alpha: 0.7),
                       ),
                     ),
                   ],
@@ -1066,10 +1052,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                   vertical: 32,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.08),
+                  color: context.tokens.surface,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.1),
+                    color: context.tokens.outline,
                     width: 1,
                   ),
                   boxShadow: [
@@ -1085,10 +1071,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                     Text(
                       AppLocalizations.of(context)!.balance_label,
                       style: TextStyle(
-                        fontFamily: 'Manrope',
-                        fontSize: 16,
+                                                fontSize: 16,
                         fontWeight: FontWeight.w500,
-                        color: Colors.white.withValues(alpha: 0.8),
+                        color: context.tokens.textPrimary.withValues(alpha: 0.8),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -1180,7 +1165,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                         AnimatedContainer(
                           duration: const Duration(milliseconds: 200),
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.08),
+                            color: context.tokens.surface,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: IconButton(
@@ -1191,7 +1176,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                                     ? Icons.visibility
                                     : Icons.visibility_off,
                                 key: ValueKey(_balanceVisible),
-                                color: Colors.white.withValues(alpha: 0.6),
+                                color: context.tokens.textSecondary,
                                 size: 24,
                               ),
                             ),
@@ -1225,18 +1210,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                 transform: Matrix4.identity()
                   ..scale(_sendButtonPressed ? 0.95 : 1.0),
                 decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                      Color(0xFF2D3FE7),
-                      Color(0xFF4C63F7),
-                    ],
-                  ),
+                  gradient: context.tokens.accentGradient,
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF2D3FE7).withValues(
+                      color: context.tokens.accentSolid.withValues(
                         alpha: _sendButtonPressed ? 0.5 : 0.3,
                       ),
                       blurRadius: _sendButtonPressed ? 8 : 12,
@@ -1261,16 +1239,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                         Text(
                           AppLocalizations.of(context)!.send_button,
                           style: TextStyle(
-                            fontFamily: 'Manrope',
-                            fontSize: 16,
+                                                        fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                            color: context.tokens.textPrimary,
                           ),
                         ),
                         SizedBox(width: 8),
                         Icon(
                           Icons.north_east,
-                          color: Colors.white,
+                          color: context.tokens.textPrimary,
                           size: 20,
                         ),
                       ],
@@ -1288,19 +1265,19 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                 transform: Matrix4.identity()
                   ..scale(_receiveButtonPressed ? 0.95 : 1.0),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(
+                  color: context.tokens.textPrimary.withValues(
                     alpha: _receiveButtonPressed ? 0.12 : 0.08,
                   ),
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: Colors.white.withValues(
+                    color: context.tokens.textPrimary.withValues(
                       alpha: _receiveButtonPressed ? 0.2 : 0.1,
                     ),
                     width: 1,
                   ),
                   boxShadow: _receiveButtonPressed ? [
                     BoxShadow(
-                      color: Colors.white.withValues(alpha: 0.1),
+                      color: context.tokens.outline,
                       blurRadius: 8,
                       offset: const Offset(0, 3),
                     ),
@@ -1322,17 +1299,16 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                       children: [
                         Icon(
                           Icons.south_east,
-                          color: Colors.white,
+                          color: context.tokens.textPrimary,
                           size: 20,
                         ),
                         SizedBox(width: 8),
                         Text(
                           AppLocalizations.of(context)!.receive_button,
                           style: TextStyle(
-                            fontFamily: 'Manrope',
-                            fontSize: 16,
+                                                        fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                            color: context.tokens.textPrimary,
                           ),
                         ),
                       ],
@@ -1373,9 +1349,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                 padding: const EdgeInsets.all(24),
                 child: Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.account_balance_wallet,
-                      color: Colors.white,
+                      color: context.tokens.textPrimary,
                       size: 24,
                     ),
                     const SizedBox(width: 12),
@@ -1384,15 +1360,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                       style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
-                        color: Colors.white,
+                        color: context.tokens.textPrimary,
                       ),
                     ),
                     const Spacer(),
                     IconButton(
                       onPressed: () => Navigator.pop(context),
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.close,
-                        color: Colors.white,
+                        color: context.tokens.textPrimary,
                       ),
                     ),
                   ],
@@ -1413,13 +1389,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                       margin: const EdgeInsets.only(bottom: 12),
                       decoration: BoxDecoration(
                         color: isSelected 
-                            ? const Color(0xFF2D3FE7).withValues(alpha: 0.3)
-                            : Colors.white.withValues(alpha: 0.05),
+                            ? context.tokens.accentSolid.withValues(alpha: 0.3)
+                            : context.tokens.inputFill,
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
                           color: isSelected 
-                              ? const Color(0xFF2D3FE7)
-                              : Colors.white.withValues(alpha: 0.1),
+                              ? context.tokens.accentSolid
+                              : context.tokens.outline,
                         ),
                       ),
                       child: ListTile(
@@ -1429,20 +1405,20 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                           height: 48,
                           decoration: BoxDecoration(
                             color: isSelected 
-                                ? const Color(0xFF2D3FE7).withValues(alpha: 0.3)
-                                : Colors.white.withValues(alpha: 0.1),
+                                ? context.tokens.accentSolid.withValues(alpha: 0.3)
+                                : context.tokens.outline,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Icon(
                             Icons.account_balance_wallet,
-                            color: isSelected ? const Color(0xFF5B73FF) : Colors.white70,
+                            color: isSelected ? context.tokens.accentBright : context.tokens.textPrimary.withValues(alpha: 0.7),
                             size: 24,
                           ),
                         ),
                         title: Text(
                           wallet.name,
                           style: TextStyle(
-                            color: Colors.white,
+                            color: context.tokens.textPrimary,
                             fontSize: 16,
                             fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                           ),
@@ -1450,15 +1426,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                         subtitle: Text(
                           wallet.balanceFormatted,
                           style: TextStyle(
-                            color: isSelected ? const Color(0xFF5B73FF) : Colors.white70,
+                            color: isSelected ? context.tokens.accentBright : context.tokens.textPrimary.withValues(alpha: 0.7),
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        trailing: isSelected 
-                            ? const Icon(
+                        trailing: isSelected
+                            ? Icon(
                                 Icons.check_circle,
-                                color: Color(0xFF5B73FF),
+                                color: context.tokens.accentBright,
                                 size: 24,
                               )
                             : null,
@@ -1470,7 +1446,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text('${AppLocalizations.of(context)!.wallet_title} "${wallet.name}" seleccionada'),
-                              backgroundColor: const Color(0xFF2D3FE7),
+                              backgroundColor: context.tokens.accentSolid,
                               duration: const Duration(seconds: 2),
                             ),
                           );
@@ -1486,10 +1462,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                 margin: const EdgeInsets.all(24),
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.05),
+                  color: context.tokens.inputFill,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.1),
+                    color: context.tokens.outline,
                   ),
                 ),
                 child: Column(
@@ -1497,16 +1473,16 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                   children: [
                     Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.info_outline,
-                          color: Color(0xFF5B73FF),
+                          color: context.tokens.accentBright,
                           size: 16,
                         ),
                         const SizedBox(width: 8),
                         Text(
                           AppLocalizations.of(context)!.create_new_wallet_title,
                           style: TextStyle(
-                            color: Colors.white,
+                            color: context.tokens.textPrimary,
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
@@ -1516,8 +1492,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                     const SizedBox(height: 8),
                     Text(
                       AppLocalizations.of(context)!.create_wallet_short_description,
-                      style: const TextStyle(
-                        color: Colors.white70,
+                      style: TextStyle(
+                        color: context.tokens.textPrimary.withValues(alpha: 0.7),
                         fontSize: 12,
                       ),
                     ),
@@ -1530,8 +1506,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                           _showWalletCreationInfo();
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF2D3FE7),
-                          foregroundColor: Colors.white,
+                          backgroundColor: context.tokens.accentSolid,
+                          foregroundColor: context.tokens.accentForeground,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -1557,24 +1533,24 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1D47),
+        backgroundColor: context.tokens.dialogBackground,
         title: Row(
           children: [
             Icon(
               Icons.add_circle_outline,
-              color: Color(0xFF5B73FF),
+              color: context.tokens.accentBright,
             ),
             SizedBox(width: 8),
             Text(
               AppLocalizations.of(context)!.create_new_wallet_title,
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: context.tokens.textPrimary),
             ),
           ],
         ),
         content: Text(
           AppLocalizations.of(context)!.create_wallet_detailed_instructions,
-          style: const TextStyle(
-            color: Colors.white70,
+          style: TextStyle(
+            color: context.tokens.textPrimary.withValues(alpha: 0.7),
             fontSize: 14,
           ),
         ),
@@ -1583,7 +1559,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
             onPressed: () => Navigator.pop(context),
             child: Text(
               AppLocalizations.of(context)!.cancel_button,
-              style: TextStyle(color: Color(0xFF5B73FF)),
+              style: TextStyle(color: context.tokens.accentBright),
             ),
           ),
         ],
@@ -1598,10 +1574,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
       child: Container(
         height: 56, // Standard button height
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.08), // Glassmorphism
+          color: context.tokens.surface, // Glassmorphism
           borderRadius: BorderRadius.circular(16), // Standard border radius
           border: Border.all(
-            color: Colors.white.withValues(alpha: 0.1),
+            color: context.tokens.outline,
             width: 1,
           ),
           boxShadow: [
@@ -1622,17 +1598,16 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
               children: [
                 Icon(
                   Icons.history,
-                  color: _isInHistory ? const Color(0xFF5B73FF) : Colors.white,
+                  color: _isInHistory ? context.tokens.accentBright : context.tokens.textPrimary,
                   size: 20, // Icon size according to guide
                 ),
                 const SizedBox(width: 12),
                 Text(
                   AppLocalizations.of(context)!.history_title,
                   style: TextStyle(
-                    fontFamily: 'Manrope',
-                    fontSize: 16,
+                                        fontSize: 16,
                     fontWeight: FontWeight.w500, // Weight for secondary buttons
-                    color: _isInHistory ? const Color(0xFF5B73FF) : Colors.white,
+                    color: _isInHistory ? context.tokens.accentBright : context.tokens.textPrimary,
                   ),
                 ),
               ],
@@ -1645,20 +1620,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
 
   Widget _buildDrawer(BuildContext context, AuthProvider authProvider, WalletProvider walletProvider) {
     return Drawer(
-      backgroundColor: const Color(0xFF1A1D47),
+      backgroundColor: context.tokens.dialogBackground,
       child: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF0F1419),
-              Color(0xFF1A1D47),
-              Color(0xFF2D3FE7),
-            ],
-            stops: [0.0, 0.5, 1.0],
-          ),
-        ),
+        decoration: BoxDecoration(gradient: context.tokens.backgroundGradient),
         child: SafeArea(
           child: Column(
             children: [
@@ -1676,12 +1640,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                           width: 56,
                           height: 56,
                           decoration: BoxDecoration(
-                            color: const Color(0xFF2D3FE7),
+                            color: context.tokens.accentSolid,
                             borderRadius: BorderRadius.circular(16),
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.person,
-                            color: Colors.white,
+                            color: context.tokens.textPrimary,
                             size: 28,
                           ),
                         ),
@@ -1692,10 +1656,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                             children: [
                               Text(
                                 authProvider.currentUser ?? 'User',
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,
-                                  color: Colors.white,
+                                  color: context.tokens.textPrimary,
                                 ),
                               ),
                               const SizedBox(height: 4),
@@ -1703,7 +1667,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                                 _extractDomain(authProvider.currentServer ?? ''),
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: Colors.white.withValues(alpha: 0.7),
+                                  color: context.tokens.textPrimary.withValues(alpha: 0.7),
                                 ),
                               ),
                             ],
@@ -1719,17 +1683,17 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.1),
+                          color: context.tokens.surface,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.2),
+                            color: context.tokens.outline,
                           ),
                         ),
                         child: Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.account_balance_wallet,
-                              color: Color(0xFF5B73FF),
+                              color: context.tokens.accentBright,
                               size: 16,
                             ),
                             const SizedBox(width: 8),
@@ -1739,17 +1703,17 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                                 children: [
                                   Text(
                                     walletProvider.primaryWallet!.name,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
-                                      color: Colors.white,
+                                      color: context.tokens.textPrimary,
                                     ),
                                   ),
                                   Text(
                                     walletProvider.primaryWallet!.balanceFormatted,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 12,
-                                      color: Color(0xFF5B73FF),
+                                      color: context.tokens.accentBright,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -1831,7 +1795,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                     Container(
                       width: double.infinity,
                       height: 1,
-                      color: Colors.white.withValues(alpha: 0.1),
+                      color: context.tokens.outline,
                     ),
                     const SizedBox(height: 16),
                     SizedBox(
@@ -1842,8 +1806,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                           _showLogoutConfirmation(authProvider);
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red.withValues(alpha: 0.2),
-                          foregroundColor: Colors.red,
+                          backgroundColor: context.tokens.statusUnhealthy.withValues(alpha: 0.2),
+                          foregroundColor: context.tokens.statusUnhealthy,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -1882,21 +1846,22 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.1),
+            color: context.tokens.surface,
             borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: context.tokens.outline, width: 1),
           ),
           child: Icon(
             icon,
-            color: const Color(0xFF5B73FF),
+            color: context.tokens.accentBright,
             size: 20,
           ),
         ),
         title: Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w500,
-            color: Colors.white,
+            color: context.tokens.textPrimary,
           ),
         ),
         subtitle: subtitle != null 
@@ -1904,7 +1869,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
               subtitle,
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.white.withValues(alpha: 0.7),
+                color: context.tokens.textPrimary.withValues(alpha: 0.7),
               ),
             )
           : null,
@@ -1958,7 +1923,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1D47),
+        backgroundColor: context.tokens.dialogBackground,
         title: Row(
           children: [
             Container(
@@ -1978,9 +1943,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
               ),
             ),
             const SizedBox(width: 12),
-            const Text(
+            Text(
               'LaChispa',
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: context.tokens.textPrimary),
             ),
           ],
         ),
@@ -1990,8 +1955,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
           children: [
             Text(
               subtitle,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: context.tokens.textPrimary,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
@@ -1999,8 +1964,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
             const SizedBox(height: 8),
             Text(
               description,
-              style: const TextStyle(
-                color: Colors.white70,
+              style: TextStyle(
+                color: context.tokens.textPrimary.withValues(alpha: 0.7),
                 fontSize: 14,
               ),
             ),
@@ -2008,21 +1973,21 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: const Color(0xFF2D3FE7).withValues(alpha: 0.2),
+                color: context.tokens.accentSolid.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.code,
-                    color: Color(0xFF5B73FF),
+                    color: context.tokens.accentBright,
                     size: 16,
                   ),
                   const SizedBox(width: 8),
                   Text(
                     AppInfoService.getVersionDisplay(languageProvider.currentLocale.languageCode),
-                    style: const TextStyle(
-                      color: Color(0xFF5B73FF),
+                    style: TextStyle(
+                      color: context.tokens.accentBright,
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
@@ -2037,7 +2002,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
             onPressed: () => Navigator.pop(context),
             child: Text(
               AppLocalizations.of(context)!.cancel_button,
-              style: TextStyle(color: Color(0xFF5B73FF)),
+              style: TextStyle(color: context.tokens.accentBright),
             ),
           ),
         ],
@@ -2049,21 +2014,21 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1D47),
+        backgroundColor: context.tokens.dialogBackground,
         title: Text(
           AppLocalizations.of(context)!.logout_option,
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: context.tokens.textPrimary),
         ),
         content: Text(
           AppLocalizations.of(context)!.confirm_logout_message,
-          style: TextStyle(color: Colors.white70),
+          style: TextStyle(color: context.tokens.textPrimary.withValues(alpha: 0.7)),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: Text(
               AppLocalizations.of(context)!.cancel_button,
-              style: TextStyle(color: Colors.white54),
+              style: TextStyle(color: context.tokens.textTertiary),
             ),
           ),
           TextButton(
@@ -2083,7 +2048,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
             },
             child: Text(
               AppLocalizations.of(context)!.logout_option,
-              style: TextStyle(color: Colors.red),
+              style: TextStyle(color: context.tokens.statusUnhealthy),
             ),
           ),
         ],
@@ -2120,7 +2085,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.3),
+                color: context.tokens.textTertiary,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -2130,10 +2095,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
               padding: const EdgeInsets.all(20),
               child: Text(
                 AppLocalizations.of(context)!.select_language,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
+                  color: context.tokens.textPrimary,
                 ),
               ),
             ),
@@ -2165,14 +2130,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-                              color: isSelected ? const Color(0xFF4C63F7) : Colors.white,
+                              color: isSelected ? context.tokens.accentSolid : context.tokens.textPrimary,
                             ),
                           ),
                         ),
                         if (isSelected)
-                          const Icon(
+                          Icon(
                             Icons.check_circle,
-                            color: Color(0xFF4C63F7),
+                            color: context.tokens.accentSolid,
                             size: 24,
                           ),
                       ],
@@ -2236,7 +2201,7 @@ class SparkPainter extends CustomPainter {
     // Optimized particle rendering
     if (particles.isEmpty) return;
     
-    // Predefined Chispa colors for performance
+    // Particle colors are intrinsic to the visual effect (CustomPainter, no context)
     const primaryColor = Color(0xFF5B73FF); // Glow exterior
     const secondaryColor = Color(0xFF4C63F7); // Glow interior
     

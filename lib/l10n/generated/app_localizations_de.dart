@@ -743,6 +743,25 @@ class AppLocalizationsDe extends AppLocalizations {
   String get lightning_address_set_default => 'Als Standard festlegen';
 
   @override
+  String get lightning_address_delete_title => 'Lightning-Adresse löschen';
+
+  @override
+  String lightning_address_delete_confirm(String address) {
+    return 'Möchten Sie $address wirklich löschen?';
+  }
+
+  @override
+  String get lightning_address_created_success => 'Lightning-Adresse erstellt';
+
+  @override
+  String get lightning_address_deleted_success => 'Lightning-Adresse gelöscht';
+
+  @override
+  String lightning_address_set_default_success(String address) {
+    return '$address ist jetzt Ihre Standard-Lightning-Adresse';
+  }
+
+  @override
   String get create_new_wallet_help => 'Neue Wallet erstellen';
 
   @override

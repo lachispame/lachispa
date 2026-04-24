@@ -5,6 +5,7 @@ import '../providers/wallet_provider.dart';
 import '../models/currency_info.dart';
 import '../l10n/generated/app_localizations.dart';
 import '../providers/auth_provider.dart';
+import '../theme/app_tokens.dart';
 
 class CurrencySettingsScreen extends StatefulWidget {
   const CurrencySettingsScreen({super.key});
@@ -124,17 +125,17 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1D47),
+        backgroundColor: context.tokens.dialogBackground,
         content: Row(
           children: [
-            const CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF5B73FF)),
+            CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(context.tokens.accentBright),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: Text(
                 AppLocalizations.of(context)!.checking_currency_availability(currency),
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: context.tokens.textPrimary),
               ),
             ),
           ],
@@ -232,18 +233,7 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
         return Scaffold(
           backgroundColor: Colors.transparent,
           body: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF0F1419),
-                  Color(0xFF1A1D47),
-                  Color(0xFF2D3FE7),
-                ],
-                stops: [0.0, 0.5, 1.0],
-              ),
-            ),
+            decoration: BoxDecoration(gradient: context.tokens.backgroundGradient),
             child: SafeArea(
               child: Column(
                 children: [
@@ -293,25 +283,25 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.08),
+              color: context.tokens.surface,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Colors.white.withValues(alpha: 0.1),
+                color: context.tokens.outline,
                 width: 1,
               ),
             ),
             child: IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.arrow_back,
-                color: Colors.white,
+                color: context.tokens.textPrimary,
                 size: 24,
               ),
               onPressed: () => Navigator.pop(context),
             ),
           ),
-          
+
           const SizedBox(width: 16),
-          
+
           // Title
           Expanded(
             child: Column(
@@ -319,20 +309,18 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
               children: [
                 Text(
                   AppLocalizations.of(context)!.currency_settings_title ?? 'Currency Settings',
-                  style: const TextStyle(
-                    fontFamily: 'Manrope',
-                    fontSize: 24,
+                  style: TextStyle(
+        fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: context.tokens.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   AppLocalizations.of(context)!.currency_settings_subtitle ?? 'Select your preferred currencies',
                   style: TextStyle(
-                    fontFamily: 'Manrope',
-                    fontSize: 14,
-                    color: Colors.white.withValues(alpha: 0.7),
+        fontSize: 14,
+                    color: context.tokens.textPrimary.withValues(alpha: 0.7),
                   ),
                 ),
               ],
@@ -368,10 +356,10 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
+        color: context.tokens.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
+          color: context.tokens.outline,
           width: 1,
         ),
       ),
@@ -381,29 +369,28 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
           // Header
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.add_circle_outline,
-                color: Color(0xFF5B73FF),
+                color: context.tokens.accentBright,
                 size: 20,
               ),
               const SizedBox(width: 8),
               Text(
                 AppLocalizations.of(context)!.available_currencies ?? 'Add Currency',
-                style: const TextStyle(
-                  fontFamily: 'Manrope',
-                  fontSize: 18,
+                style: TextStyle(
+    fontSize: 18,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  color: context.tokens.textPrimary,
                 ),
               ),
               const Spacer(),
               if (currencyProvider.isLoadingCurrencies)
-                const SizedBox(
+                SizedBox(
                   width: 16,
                   height: 16,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF5B73FF)),
+                    valueColor: AlwaysStoppedAnimation<Color>(context.tokens.accentBright),
                   ),
                 ),
             ],
@@ -421,20 +408,20 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.05),
+                color: context.tokens.inputFill,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
                   color: _isDropdownOpen 
-                      ? const Color(0xFF5B73FF)
-                      : Colors.white.withValues(alpha: 0.1),
+                      ? context.tokens.accentBright
+                      : context.tokens.outline,
                   width: _isDropdownOpen ? 2 : 1,
                 ),
               ),
               child: Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.search,
-                    color: Color(0xFF5B73FF),
+                    color: context.tokens.accentBright,
                     size: 20,
                   ),
                   const SizedBox(width: 12),
@@ -443,14 +430,14 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                         ? TextField(
                             controller: _searchController,
                             autofocus: true,
-                            style: const TextStyle(
-                              color: Colors.white,
+                            style: TextStyle(
+                              color: context.tokens.textPrimary,
                               fontSize: 16,
                             ),
                             decoration: InputDecoration(
                               hintText: 'Search currencies...',
                               hintStyle: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.5),
+                                color: context.tokens.textSecondary,
                                 fontSize: 16,
                               ),
                               border: InputBorder.none,
@@ -461,14 +448,14 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                         : Text(
                             'Search and select currencies...',
                             style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.7),
+                              color: context.tokens.textPrimary.withValues(alpha: 0.7),
                               fontSize: 16,
                             ),
                           ),
                   ),
                   Icon(
                     _isDropdownOpen ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                    color: Color(0xFF5B73FF),
+                    color: context.tokens.accentBright,
                     size: 20,
                   ),
                 ],
@@ -482,10 +469,10 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
             Container(
               constraints: const BoxConstraints(maxHeight: 300),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.05),
+                color: context.tokens.inputFill,
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.1),
+                  color: context.tokens.outline,
                   width: 1,
                 ),
               ),
@@ -498,7 +485,7 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                               ? 'No currencies found'
                               : 'No currencies available',
                           style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.7),
+                            color: context.tokens.textPrimary.withValues(alpha: 0.7),
                             fontSize: 14,
                           ),
                         ),
@@ -557,10 +544,10 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
+        color: context.tokens.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
+          color: context.tokens.outline,
           width: 1,
         ),
       ),
@@ -569,28 +556,26 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
         children: [
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.star,
-                color: Color(0xFF5B73FF),
+                color: context.tokens.accentBright,
                 size: 20,
               ),
               const SizedBox(width: 8),
               Text(
                 AppLocalizations.of(context)!.selected_currencies ?? 'Selected Currencies',
-                style: const TextStyle(
-                  fontFamily: 'Manrope',
-                  fontSize: 18,
+                style: TextStyle(
+    fontSize: 18,
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  color: context.tokens.textPrimary,
                 ),
               ),
               const Spacer(),
               Text(
                 '${selectedCurrencies.length + 1}', // +1 for sats
                 style: TextStyle(
-                  fontFamily: 'Manrope',
-                  fontSize: 14,
-                  color: Colors.white.withValues(alpha: 0.7),
+    fontSize: 14,
+                  color: context.tokens.textPrimary.withValues(alpha: 0.7),
                 ),
               ),
             ],
@@ -666,7 +651,7 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
           decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(
-                color: Colors.white.withValues(alpha: 0.05),
+                color: context.tokens.inputFill,
                 width: 0.5,
               ),
             ),
@@ -678,7 +663,7 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                 width: 32,
                 height: 32,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.05),
+                  color: context.tokens.inputFill,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Center(
@@ -701,23 +686,21 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                         Text(
                           currency,
                           style: TextStyle(
-                            fontFamily: 'Manrope',
-                            fontSize: 14,
+                        fontSize: 14,
                             fontWeight: FontWeight.bold,
                             color: isAlreadySelected 
-                                ? Colors.white.withValues(alpha: 0.5)
-                                : Colors.white,
+                                ? context.tokens.textSecondary
+                                : context.tokens.textPrimary,
                           ),
                         ),
                         const SizedBox(width: 6),
                         Text(
                           name,
                           style: TextStyle(
-                            fontFamily: 'Manrope',
-                            fontSize: 12,
+                        fontSize: 12,
                             color: isAlreadySelected 
-                                ? Colors.white.withValues(alpha: 0.4)
-                                : Colors.white.withValues(alpha: 0.7),
+                                ? context.tokens.textTertiary
+                                : context.tokens.textPrimary.withValues(alpha: 0.7),
                           ),
                         ),
                       ],
@@ -726,11 +709,10 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                       Text(
                         country,
                         style: TextStyle(
-                          fontFamily: 'Manrope',
-                          fontSize: 11,
+                    fontSize: 11,
                           color: isAlreadySelected 
-                              ? Colors.white.withValues(alpha: 0.3)
-                              : Colors.white.withValues(alpha: 0.5),
+                              ? context.tokens.textTertiary
+                              : context.tokens.textSecondary,
                         ),
                       ),
                   ],
@@ -741,13 +723,13 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
               if (isAlreadySelected)
                 Icon(
                   Icons.check_circle,
-                  color: Colors.white.withValues(alpha: 0.5),
+                  color: context.tokens.textSecondary,
                   size: 18,
                 )
               else
                 Icon(
                   Icons.add_circle_outline,
-                  color: Color(0xFF5B73FF),
+                  color: context.tokens.accentBright,
                   size: 18,
                 ),
             ],
@@ -779,13 +761,13 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: isSelected 
-                  ? const Color(0xFF2D3FE7).withValues(alpha: 0.2)
-                  : Colors.white.withValues(alpha: 0.05),
+                  ? context.tokens.accentSolid.withValues(alpha: 0.2)
+                  : context.tokens.inputFill,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: isSelected 
-                    ? const Color(0xFF2D3FE7)
-                    : Colors.white.withValues(alpha: 0.1),
+                    ? context.tokens.accentSolid
+                    : context.tokens.outline,
                 width: isSelected ? 2 : 1,
               ),
             ),
@@ -797,13 +779,13 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                   height: 48,
                   decoration: BoxDecoration(
                     color: isSelected 
-                        ? const Color(0xFF2D3FE7).withValues(alpha: 0.3)
-                        : Colors.white.withValues(alpha: 0.1),
+                        ? context.tokens.accentSolid.withValues(alpha: 0.3)
+                        : context.tokens.outline,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: isSelected 
-                          ? const Color(0xFF2D3FE7)
-                          : Colors.white.withValues(alpha: 0.2),
+                          ? context.tokens.accentSolid
+                          : context.tokens.outlineStrong,
                       width: 1,
                     ),
                   ),
@@ -822,13 +804,13 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                           child: Container(
                             width: 16,
                             height: 16,
-                            decoration: const BoxDecoration(
-                              color: Color(0xFF2D3FE7),
+                            decoration: BoxDecoration(
+                              color: context.tokens.accentSolid,
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(
+                            child: Icon(
                               Icons.check,
-                              color: Colors.white,
+                              color: context.tokens.accentForeground,
                               size: 12,
                             ),
                           ),
@@ -849,10 +831,9 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                           Text(
                             currency,
                             style: TextStyle(
-                              fontFamily: 'Manrope',
-                              fontSize: 16,
+                            fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: isSelected ? const Color(0xFF2D3FE7) : Colors.white,
+                              color: isSelected ? context.tokens.accentSolid : context.tokens.textPrimary,
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -860,19 +841,18 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
                               color: isSelected 
-                                  ? const Color(0xFF2D3FE7).withValues(alpha: 0.2)
-                                  : Colors.white.withValues(alpha: 0.1),
+                                  ? context.tokens.accentSolid.withValues(alpha: 0.2)
+                                  : context.tokens.outline,
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Text(
                               currencyInfo?.symbol ?? currency,
                               style: TextStyle(
-                                fontFamily: 'Manrope',
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
                                 color: isSelected 
-                                    ? const Color(0xFF2D3FE7)
-                                    : Colors.white.withValues(alpha: 0.7),
+                                    ? context.tokens.accentSolid
+                                    : context.tokens.textPrimary.withValues(alpha: 0.7),
                               ),
                             ),
                           ),
@@ -882,12 +862,11 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                       Text(
                         name,
                         style: TextStyle(
-                          fontFamily: 'Manrope',
-                          fontSize: 14,
+                    fontSize: 14,
                           fontWeight: FontWeight.w500,
                           color: isSelected 
-                              ? const Color(0xFF2D3FE7).withValues(alpha: 0.8)
-                              : Colors.white.withValues(alpha: 0.9),
+                              ? context.tokens.accentSolid.withValues(alpha: 0.8)
+                              : context.tokens.textPrimary.withValues(alpha: 0.9),
                         ),
                       ),
                       if (country.isNotEmpty) ...[
@@ -895,11 +874,10 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                         Text(
                           country,
                           style: TextStyle(
-                            fontFamily: 'Manrope',
-                            fontSize: 12,
+                        fontSize: 12,
                             color: isSelected 
-                                ? const Color(0xFF2D3FE7).withValues(alpha: 0.6)
-                                : Colors.white.withValues(alpha: 0.6),
+                                ? context.tokens.accentSolid.withValues(alpha: 0.6)
+                                : context.tokens.textSecondary,
                           ),
                         ),
                       ],
@@ -910,7 +888,7 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                 // Arrow indicator
                 Icon(
                   isSelected ? Icons.check_circle : Icons.radio_button_unchecked,
-                  color: isSelected ? const Color(0xFF2D3FE7) : Colors.white.withValues(alpha: 0.5),
+                  color: isSelected ? context.tokens.accentSolid : context.tokens.textSecondary,
                   size: 24,
                 ),
               ],
@@ -939,12 +917,12 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
       decoration: BoxDecoration(
         color: isFirst 
             ? const Color(0xFFFFD700).withValues(alpha: 0.1)
-            : Colors.white.withValues(alpha: 0.05),
+            : context.tokens.inputFill,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isFirst 
               ? const Color(0xFFFFD700).withValues(alpha: 0.3)
-              : Colors.white.withValues(alpha: 0.1),
+              : context.tokens.outline,
           width: isFirst ? 2 : 1,
         ),
       ),
@@ -957,12 +935,12 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
             decoration: BoxDecoration(
               color: isFirst 
                   ? const Color(0xFFFFD700).withValues(alpha: 0.2)
-                  : const Color(0xFF2D3FE7).withValues(alpha: 0.1),
+                  : context.tokens.accentSolid.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: isFirst 
                     ? const Color(0xFFFFD700).withValues(alpha: 0.5)
-                    : Colors.white.withValues(alpha: 0.2),
+                    : context.tokens.outlineStrong,
                 width: 1,
               ),
             ),
@@ -985,10 +963,9 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                     Text(
                       currency.toUpperCase(),
                       style: TextStyle(
-                        fontFamily: 'Manrope',
-                        fontSize: 16,
+                fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: isFirst ? const Color(0xFFFFD700) : Colors.white,
+                        color: isFirst ? const Color(0xFFFFD700) : context.tokens.textPrimary,
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -997,18 +974,17 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                       decoration: BoxDecoration(
                         color: isFirst 
                             ? const Color(0xFFFFD700).withValues(alpha: 0.2)
-                            : Colors.white.withValues(alpha: 0.1),
+                            : context.tokens.outline,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
                         symbol,
                         style: TextStyle(
-                          fontFamily: 'Manrope',
-                          fontSize: 12,
+                    fontSize: 12,
                           fontWeight: FontWeight.w500,
                           color: isFirst 
                               ? const Color(0xFFFFD700)
-                              : Colors.white.withValues(alpha: 0.7),
+                              : context.tokens.textPrimary.withValues(alpha: 0.7),
                         ),
                       ),
                     ),
@@ -1018,12 +994,11 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                 Text(
                   name,
                   style: TextStyle(
-                    fontFamily: 'Manrope',
-                    fontSize: 14,
+        fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: isFirst 
                         ? const Color(0xFFFFD700).withValues(alpha: 0.8)
-                        : Colors.white.withValues(alpha: 0.9),
+                        : context.tokens.textPrimary.withValues(alpha: 0.9),
                   ),
                 ),
                 if (country.isNotEmpty) ...[
@@ -1031,11 +1006,10 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                   Text(
                     country,
                     style: TextStyle(
-                      fontFamily: 'Manrope',
-                      fontSize: 12,
+            fontSize: 12,
                       color: isFirst 
                           ? const Color(0xFFFFD700).withValues(alpha: 0.6)
-                          : Colors.white.withValues(alpha: 0.6),
+                          : context.tokens.textSecondary,
                     ),
                   ),
                 ],
@@ -1073,12 +1047,12 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
               decoration: BoxDecoration(
                 color: isFirst 
                     ? const Color(0xFFFFD700).withValues(alpha: 0.1)
-                    : Colors.white.withValues(alpha: 0.05),
+                    : context.tokens.inputFill,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: isFirst 
                       ? const Color(0xFFFFD700).withValues(alpha: 0.3)
-                      : Colors.white.withValues(alpha: 0.2),
+                      : context.tokens.outlineStrong,
                   width: 1,
                 ),
               ),
@@ -1086,7 +1060,7 @@ class _CurrencySettingsScreenState extends State<CurrencySettingsScreen>
                 Icons.lock,
                 color: isFirst 
                     ? const Color(0xFFFFD700).withValues(alpha: 0.7)
-                    : Colors.white.withValues(alpha: 0.5),
+                    : context.tokens.textSecondary,
                 size: 18,
               ),
             ),

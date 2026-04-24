@@ -748,6 +748,26 @@ class AppLocalizationsIt extends AppLocalizations {
   String get lightning_address_set_default => 'Imposta come predefinito';
 
   @override
+  String get lightning_address_delete_title => 'Elimina indirizzo Lightning';
+
+  @override
+  String lightning_address_delete_confirm(String address) {
+    return 'Sei sicuro di voler eliminare $address?';
+  }
+
+  @override
+  String get lightning_address_created_success => 'Indirizzo Lightning creato';
+
+  @override
+  String get lightning_address_deleted_success =>
+      'Indirizzo Lightning eliminato';
+
+  @override
+  String lightning_address_set_default_success(String address) {
+    return '$address è ora il tuo indirizzo Lightning predefinito';
+  }
+
+  @override
   String get create_new_wallet_help => 'Crea nuovo portafoglio';
 
   @override

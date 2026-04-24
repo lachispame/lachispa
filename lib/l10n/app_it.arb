@@ -209,6 +209,25 @@
   "lightning_address_delete": "Elimina",
   "lightning_address_is_default": "È predefinito",
   "lightning_address_set_default": "Imposta come predefinito",
+  "lightning_address_delete_title": "Elimina indirizzo Lightning",
+  "lightning_address_delete_confirm": "Sei sicuro di voler eliminare {address}?",
+  "@lightning_address_delete_confirm": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "lightning_address_created_success": "Indirizzo Lightning creato",
+  "lightning_address_deleted_success": "Indirizzo Lightning eliminato",
+  "lightning_address_set_default_success": "{address} è ora il tuo indirizzo Lightning predefinito",
+  "@lightning_address_set_default_success": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
   "create_new_wallet_help": "Crea nuovo portafoglio",
   "create_wallet_short_description": "Per creare un nuovo portafoglio, accedi al tuo pannello LNBits dal browser e usa l'opzione \"Crea portafoglio\".",
   "create_wallet_detailed_instructions": "Per creare un nuovo portafoglio:\\n\\n1. Apri il tuo browser web\\n2. Accedi al tuo server LNBits\\n3. Effettua l'accesso con il tuo account\\n4. Cerca il pulsante \"Crea portafoglio\"\\n5. Assegna un nome al tuo nuovo portafoglio\\n6. Torna a LaChispa e aggiorna i tuoi portafogli\\n\\nIl nuovo portafoglio apparirà automaticamente nella tua lista.",

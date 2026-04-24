@@ -268,6 +268,25 @@
   "lightning_address_delete": "Delete",
   "lightning_address_is_default": "Is default",
   "lightning_address_set_default": "Set as default",
+  "lightning_address_delete_title": "Delete Lightning address",
+  "lightning_address_delete_confirm": "Are you sure you want to delete {address}?",
+  "@lightning_address_delete_confirm": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "lightning_address_created_success": "Lightning address created",
+  "lightning_address_deleted_success": "Lightning address deleted",
+  "lightning_address_set_default_success": "{address} is now your default Lightning address",
+  "@lightning_address_set_default_success": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
   "create_new_wallet_help": "Create new wallet",
   "create_wallet_short_description": "To create a new wallet, access your LNBits panel from the browser and use the \"Create wallet\" option.",
   "create_wallet_detailed_instructions": "To create a new wallet:\\n\\n1. Open your web browser\\n2. Access your LNBits server\\n3. Log in with your account\\n4. Look for the \"Create wallet\" button\\n5. Assign a name to your new wallet\\n6. Return to LaChispa and refresh your wallets\\n\\nThe new wallet will appear automatically in your list.",

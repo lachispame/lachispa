@@ -725,6 +725,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lightning_address_set_default => 'Set as default';
 
   @override
+  String get lightning_address_delete_title => 'Delete Lightning address';
+
+  @override
+  String lightning_address_delete_confirm(String address) {
+    return 'Are you sure you want to delete $address?';
+  }
+
+  @override
+  String get lightning_address_created_success => 'Lightning address created';
+
+  @override
+  String get lightning_address_deleted_success => 'Lightning address deleted';
+
+  @override
+  String lightning_address_set_default_success(String address) {
+    return '$address is now your default Lightning address';
+  }
+
+  @override
   String get create_new_wallet_help => 'Create new wallet';
 
   @override

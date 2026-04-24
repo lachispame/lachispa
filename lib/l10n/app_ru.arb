@@ -209,6 +209,25 @@
   "lightning_address_delete": "Удалить",
   "lightning_address_is_default": "По умолчанию",
   "lightning_address_set_default": "Установить по умолчанию",
+  "lightning_address_delete_title": "Удалить Lightning-адрес",
+  "lightning_address_delete_confirm": "Вы уверены, что хотите удалить {address}?",
+  "@lightning_address_delete_confirm": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "lightning_address_created_success": "Lightning-адрес создан",
+  "lightning_address_deleted_success": "Lightning-адрес удалён",
+  "lightning_address_set_default_success": "{address} теперь ваш Lightning-адрес по умолчанию",
+  "@lightning_address_set_default_success": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
   "create_new_wallet_help": "Создать новый кошелек",
   "create_wallet_short_description": "Чтобы создать новый кошелек, войдите в панель LNBits через браузер и используйте опцию \\\"Создать кошелек\\\".",
   "create_wallet_detailed_instructions": "Чтобы создать новый кошелек:\\\\n\\\\n1. Откройте веб-браузер\\\\n2. Войдите на ваш сервер LNBits\\\\n3. Войдите в свой аккаунт\\\\n4. Найдите кнопку \\\"Создать кошелек\\\"\\\\n5. Дайте имя вашему новому кошельку\\\\n6. Вернитесь в LaChispa и обновите ваши кошельки\\\\n\\\\nНовый кошелек автоматически появится в вашем списке.",
