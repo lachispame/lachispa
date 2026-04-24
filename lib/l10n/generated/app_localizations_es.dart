@@ -527,6 +527,43 @@ class AppLocalizationsEs extends AppLocalizations {
       'Saldo insuficiente para realizar el pago';
 
   @override
+  String get payment_error_fee_reserve_required =>
+      'Balance insuficiente para cubrir tarifas de ruta';
+
+  @override
+  String get payment_error_already_paid => 'Esta factura ya fue pagada';
+
+  @override
+  String get payment_error_still_pending =>
+      'Ya hay un pago en proceso para esta factura';
+
+  @override
+  String get payment_error_route_not_found =>
+      'No se encontró ruta para este pago';
+
+  @override
+  String get payment_error_payment_not_found =>
+      'El pago no existe en esta billetera';
+
+  @override
+  String payment_error_lnurl_generic(Object detail) {
+    return 'Error LNURL: $detail';
+  }
+
+  @override
+  String get payment_error_auth =>
+      'Error de autenticación. Verifica tus credenciales.';
+
+  @override
+  String get payment_error_server =>
+      'Error del servidor Lightning. Intenta de nuevo.';
+
+  @override
+  String payment_error_unknown(Object code) {
+    return 'Error desconocido ($code)';
+  }
+
+  @override
   String get confirm_payment_title => 'Confirmar Pago';
 
   @override

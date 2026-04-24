@@ -524,6 +524,41 @@ class AppLocalizationsEn extends AppLocalizations {
       'Insufficient balance to make payment';
 
   @override
+  String get payment_error_fee_reserve_required =>
+      'Insufficient balance to cover routing fees';
+
+  @override
+  String get payment_error_already_paid => 'This invoice has already been paid';
+
+  @override
+  String get payment_error_still_pending =>
+      'A payment for this invoice is already in progress';
+
+  @override
+  String get payment_error_route_not_found => 'No route found for this payment';
+
+  @override
+  String get payment_error_payment_not_found =>
+      'Payment not found in this wallet';
+
+  @override
+  String payment_error_lnurl_generic(Object detail) {
+    return 'LNURL error: $detail';
+  }
+
+  @override
+  String get payment_error_auth =>
+      'Authentication error. Check your credentials.';
+
+  @override
+  String get payment_error_server => 'Lightning server error. Try again.';
+
+  @override
+  String payment_error_unknown(Object code) {
+    return 'Unknown error ($code)';
+  }
+
+  @override
   String get confirm_payment_title => 'Confirm Payment';
 
   @override

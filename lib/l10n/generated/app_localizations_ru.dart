@@ -525,6 +525,42 @@ class AppLocalizationsRu extends AppLocalizations {
       'Недостаточно средств для совершения платежа';
 
   @override
+  String get payment_error_fee_reserve_required =>
+      'Недостаточно средств для покрытия комиссий маршрутизации';
+
+  @override
+  String get payment_error_already_paid => 'Этот счёт уже оплачен';
+
+  @override
+  String get payment_error_still_pending =>
+      'Платёж по этому счёту уже выполняется';
+
+  @override
+  String get payment_error_route_not_found => 'Маршрут для платежа не найден';
+
+  @override
+  String get payment_error_payment_not_found =>
+      'Платёж не найден в этом кошельке';
+
+  @override
+  String payment_error_lnurl_generic(Object detail) {
+    return 'Ошибка LNURL: $detail';
+  }
+
+  @override
+  String get payment_error_auth =>
+      'Ошибка аутентификации. Проверьте учётные данные.';
+
+  @override
+  String get payment_error_server =>
+      'Ошибка сервера Lightning. Попробуйте ещё раз.';
+
+  @override
+  String payment_error_unknown(Object code) {
+    return 'Неизвестная ошибка ($code)';
+  }
+
+  @override
   String get confirm_payment_title => 'Подтвердить платеж';
 
   @override

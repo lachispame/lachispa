@@ -527,6 +527,43 @@ class AppLocalizationsPt extends AppLocalizations {
       'Saldo insuficiente para efetuar o pagamento';
 
   @override
+  String get payment_error_fee_reserve_required =>
+      'Saldo insuficiente para cobrir taxas de roteamento';
+
+  @override
+  String get payment_error_already_paid => 'Esta fatura já foi paga';
+
+  @override
+  String get payment_error_still_pending =>
+      'Já existe um pagamento em andamento para esta fatura';
+
+  @override
+  String get payment_error_route_not_found =>
+      'Nenhuma rota encontrada para este pagamento';
+
+  @override
+  String get payment_error_payment_not_found =>
+      'Pagamento não encontrado nesta carteira';
+
+  @override
+  String payment_error_lnurl_generic(Object detail) {
+    return 'Erro LNURL: $detail';
+  }
+
+  @override
+  String get payment_error_auth =>
+      'Erro de autenticação. Verifique suas credenciais.';
+
+  @override
+  String get payment_error_server =>
+      'Erro do servidor Lightning. Tente novamente.';
+
+  @override
+  String payment_error_unknown(Object code) {
+    return 'Erro desconhecido ($code)';
+  }
+
+  @override
   String get confirm_payment_title => 'Confirmar Pagamento';
 
   @override

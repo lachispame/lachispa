@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '11amount_screen.dart';
 import '12invoice_confirm_screen.dart';
 import '../services/invoice_service.dart';
+import '../services/payment_error.dart';
 import '../providers/auth_provider.dart';
 import '../providers/wallet_provider.dart';
 import '../widgets/qr_scanner_widget.dart';
@@ -151,7 +152,11 @@ class _SendScreenState extends State<SendScreen> {
       }
 
     } catch (e) {
-      _showErrorSnackBar('${AppLocalizations.of(context)!.send_error_prefix}$e');
+      if (e is PaymentError) {
+        _showErrorSnackBar(_localizePaymentError(e));
+      } else {
+        _showErrorSnackBar('${AppLocalizations.of(context)!.send_error_prefix}$e');
+      }
     } finally {
       setState(() {
         _isProcessing = false;
@@ -288,6 +293,34 @@ class _SendScreenState extends State<SendScreen> {
         duration: const Duration(seconds: 3),
       ),
     );
+  }
+
+  String _localizePaymentError(PaymentError e) {
+    final l = AppLocalizations.of(context)!;
+    switch (e.kind) {
+      case PaymentErrorKind.insufficientBalance:
+        return l.insufficient_balance_error;
+      case PaymentErrorKind.feeReserveRequired:
+        return l.payment_error_fee_reserve_required;
+      case PaymentErrorKind.alreadyPaid:
+        return l.payment_error_already_paid;
+      case PaymentErrorKind.stillPending:
+        return l.payment_error_still_pending;
+      case PaymentErrorKind.routeNotFound:
+        return l.payment_error_route_not_found;
+      case PaymentErrorKind.paymentNotFound:
+        return l.payment_error_payment_not_found;
+      case PaymentErrorKind.authenticationError:
+        return l.payment_error_auth;
+      case PaymentErrorKind.amountlessInvoice:
+        return l.amountless_invoice_error;
+      case PaymentErrorKind.lnurlOrDecodeError:
+        return l.payment_error_lnurl_generic(e.rawDetail ?? '');
+      case PaymentErrorKind.serverError:
+        return l.payment_error_server;
+      case PaymentErrorKind.unknown:
+        return l.payment_error_unknown(e.statusCode ?? '?');
+    }
   }
 
   void _showErrorSnackBar(String message) {

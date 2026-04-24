@@ -191,6 +191,25 @@
   "lightning_payment_pending": "Lightning Address payment pending - Hold invoice detected",
   "lightning_payment_success": "Lightning Address payment completed successfully!",
   "insufficient_balance_error": "Insufficient balance to make payment",
+  "payment_error_fee_reserve_required": "Insufficient balance to cover routing fees",
+  "payment_error_already_paid": "This invoice has already been paid",
+  "payment_error_still_pending": "A payment for this invoice is already in progress",
+  "payment_error_route_not_found": "No route found for this payment",
+  "payment_error_payment_not_found": "Payment not found in this wallet",
+  "payment_error_lnurl_generic": "LNURL error: {detail}",
+  "@payment_error_lnurl_generic": {
+    "placeholders": {
+      "detail": { "type": "Object" }
+    }
+  },
+  "payment_error_auth": "Authentication error. Check your credentials.",
+  "payment_error_server": "Lightning server error. Try again.",
+  "payment_error_unknown": "Unknown error ({code})",
+  "@payment_error_unknown": {
+    "placeholders": {
+      "code": { "type": "Object" }
+    }
+  },
   
   "confirm_payment_title": "Confirm Payment",
   "invoice_description_label": "Description",

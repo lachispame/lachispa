@@ -537,6 +537,42 @@ class AppLocalizationsFr extends AppLocalizations {
       'Solde insuffisant pour effectuer le paiement';
 
   @override
+  String get payment_error_fee_reserve_required =>
+      'Solde insuffisant pour couvrir les frais de routage';
+
+  @override
+  String get payment_error_already_paid => 'Cette facture a déjà été payée';
+
+  @override
+  String get payment_error_still_pending =>
+      'Un paiement pour cette facture est déjà en cours';
+
+  @override
+  String get payment_error_route_not_found =>
+      'Aucune route trouvée pour ce paiement';
+
+  @override
+  String get payment_error_payment_not_found =>
+      'Paiement introuvable dans ce portefeuille';
+
+  @override
+  String payment_error_lnurl_generic(Object detail) {
+    return 'Erreur LNURL : $detail';
+  }
+
+  @override
+  String get payment_error_auth =>
+      'Erreur d\'authentification. Vérifiez vos identifiants.';
+
+  @override
+  String get payment_error_server => 'Erreur du serveur Lightning. Réessayez.';
+
+  @override
+  String payment_error_unknown(Object code) {
+    return 'Erreur inconnue ($code)';
+  }
+
+  @override
   String get confirm_payment_title => 'Confirmer le paiement';
 
   @override

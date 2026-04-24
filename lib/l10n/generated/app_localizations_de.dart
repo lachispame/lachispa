@@ -535,6 +535,44 @@ class AppLocalizationsDe extends AppLocalizations {
       'Unzureichendes Guthaben für die Zahlung';
 
   @override
+  String get payment_error_fee_reserve_required =>
+      'Guthaben reicht nicht für Routing-Gebühren';
+
+  @override
+  String get payment_error_already_paid =>
+      'Diese Rechnung wurde bereits bezahlt';
+
+  @override
+  String get payment_error_still_pending =>
+      'Eine Zahlung für diese Rechnung ist bereits unterwegs';
+
+  @override
+  String get payment_error_route_not_found =>
+      'Keine Route für diese Zahlung gefunden';
+
+  @override
+  String get payment_error_payment_not_found =>
+      'Zahlung in dieser Wallet nicht gefunden';
+
+  @override
+  String payment_error_lnurl_generic(Object detail) {
+    return 'LNURL-Fehler: $detail';
+  }
+
+  @override
+  String get payment_error_auth =>
+      'Authentifizierungsfehler. Zugangsdaten überprüfen.';
+
+  @override
+  String get payment_error_server =>
+      'Lightning-Server-Fehler. Bitte erneut versuchen.';
+
+  @override
+  String payment_error_unknown(Object code) {
+    return 'Unbekannter Fehler ($code)';
+  }
+
+  @override
   String get confirm_payment_title => 'Zahlung bestätigen';
 
   @override
