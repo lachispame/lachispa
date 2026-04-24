@@ -272,7 +272,8 @@ class _SendScreenState extends State<SendScreen> {
       SnackBar(
         content: Row(
           children: [
-            Icon(Icons.check_circle, color: t.statusHealthy),
+            // White content on saturated status background; not a themable surface.
+            const Icon(Icons.check_circle, color: Colors.white),
             const SizedBox(width: 8),
             Expanded(
               child: Text(
@@ -295,7 +296,8 @@ class _SendScreenState extends State<SendScreen> {
       SnackBar(
         content: Row(
           children: [
-            Icon(Icons.error, color: t.statusUnhealthy),
+            // White content on saturated status background; not a themable surface.
+            const Icon(Icons.error, color: Colors.white),
             const SizedBox(width: 8),
             Expanded(
               child: Text(

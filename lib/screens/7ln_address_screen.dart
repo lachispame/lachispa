@@ -102,10 +102,10 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
 
           Container(
             decoration: BoxDecoration(
-              color: t.outline,
+              color: t.surface,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: t.outlineStrong,
+                color: t.outline,
                 width: 1,
               ),
             ),
@@ -143,10 +143,10 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
 
           Container(
             decoration: BoxDecoration(
-              color: t.outline,
+              color: t.surface,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: t.outlineStrong,
+                color: t.outline,
                 width: 1,
               ),
             ),
@@ -512,20 +512,20 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
                       ? amber.withValues(alpha: 0.2)
                       : (address.isActive
                           ? t.statusHealthy.withValues(alpha: 0.2)
-                          : Colors.grey.withValues(alpha: 0.2)),
+                          : t.outline),
                   borderRadius: BorderRadius.circular(6),
                   border: Border.all(
                     color: address.isDefault
                         ? amber.withValues(alpha: 0.3)
                         : (address.isActive
                             ? t.statusHealthy.withValues(alpha: 0.3)
-                            : Colors.grey.withValues(alpha: 0.3)),
+                            : t.outlineStrong),
                   ),
                 ),
                 child: Text(
                   address.isDefault ? AppLocalizations.of(context)!.lightning_address_title : (address.isActive ? AppLocalizations.of(context)!.valid_status : AppLocalizations.of(context)!.not_available_text),
                   style: TextStyle(
-                    color: address.isDefault ? amber : (address.isActive ? t.statusHealthy : Colors.grey),
+                    color: address.isDefault ? amber : (address.isActive ? t.statusHealthy : t.textSecondary),
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                   ),
@@ -589,8 +589,9 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
                   ),
                   Container(
                     decoration: BoxDecoration(
-                      color: t.outline,
+                      color: t.surface,
                       borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: t.outline, width: 1),
                     ),
                     child: Material(
                       color: Colors.transparent,

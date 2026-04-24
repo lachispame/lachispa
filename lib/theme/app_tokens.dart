@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class AppTokens extends ThemeExtension<AppTokens> {
   const AppTokens({
     required this.backgroundGradient,
+    required this.scaffoldBase,
     required this.surface,
     required this.outline,
     required this.outlineStrong,
@@ -19,12 +20,14 @@ class AppTokens extends ThemeExtension<AppTokens> {
     required this.statusUnhealthy,
     required this.statusChecking,
     required this.statusWarning,
+    required this.statusWarningSoft,
     required this.ctaShadow,
     required this.dialogBackground,
     required this.inputFill,
   });
 
   final Gradient backgroundGradient;
+  final Color scaffoldBase;
   final Color surface;
   final Color outline;
   final Color outlineStrong;
@@ -40,6 +43,7 @@ class AppTokens extends ThemeExtension<AppTokens> {
   final Color statusUnhealthy;
   final Color statusChecking;
   final Color statusWarning;
+  final Color statusWarningSoft;
   final Color ctaShadow;
   final Color dialogBackground;
   final Color inputFill;
@@ -47,6 +51,7 @@ class AppTokens extends ThemeExtension<AppTokens> {
   @override
   AppTokens copyWith({
     Gradient? backgroundGradient,
+    Color? scaffoldBase,
     Color? surface,
     Color? outline,
     Color? outlineStrong,
@@ -62,12 +67,14 @@ class AppTokens extends ThemeExtension<AppTokens> {
     Color? statusUnhealthy,
     Color? statusChecking,
     Color? statusWarning,
+    Color? statusWarningSoft,
     Color? ctaShadow,
     Color? dialogBackground,
     Color? inputFill,
   }) {
     return AppTokens(
       backgroundGradient: backgroundGradient ?? this.backgroundGradient,
+      scaffoldBase: scaffoldBase ?? this.scaffoldBase,
       surface: surface ?? this.surface,
       outline: outline ?? this.outline,
       outlineStrong: outlineStrong ?? this.outlineStrong,
@@ -83,6 +90,7 @@ class AppTokens extends ThemeExtension<AppTokens> {
       statusUnhealthy: statusUnhealthy ?? this.statusUnhealthy,
       statusChecking: statusChecking ?? this.statusChecking,
       statusWarning: statusWarning ?? this.statusWarning,
+      statusWarningSoft: statusWarningSoft ?? this.statusWarningSoft,
       ctaShadow: ctaShadow ?? this.ctaShadow,
       dialogBackground: dialogBackground ?? this.dialogBackground,
       inputFill: inputFill ?? this.inputFill,
@@ -95,6 +103,7 @@ class AppTokens extends ThemeExtension<AppTokens> {
     return AppTokens(
       backgroundGradient:
           t < 0.5 ? backgroundGradient : other.backgroundGradient,
+      scaffoldBase: Color.lerp(scaffoldBase, other.scaffoldBase, t)!,
       surface: Color.lerp(surface, other.surface, t)!,
       outline: Color.lerp(outline, other.outline, t)!,
       outlineStrong: Color.lerp(outlineStrong, other.outlineStrong, t)!,
@@ -112,6 +121,8 @@ class AppTokens extends ThemeExtension<AppTokens> {
           Color.lerp(statusUnhealthy, other.statusUnhealthy, t)!,
       statusChecking: Color.lerp(statusChecking, other.statusChecking, t)!,
       statusWarning: Color.lerp(statusWarning, other.statusWarning, t)!,
+      statusWarningSoft:
+          Color.lerp(statusWarningSoft, other.statusWarningSoft, t)!,
       ctaShadow: Color.lerp(ctaShadow, other.ctaShadow, t)!,
       dialogBackground:
           Color.lerp(dialogBackground, other.dialogBackground, t)!,

@@ -266,8 +266,9 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
             child: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: t.outline,
+                color: t.surface,
                 borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: t.outline, width: 1),
               ),
               child: Icon(
                 Icons.arrow_back,
@@ -425,7 +426,7 @@ class _ServerSettingsScreenState extends State<ServerSettingsScreen>
                 color: t.textSecondary,
               ),
               filled: true,
-              fillColor: t.outline,
+              fillColor: t.inputFill,
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide(

@@ -114,8 +114,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: t.outline,
+                color: t.surface,
                 borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: t.outline, width: 1),
               ),
               child: Icon(
                 Icons.arrow_back,

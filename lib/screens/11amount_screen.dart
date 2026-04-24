@@ -544,7 +544,8 @@ class _AmountScreenState extends State<AmountScreen> {
       SnackBar(
         content: Row(
           children: [
-            Icon(Icons.check_circle, color: t.statusHealthy),
+            // White content on saturated status background; not a themable surface.
+            const Icon(Icons.check_circle, color: Colors.white),
             const SizedBox(width: 8),
             Text(message),
           ],
@@ -561,7 +562,8 @@ class _AmountScreenState extends State<AmountScreen> {
       SnackBar(
         content: Row(
           children: [
-            Icon(Icons.schedule, color: t.statusWarning),
+            // White content on saturated status background; not a themable surface.
+            const Icon(Icons.schedule, color: Colors.white),
             const SizedBox(width: 8),
             Text(message),
           ],
@@ -578,7 +580,8 @@ class _AmountScreenState extends State<AmountScreen> {
       SnackBar(
         content: Row(
           children: [
-            Icon(Icons.error, color: t.statusUnhealthy),
+            // White content on saturated status background; not a themable surface.
+            const Icon(Icons.error, color: Colors.white),
             const SizedBox(width: 8),
             Text(message),
           ],

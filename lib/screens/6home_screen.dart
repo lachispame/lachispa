@@ -328,7 +328,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
             SnackBar(
               content: Row(
                 children: [
-                  Icon(Icons.check_circle, color: context.tokens.statusHealthy),
+                  // White content on saturated status background; not a themable surface.
+                  const Icon(Icons.check_circle, color: Colors.white),
                   const SizedBox(width: 8),
                   Text('${AppLocalizations.of(context)!.received_label}! +$difference sats'),
                 ],
@@ -935,9 +936,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
               ),
             ),
             child: IconButton(
-              icon: const Icon(
+              icon: Icon(
                 Icons.auto_awesome,
-                color: Colors.orange,
+                color: context.tokens.statusWarning,
                 size: 24,
               ),
               onPressed: _triggerTestSpark,
@@ -962,10 +963,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: context.tokens.outline,
+                      color: context.tokens.surface,
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: context.tokens.outlineStrong,
+                        color: context.tokens.outline,
                       ),
                     ),
                     child: Row(
@@ -1682,10 +1683,10 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: context.tokens.outline,
+                          color: context.tokens.surface,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: context.tokens.outlineStrong,
+                            color: context.tokens.outline,
                           ),
                         ),
                         child: Row(
@@ -1845,8 +1846,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
           width: 40,
           height: 40,
           decoration: BoxDecoration(
-            color: context.tokens.outline,
+            color: context.tokens.surface,
             borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: context.tokens.outline, width: 1),
           ),
           child: Icon(
             icon,

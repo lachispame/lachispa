@@ -90,8 +90,7 @@ class _FixedFloatScreenState extends State<FixedFloatScreen> {
   Widget build(BuildContext context) {
     final t = context.tokens;
     return Scaffold(
-      // Scaffold base bg matches gradient first stop
-      backgroundColor: const Color(0xFF0F1419),
+      backgroundColor: t.scaffoldBase,
       appBar: AppBar(
         title: Text(
           'Fixed Float',
@@ -159,7 +158,7 @@ class _FixedFloatScreenState extends State<FixedFloatScreen> {
         // Loading indicator
         if (_isLoading)
           Container(
-            color: const Color(0xFF0F1419).withValues(alpha: 0.9),
+            color: t.scaffoldBase.withValues(alpha: 0.9),
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -195,10 +194,10 @@ class _FixedFloatScreenState extends State<FixedFloatScreen> {
             width: 120,
             height: 120,
             decoration: BoxDecoration(
-              color: t.outline,
+              color: t.surface,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: t.outlineStrong,
+                color: t.outline,
                 width: 2,
               ),
             ),
@@ -251,8 +250,7 @@ class _FixedFloatScreenState extends State<FixedFloatScreen> {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
-                  // Lighter shade of warning is intrinsic to error text styling
-                  color: Colors.orange.shade200,
+                  color: t.statusWarningSoft,
                 ),
               ),
             ),

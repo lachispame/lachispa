@@ -251,14 +251,7 @@ class _VoucherScanScreenState extends State<VoucherScanScreen> {
             width: 200,
             height: 200,
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  context.tokens.accentSolid,
-                  context.tokens.accentSolid,
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+              gradient: context.tokens.accentGradient,
               borderRadius: BorderRadius.circular(100),
               boxShadow: [
                 BoxShadow(
