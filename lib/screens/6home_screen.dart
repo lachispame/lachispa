@@ -1220,6 +1220,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                       blurRadius: _sendButtonPressed ? 8 : 12,
                       offset: Offset(0, _sendButtonPressed ? 3 : 6),
                     ),
+                    BoxShadow(
+                      color: context.tokens.ctaShadow,
+                      blurRadius: _sendButtonPressed ? 6 : 10,
+                      offset: Offset(0, _sendButtonPressed ? 2 : 4),
+                    ),
                   ],
                 ),
                 child: GestureDetector(
@@ -1241,13 +1246,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                           style: TextStyle(
                                                         fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: context.tokens.textPrimary,
+                            color: context.tokens.accentForeground,
                           ),
                         ),
                         SizedBox(width: 8),
                         Icon(
                           Icons.north_east,
-                          color: context.tokens.textPrimary,
+                          color: context.tokens.accentForeground,
                           size: 20,
                         ),
                       ],
@@ -1265,23 +1270,21 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                 transform: Matrix4.identity()
                   ..scale(_receiveButtonPressed ? 0.95 : 1.0),
                 decoration: BoxDecoration(
-                  color: context.tokens.textPrimary.withValues(
-                    alpha: _receiveButtonPressed ? 0.12 : 0.08,
-                  ),
+                  color: _receiveButtonPressed
+                      ? context.tokens.outline
+                      : context.tokens.surface,
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(
-                    color: context.tokens.textPrimary.withValues(
-                      alpha: _receiveButtonPressed ? 0.2 : 0.1,
-                    ),
+                    color: context.tokens.outlineStrong,
                     width: 1,
                   ),
-                  boxShadow: _receiveButtonPressed ? [
+                  boxShadow: [
                     BoxShadow(
-                      color: context.tokens.outline,
-                      blurRadius: 8,
-                      offset: const Offset(0, 3),
+                      color: context.tokens.ctaShadow,
+                      blurRadius: _receiveButtonPressed ? 6 : 10,
+                      offset: Offset(0, _receiveButtonPressed ? 2 : 4),
                     ),
-                  ] : [],
+                  ],
                 ),
                 child: GestureDetector(
                   onTapDown: (_) => setState(() => _receiveButtonPressed = true),
@@ -1327,16 +1330,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
     return Consumer<WalletProvider>(
       builder: (context, walletProvider, child) {
         return Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFF0F1419),
-                Color(0xFF1A1D47),
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-            borderRadius: BorderRadius.only(
+          decoration: BoxDecoration(
+            color: context.tokens.dialogBackground,
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(20),
               topRight: Radius.circular(20),
             ),
@@ -1426,7 +1422,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                         subtitle: Text(
                           wallet.balanceFormatted,
                           style: TextStyle(
-                            color: isSelected ? context.tokens.accentBright : context.tokens.textPrimary.withValues(alpha: 0.7),
+                            color: isSelected ? context.tokens.textAccent : context.tokens.textPrimary.withValues(alpha: 0.7),
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
@@ -1559,7 +1555,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
             onPressed: () => Navigator.pop(context),
             child: Text(
               AppLocalizations.of(context)!.cancel_button,
-              style: TextStyle(color: context.tokens.accentBright),
+              style: TextStyle(color: context.tokens.textAccent),
             ),
           ),
         ],
@@ -1607,7 +1603,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                   style: TextStyle(
                                         fontSize: 16,
                     fontWeight: FontWeight.w500, // Weight for secondary buttons
-                    color: _isInHistory ? context.tokens.accentBright : context.tokens.textPrimary,
+                    color: _isInHistory ? context.tokens.textAccent : context.tokens.textPrimary,
                   ),
                 ),
               ],
@@ -1713,7 +1709,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                                     walletProvider.primaryWallet!.balanceFormatted,
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: context.tokens.accentBright,
+                                      color: context.tokens.textAccent,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -1987,7 +1983,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                   Text(
                     AppInfoService.getVersionDisplay(languageProvider.currentLocale.languageCode),
                     style: TextStyle(
-                      color: context.tokens.accentBright,
+                      color: context.tokens.textAccent,
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
@@ -2002,7 +1998,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
             onPressed: () => Navigator.pop(context),
             child: Text(
               AppLocalizations.of(context)!.cancel_button,
-              style: TextStyle(color: context.tokens.accentBright),
+              style: TextStyle(color: context.tokens.textAccent),
             ),
           ),
         ],

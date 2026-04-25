@@ -659,6 +659,25 @@ class AppLocalizationsFr extends AppLocalizations {
   String get select_language => 'Sélectionner la langue';
 
   @override
+  String get theme_selector_title => 'Thème';
+
+  @override
+  String get theme_selector_description =>
+      'Changer l\'apparence de l\'application';
+
+  @override
+  String get select_theme => 'Sélectionner le thème';
+
+  @override
+  String get theme_lachispa => 'LaChispa';
+
+  @override
+  String get theme_light => 'Clair';
+
+  @override
+  String get theme_dark => 'Sombre';
+
+  @override
   String get no_wallet_error => 'Aucun portefeuille principal disponible';
 
   @override

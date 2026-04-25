@@ -1296,6 +1296,42 @@ abstract class AppLocalizations {
   /// **'Seleccionar idioma'**
   String get select_language;
 
+  /// No description provided for @theme_selector_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Tema'**
+  String get theme_selector_title;
+
+  /// No description provided for @theme_selector_description.
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar apariencia de la aplicación'**
+  String get theme_selector_description;
+
+  /// No description provided for @select_theme.
+  ///
+  /// In es, this message translates to:
+  /// **'Seleccionar tema'**
+  String get select_theme;
+
+  /// No description provided for @theme_lachispa.
+  ///
+  /// In es, this message translates to:
+  /// **'LaChispa'**
+  String get theme_lachispa;
+
+  /// No description provided for @theme_light.
+  ///
+  /// In es, this message translates to:
+  /// **'Claro'**
+  String get theme_light;
+
+  /// No description provided for @theme_dark.
+  ///
+  /// In es, this message translates to:
+  /// **'Oscuro'**
+  String get theme_dark;
+
   /// No description provided for @no_wallet_error.
   ///
   /// In es, this message translates to:

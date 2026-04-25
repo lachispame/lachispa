@@ -646,6 +646,24 @@ class AppLocalizationsPt extends AppLocalizations {
   String get select_language => 'Selecionar idioma';
 
   @override
+  String get theme_selector_title => 'Tema';
+
+  @override
+  String get theme_selector_description => 'Alterar aparência da aplicação';
+
+  @override
+  String get select_theme => 'Selecionar tema';
+
+  @override
+  String get theme_lachispa => 'LaChispa';
+
+  @override
+  String get theme_light => 'Claro';
+
+  @override
+  String get theme_dark => 'Escuro';
+
+  @override
   String get no_wallet_error => 'Sem carteira principal disponível';
 
   @override

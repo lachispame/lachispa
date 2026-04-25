@@ -656,6 +656,25 @@ class AppLocalizationsDe extends AppLocalizations {
   String get select_language => 'Sprache auswählen';
 
   @override
+  String get theme_selector_title => 'Design';
+
+  @override
+  String get theme_selector_description =>
+      'Erscheinungsbild der Anwendung ändern';
+
+  @override
+  String get select_theme => 'Design auswählen';
+
+  @override
+  String get theme_lachispa => 'LaChispa';
+
+  @override
+  String get theme_light => 'Hell';
+
+  @override
+  String get theme_dark => 'Dunkel';
+
+  @override
   String get no_wallet_error => 'Keine primäre Wallet verfügbar';
 
   @override

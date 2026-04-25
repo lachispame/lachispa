@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/language_provider.dart';
 import '../providers/currency_settings_provider.dart';
+import '../providers/theme_provider.dart';
 import '../l10n/generated/app_localizations.dart';
 import '../theme/app_tokens.dart';
 import '7ln_address_screen.dart';
@@ -91,6 +92,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               builder: (context) => const LanguageSelectionScreen(),
                             ),
                           ),
+                        );
+                      },
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // Theme Settings
+                    Consumer<ThemeProvider>(
+                      builder: (context, themeProvider, child) {
+                        return _buildSettingsItem(
+                          t: t,
+                          icon: _themeIcon(themeProvider.current),
+                          iconColor: t.accentSolid,
+                          title: AppLocalizations.of(context)!.theme_selector_title,
+                          subtitle: _themeLabel(context, themeProvider.current),
+                          onTap: () => _showThemeSelector(themeProvider),
                         );
                       },
                     ),
@@ -208,6 +225,122 @@ class _SettingsScreenState extends State<SettingsScreen> {
               color: t.textSecondary,
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  IconData _themeIcon(AppTheme theme) {
+    switch (theme) {
+      case AppTheme.lachispa:
+        return Icons.bolt;
+      case AppTheme.light:
+        return Icons.light_mode;
+      case AppTheme.dark:
+        return Icons.dark_mode;
+    }
+  }
+
+  String _themeLabel(BuildContext context, AppTheme theme) {
+    final l = AppLocalizations.of(context)!;
+    switch (theme) {
+      case AppTheme.lachispa:
+        return l.theme_lachispa;
+      case AppTheme.light:
+        return l.theme_light;
+      case AppTheme.dark:
+        return l.theme_dark;
+    }
+  }
+
+  void _showThemeSelector(ThemeProvider themeProvider) {
+    final t = context.tokens;
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (modalContext) => Consumer<ThemeProvider>(
+        builder: (context, provider, _) => Container(
+          decoration: BoxDecoration(
+            color: t.dialogBackground,
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 8),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: t.textPrimary.withValues(alpha: 0.3),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Text(
+                  AppLocalizations.of(context)!.select_theme,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: t.textPrimary,
+                  ),
+                ),
+              ),
+              ...AppTheme.values.map((option) {
+                final isSelected = provider.current == option;
+                return Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () async {
+                      await provider.changeTheme(option);
+                      if (mounted) Navigator.pop(context);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 16,
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            _themeIcon(option),
+                            color: isSelected ? t.accentSolid : t.textPrimary,
+                            size: 24,
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Text(
+                              _themeLabel(context, option),
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: isSelected
+                                    ? FontWeight.w600
+                                    : FontWeight.w400,
+                                color: isSelected
+                                    ? t.accentSolid
+                                    : t.textPrimary,
+                              ),
+                            ),
+                          ),
+                          if (isSelected)
+                            Icon(
+                              Icons.check_circle,
+                              color: t.accentSolid,
+                              size: 24,
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }),
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );

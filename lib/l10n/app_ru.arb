@@ -174,7 +174,15 @@
   "language_selector_title": "Язык",
   "language_selector_description": "Изменить язык приложения",
   "select_language": "Выбрать язык",
-  
+
+  "theme_selector_title": "Тема",
+  "theme_selector_description": "Изменить оформление приложения",
+  "select_theme": "Выбрать тему",
+  "theme_lachispa": "LaChispa",
+  "theme_light": "Светлая",
+  "theme_dark": "Тёмная",
+
+
   "no_wallet_error": "Нет доступного основного кошелька",
   "invalid_session_error": "Нет активной сессии",
   "send_error_prefix": "Ошибка обработки отправки: ",

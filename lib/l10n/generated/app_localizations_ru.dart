@@ -642,6 +642,24 @@ class AppLocalizationsRu extends AppLocalizations {
   String get select_language => 'Выбрать язык';
 
   @override
+  String get theme_selector_title => 'Тема';
+
+  @override
+  String get theme_selector_description => 'Изменить оформление приложения';
+
+  @override
+  String get select_theme => 'Выбрать тему';
+
+  @override
+  String get theme_lachispa => 'LaChispa';
+
+  @override
+  String get theme_light => 'Светлая';
+
+  @override
+  String get theme_dark => 'Тёмная';
+
+  @override
   String get no_wallet_error => 'Нет доступного основного кошелька';
 
   @override
