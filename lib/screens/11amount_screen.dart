@@ -8,6 +8,7 @@ import '../providers/auth_provider.dart';
 import '../providers/wallet_provider.dart';
 import '../providers/currency_settings_provider.dart';
 import '../l10n/generated/app_localizations.dart';
+import '../theme/app_tokens.dart';
 import '12invoice_confirm_screen.dart';
 
 class AmountScreen extends StatefulWidget {
@@ -538,66 +539,72 @@ class _AmountScreenState extends State<AmountScreen> {
   }
 
   void _showSuccessSnackBar(String message) {
+    final t = context.tokens;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.check_circle, color: Colors.green),
+            // White content on saturated status background; not a themable surface.
+            const Icon(Icons.check_circle, color: Colors.white),
             const SizedBox(width: 8),
             Text(message),
           ],
         ),
-        backgroundColor: Colors.green.withValues(alpha: 0.9),
+        backgroundColor: t.statusHealthy.withValues(alpha: 0.9),
         duration: const Duration(seconds: 3),
       ),
     );
   }
 
   void _showPendingSnackBar(String message) {
+    final t = context.tokens;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.schedule, color: Colors.orange),
+            // White content on saturated status background; not a themable surface.
+            const Icon(Icons.schedule, color: Colors.white),
             const SizedBox(width: 8),
             Text(message),
           ],
         ),
-        backgroundColor: Colors.orange.withValues(alpha: 0.9),
+        backgroundColor: t.statusWarning.withValues(alpha: 0.9),
         duration: const Duration(seconds: 4),
       ),
     );
   }
 
   void _showErrorSnackBar(String message) {
+    final t = context.tokens;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.error, color: Colors.red),
+            // White content on saturated status background; not a themable surface.
+            const Icon(Icons.error, color: Colors.white),
             const SizedBox(width: 8),
             Text(message),
           ],
         ),
-        backgroundColor: Colors.red.withValues(alpha: 0.9),
+        backgroundColor: t.statusUnhealthy.withValues(alpha: 0.9),
         duration: const Duration(seconds: 3),
       ),
     );
   }
 
-  Widget _buildNumberButton(String text, VoidCallback onPressed, bool isMobile) {
+  Widget _buildNumberButton(String text, VoidCallback onPressed, bool isMobile, AppTokens t) {
     return SizedBox(
       height: isMobile ? 48 : 56,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white.withValues(alpha: 0.08),
-          foregroundColor: Colors.white,
+          backgroundColor: t.surface,
+          foregroundColor: t.textPrimary,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
             side: BorderSide(
-              color: Colors.white.withValues(alpha: 0.1),
+              color: t.outline,
               width: 1,
             ),
           ),
@@ -608,41 +615,41 @@ class _AmountScreenState extends State<AmountScreen> {
           style: TextStyle(
             fontSize: isMobile ? 18 : 20,
             fontWeight: FontWeight.w600,
-            color: Colors.white,
+            color: t.textPrimary,
           ),
         ),
       ),
     );
   }
 
-  Widget _buildActionButton(String text, VoidCallback onPressed, {IconData? icon, required bool isMobile}) {
+  Widget _buildActionButton(String text, VoidCallback onPressed, AppTokens t, {IconData? icon, required bool isMobile}) {
     return SizedBox(
       height: isMobile ? 48 : 56,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white.withValues(alpha: 0.08),
-          foregroundColor: Colors.white,
+          backgroundColor: t.surface,
+          foregroundColor: t.textPrimary,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
             side: BorderSide(
-              color: Colors.white.withValues(alpha: 0.1),
+              color: t.outline,
               width: 1,
             ),
           ),
           shadowColor: Colors.transparent,
         ),
         child: icon != null
-            ? Icon(icon, color: Colors.white, size: isMobile ? 18 : 20)
+            ? Icon(icon, color: t.textPrimary, size: isMobile ? 18 : 20)
             : Text(
                 text,
                 style: TextStyle(
-                  fontSize: (text == '00' || text == '000' || text == 'sats' || text == 'CUP' || text == 'USD') 
-                      ? (isMobile ? 12 : 14) 
+                  fontSize: (text == '00' || text == '000' || text == 'sats' || text == 'CUP' || text == 'USD')
+                      ? (isMobile ? 12 : 14)
                       : (isMobile ? 14 : 16),
                   fontWeight: FontWeight.w600,
-                  color: Colors.white,
+                  color: t.textPrimary,
                 ),
               ),
       ),
@@ -651,6 +658,7 @@ class _AmountScreenState extends State<AmountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Consumer<CurrencySettingsProvider>(
       builder: (context, currencyProvider, child) {
         return Scaffold(
@@ -659,10 +667,11 @@ class _AmountScreenState extends State<AmountScreen> {
         builder: (context, constraints) {
           final screenWidth = constraints.maxWidth;
           final isMobile = screenWidth < 768;
-          
+
           return Container(
             width: double.infinity,
             height: double.infinity,
+            // 2-stop variant of the brand gradient used on send-flow screens
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
@@ -689,10 +698,10 @@ class _AmountScreenState extends State<AmountScreen> {
                               width: 40,
                               height: 40,
                               decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.08),
+                                color: t.surface,
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                  color: Colors.white.withValues(alpha: 0.1),
+                                  color: t.outline,
                                   width: 1,
                                 ),
                                 boxShadow: [
@@ -704,9 +713,9 @@ class _AmountScreenState extends State<AmountScreen> {
                                 ],
                               ),
                               child: IconButton(
-                                icon: const Icon(
+                                icon: Icon(
                                   Icons.arrow_back,
-                                  color: Colors.white,
+                                  color: t.textPrimary,
                                   size: 20,
                                 ),
                                 onPressed: () {
@@ -726,10 +735,9 @@ class _AmountScreenState extends State<AmountScreen> {
                             Text(
                               AppLocalizations.of(context)!.send_to_title,
                               style: TextStyle(
-                                fontFamily: 'Inter',
                                 fontSize: isMobile ? 40 : 48,
                                 fontWeight: FontWeight.w700,
-                                color: Colors.white,
+                                color: t.textPrimary,
                                 height: 1.1,
                               ),
                               textAlign: TextAlign.center,
@@ -738,10 +746,9 @@ class _AmountScreenState extends State<AmountScreen> {
                             Text(
                               widget.destination,
                               style: TextStyle(
-                                fontFamily: 'Inter',
                                 fontSize: isMobile ? 18 : 20,
                                 fontWeight: FontWeight.w400,
-                                color: Colors.white.withValues(alpha: 0.8),
+                                color: t.textPrimary.withValues(alpha: 0.8),
                               ),
                               textAlign: TextAlign.center,
                               maxLines: 2,
@@ -775,14 +782,13 @@ class _AmountScreenState extends State<AmountScreen> {
                             padding: const EdgeInsets.symmetric(vertical: 8),
                             child: Column(
                               children: [
-                                if (_selectedCurrency == 'sats') 
+                                if (_selectedCurrency == 'sats')
                                   Text(
                                     _formatDisplayAmount(),
                                     style: TextStyle(
-                                      fontFamily: 'Inter',
                                       fontSize: isMobile ? 38 : 48,
                                       fontWeight: FontWeight.w700,
-                                      color: Colors.white,
+                                      color: t.textPrimary,
                                     ),
                                     textAlign: TextAlign.center,
                                   )
@@ -795,22 +801,20 @@ class _AmountScreenState extends State<AmountScreen> {
                                       Text(
                                         _formatDisplayAmount(),
                                         style: TextStyle(
-                                          fontFamily: 'Inter',
                                           fontSize: isMobile ? 38 : 48,
                                           fontWeight: FontWeight.w700,
-                                          color: Colors.white,
+                                          color: t.textPrimary,
                                         ),
                                       ),
                                       const SizedBox(width: 12),
                                       Text(
-                                        _isConverting 
+                                        _isConverting
                                             ? '(${AppLocalizations.of(context)!.calculating_text}...)'
                                             : '(≈ $_cachedSatsAmount sats)',
                                         style: TextStyle(
-                                          fontFamily: 'Inter',
                                           fontSize: isMobile ? 18 : 22,
                                           fontWeight: FontWeight.w400,
-                                          color: Colors.white.withValues(alpha: 0.7),
+                                          color: t.textPrimary.withValues(alpha: 0.7),
                                         ),
                                       ),
                                     ],
@@ -825,10 +829,10 @@ class _AmountScreenState extends State<AmountScreen> {
                           Flexible(
                             child: Container(
                               decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.08),
+                                color: t.surface,
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
-                                  color: Colors.white.withValues(alpha: 0.1),
+                                  color: t.outline,
                                   width: 1,
                                 ),
                                 boxShadow: [
@@ -846,55 +850,55 @@ class _AmountScreenState extends State<AmountScreen> {
                                   children: [
                                     Row(
                                       children: [
-                                        Expanded(child: _buildNumberButton('1', () => _onNumberPressed('1'), isMobile)),
+                                        Expanded(child: _buildNumberButton('1', () => _onNumberPressed('1'), isMobile, t)),
                                         SizedBox(width: isMobile ? 8 : 12),
-                                        Expanded(child: _buildNumberButton('2', () => _onNumberPressed('2'), isMobile)),
+                                        Expanded(child: _buildNumberButton('2', () => _onNumberPressed('2'), isMobile, t)),
                                         SizedBox(width: isMobile ? 8 : 12),
-                                        Expanded(child: _buildNumberButton('3', () => _onNumberPressed('3'), isMobile)),
+                                        Expanded(child: _buildNumberButton('3', () => _onNumberPressed('3'), isMobile, t)),
                                         SizedBox(width: isMobile ? 8 : 12),
-                                        Expanded(child: _buildActionButton('⌫', _onDeletePressed, icon: Icons.backspace_outlined, isMobile: isMobile)),
+                                        Expanded(child: _buildActionButton('⌫', _onDeletePressed, t, icon: Icons.backspace_outlined, isMobile: isMobile)),
                                       ],
                                     ),
-                                    
+
                                     SizedBox(height: isMobile ? 8 : 12),
-                                    
+
                                     Row(
                                       children: [
-                                        Expanded(child: _buildNumberButton('4', () => _onNumberPressed('4'), isMobile)),
+                                        Expanded(child: _buildNumberButton('4', () => _onNumberPressed('4'), isMobile, t)),
                                         SizedBox(width: isMobile ? 8 : 12),
-                                        Expanded(child: _buildNumberButton('5', () => _onNumberPressed('5'), isMobile)),
+                                        Expanded(child: _buildNumberButton('5', () => _onNumberPressed('5'), isMobile, t)),
                                         SizedBox(width: isMobile ? 8 : 12),
-                                        Expanded(child: _buildNumberButton('6', () => _onNumberPressed('6'), isMobile)),
+                                        Expanded(child: _buildNumberButton('6', () => _onNumberPressed('6'), isMobile, t)),
                                         SizedBox(width: isMobile ? 8 : 12),
-                                        Expanded(child: _buildActionButton('00', () => _onZerosPressed('00'), isMobile: isMobile)),
+                                        Expanded(child: _buildActionButton('00', () => _onZerosPressed('00'), t, isMobile: isMobile)),
                                       ],
                                     ),
-                                    
+
                                     SizedBox(height: isMobile ? 8 : 12),
-                                    
+
                                     Row(
                                       children: [
-                                        Expanded(child: _buildNumberButton('7', () => _onNumberPressed('7'), isMobile)),
+                                        Expanded(child: _buildNumberButton('7', () => _onNumberPressed('7'), isMobile, t)),
                                         SizedBox(width: isMobile ? 8 : 12),
-                                        Expanded(child: _buildNumberButton('8', () => _onNumberPressed('8'), isMobile)),
+                                        Expanded(child: _buildNumberButton('8', () => _onNumberPressed('8'), isMobile, t)),
                                         SizedBox(width: isMobile ? 8 : 12),
-                                        Expanded(child: _buildNumberButton('9', () => _onNumberPressed('9'), isMobile)),
+                                        Expanded(child: _buildNumberButton('9', () => _onNumberPressed('9'), isMobile, t)),
                                         SizedBox(width: isMobile ? 8 : 12),
-                                        Expanded(child: _buildActionButton('000', () => _onZerosPressed('000'), isMobile: isMobile)),
+                                        Expanded(child: _buildActionButton('000', () => _onZerosPressed('000'), t, isMobile: isMobile)),
                                       ],
                                     ),
-                                    
+
                                     SizedBox(height: isMobile ? 8 : 12),
-                                    
+
                                     Row(
                                       children: [
-                                        Expanded(child: _buildActionButton('.', _onDecimalPressed, isMobile: isMobile)),
+                                        Expanded(child: _buildActionButton('.', _onDecimalPressed, t, isMobile: isMobile)),
                                         SizedBox(width: isMobile ? 8 : 12),
-                                        Expanded(child: _buildNumberButton('0', () => _onNumberPressed('0'), isMobile)),
+                                        Expanded(child: _buildNumberButton('0', () => _onNumberPressed('0'), isMobile, t)),
                                         SizedBox(width: isMobile ? 8 : 12),
-                                        Expanded(child: _buildActionButton('C', _onClearPressed, isMobile: isMobile)),
+                                        Expanded(child: _buildActionButton('C', _onClearPressed, t, isMobile: isMobile)),
                                         SizedBox(width: isMobile ? 8 : 12),
-                                        Expanded(child: _buildActionButton(_selectedCurrency, _toggleCurrency, isMobile: isMobile)),
+                                        Expanded(child: _buildActionButton(_selectedCurrency, _toggleCurrency, t, isMobile: isMobile)),
                                       ],
                                     ),
                                   ],
@@ -910,10 +914,10 @@ class _AmountScreenState extends State<AmountScreen> {
                           Container(
                             width: double.infinity,
                             decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.08),
+                              color: t.surface,
                               borderRadius: BorderRadius.circular(16),
                               border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.1),
+                                color: t.outline,
                                 width: 1,
                               ),
                             ),
@@ -923,20 +927,20 @@ class _AmountScreenState extends State<AmountScreen> {
                               focusNode: _commentFocusNode,
                               maxLines: 2,
                               maxLength: 150,
-                              style: const TextStyle(
-                                color: Colors.white,
+                              style: TextStyle(
+                                color: t.textPrimary,
                                 fontSize: 16,
                               ),
                               decoration: InputDecoration(
                                 hintText: AppLocalizations.of(context)!.add_note_optional,
                                 hintStyle: TextStyle(
-                                  color: Colors.white.withValues(alpha: 0.6),
+                                  color: t.textPrimary.withValues(alpha: 0.6),
                                   fontSize: 16,
                                 ),
                                 border: InputBorder.none,
                                 contentPadding: const EdgeInsets.all(16),
                                 counterStyle: TextStyle(
-                                  color: Colors.white.withValues(alpha: 0.5),
+                                  color: t.textTertiary,
                                   fontSize: 12,
                                 ),
                               ),
@@ -944,7 +948,7 @@ class _AmountScreenState extends State<AmountScreen> {
                           ),
                           
                           const SizedBox(height: 16),
-                          
+
                           SizedBox(
                             width: double.infinity,
                             height: 64,
@@ -954,21 +958,21 @@ class _AmountScreenState extends State<AmountScreen> {
                                   : null,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: (double.tryParse(_amount) ?? 0) > 0
-                                    ? const Color(0xFF2D3FE7)
-                                    : Colors.white.withValues(alpha: 0.08),
-                                foregroundColor: Colors.white,
+                                    ? t.accentSolid
+                                    : t.surface,
+                                foregroundColor: t.accentForeground,
                                 elevation: (double.tryParse(_amount) ?? 0) > 0 ? 8 : 0,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(16),
                                   side: BorderSide(
                                     color: (double.tryParse(_amount) ?? 0) > 0
-                                        ? const Color(0xFF4C63F7)
-                                        : Colors.white.withValues(alpha: 0.1),
+                                        ? t.accentSolid
+                                        : t.outline,
                                     width: 1,
                                   ),
                                 ),
                                 shadowColor: (double.tryParse(_amount) ?? 0) > 0
-                                    ? const Color(0xFF2D3FE7).withValues(alpha: 0.3)
+                                    ? t.accentSolid.withValues(alpha: 0.3)
                                     : Colors.transparent,
                               ),
                               child: _isProcessingPayment
@@ -980,7 +984,7 @@ class _AmountScreenState extends State<AmountScreen> {
                                           height: 20,
                                           child: CircularProgressIndicator(
                                             strokeWidth: 2,
-                                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                            valueColor: AlwaysStoppedAnimation<Color>(t.accentForeground),
                                           ),
                                         ),
                                         const SizedBox(width: 12),
@@ -989,7 +993,7 @@ class _AmountScreenState extends State<AmountScreen> {
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.w700,
-                                            color: Colors.white,
+                                            color: t.accentForeground,
                                           ),
                                         ),
                                       ],
@@ -1002,15 +1006,15 @@ class _AmountScreenState extends State<AmountScreen> {
                                         fontSize: 16,
                                         fontWeight: FontWeight.w700,
                                         color: (double.tryParse(_amount) ?? 0) > 0
-                                            ? Colors.white
-                                            : Colors.white.withValues(alpha: 0.4),
+                                            ? t.accentForeground
+                                            : t.textPrimary.withValues(alpha: 0.4),
                                       ),
                                       textAlign: TextAlign.center,
                                     ),
                             ),
                           ),
-                          
-                          
+
+
                           // Compact loading indicator for exchange rates
                           if (_isLoadingRates) ...[
                             const SizedBox(height: 8),
@@ -1023,7 +1027,7 @@ class _AmountScreenState extends State<AmountScreen> {
                                   child: CircularProgressIndicator(
                                     strokeWidth: 2,
                                     valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white.withValues(alpha: 0.6),
+                                      t.textPrimary.withValues(alpha: 0.6),
                                     ),
                                   ),
                                 ),
@@ -1031,7 +1035,7 @@ class _AmountScreenState extends State<AmountScreen> {
                                 Text(
                                   AppLocalizations.of(context)!.loading_text,
                                   style: TextStyle(
-                                    color: Colors.white.withValues(alpha: 0.6),
+                                    color: t.textPrimary.withValues(alpha: 0.6),
                                     fontSize: 12,
                                     fontWeight: FontWeight.w400,
                                   ),

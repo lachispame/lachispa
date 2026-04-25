@@ -3,6 +3,10 @@
   
   "welcome_title": "Bienvenue à La Chispa !",
   "welcome_subtitle": "Lightning pour tous",
+  "welcome_hero_prefix": "Paye avec",
+  "welcome_hero_tagline": "Lightning, dans ta poche.",
+  "welcome_server_label": "SERVEUR",
+  "welcome_server_change": "Modifier",
   "get_started_button": "Commencer",
   "tap_to_start_hint": "Aussi simple qu'allumer une étincelle",
   
@@ -139,6 +143,15 @@
   "lightning_payment_pending": "Paiement Lightning Address en attente - Facture de retenue détectée",
   "lightning_payment_success": "Paiement Lightning Address effectué avec succès !",
   "insufficient_balance_error": "Solde insuffisant pour effectuer le paiement",
+  "payment_error_fee_reserve_required": "Solde insuffisant pour couvrir les frais de routage",
+  "payment_error_already_paid": "Cette facture a déjà été payée",
+  "payment_error_still_pending": "Un paiement pour cette facture est déjà en cours",
+  "payment_error_route_not_found": "Aucune route trouvée pour ce paiement",
+  "payment_error_payment_not_found": "Paiement introuvable dans ce portefeuille",
+  "payment_error_lnurl_generic": "Erreur LNURL : {detail}",
+  "payment_error_auth": "Erreur d'authentification. Vérifiez vos identifiants.",
+  "payment_error_server": "Erreur du serveur Lightning. Réessayez.",
+  "payment_error_unknown": "Erreur inconnue ({code})",
   
   "confirm_payment_title": "Confirmer le paiement",
   "invoice_description_label": "Description",
@@ -212,6 +225,25 @@
   "lightning_address_delete": "Supprimer",
   "lightning_address_is_default": "Est par défaut",
   "lightning_address_set_default": "Définir par défaut",
+  "lightning_address_delete_title": "Supprimer l'adresse Lightning",
+  "lightning_address_delete_confirm": "Voulez-vous vraiment supprimer {address} ?",
+  "@lightning_address_delete_confirm": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "lightning_address_created_success": "Adresse Lightning créée",
+  "lightning_address_deleted_success": "Adresse Lightning supprimée",
+  "lightning_address_set_default_success": "{address} est maintenant votre adresse Lightning par défaut",
+  "@lightning_address_set_default_success": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
   "create_new_wallet_help": "Créer un nouveau portefeuille",
   "create_wallet_short_description": "Pour créer un nouveau portefeuille, accédez à votre panneau LNBits depuis le navigateur et utilisez l'option \"Créer un portefeuille\".",
   "create_wallet_detailed_instructions": "Pour créer un nouveau portefeuille :\\n\\n1. Ouvrez votre navigateur web\\n2. Accédez à votre serveur LNBits\\n3. Connectez-vous avec votre compte\\n4. Recherchez le bouton \"Créer un portefeuille\"\\n5. Attribuez un nom à votre nouveau portefeuille\\n6. Retournez à LaChispa et actualisez vos portefeuilles\\n\\nLe nouveau portefeuille apparaîtra automatiquement dans votre liste.",

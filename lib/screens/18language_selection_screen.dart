@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'dart:async';
 import '../providers/language_provider.dart';
 import '../l10n/generated/app_localizations.dart';
+import '../theme/app_tokens.dart';
 import '../widgets/spark_effect.dart';
 
 class LanguageSelectionScreen extends StatefulWidget {
@@ -87,6 +88,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     final languageProvider = Provider.of<LanguageProvider>(context);
     final l10n = AppLocalizations.of(context)!;
     final availableLanguages = languageProvider.getAvailableLanguages();
@@ -96,18 +98,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF0F1419),
-              Color(0xFF1A1D47),
-              Color(0xFF2D3FE7),
-            ],
-            stops: [0.0, 0.5, 1.0],
-          ),
-        ),
+        decoration: BoxDecoration(gradient: t.backgroundGradient),
         child: Stack(
           children: [
             // Main content
@@ -137,10 +128,10 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                                   width: 48,
                                   height: 48,
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withValues(alpha: 0.08),
+                                    color: t.surface,
                                     borderRadius: BorderRadius.circular(12),
                                     border: Border.all(
-                                      color: Colors.white.withValues(alpha: 0.1),
+                                      color: t.outline,
                                       width: 1,
                                     ),
                                     boxShadow: [
@@ -152,7 +143,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                                     ],
                                   ),
                                   child: IconButton(
-                                    icon: const Icon(Icons.arrow_back, color: Colors.white, size: 24),
+                                    icon: Icon(Icons.arrow_back, color: t.textPrimary, size: 24),
                                     onPressed: () => Navigator.pop(context),
                                   ),
                                 ),
@@ -160,11 +151,10 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                                 // Title - made smaller
                                 Text(
                                   l10n.language_selector_title,
-                                  style: const TextStyle(
-                                    color: Colors.white,
+                                  style: TextStyle(
+                                    color: t.textPrimary,
                                     fontSize: 50,
                                     fontWeight: FontWeight.bold,
-                                    fontFamily: 'Inter',
                                   ),
                                 ),
                                 const Spacer(),
@@ -196,10 +186,9 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                                   Text(
                                     l10n.language_selector_description,
                                     style: TextStyle(
-                                      color: Colors.white.withValues(alpha: 0.9),
+                                      color: t.textPrimary.withValues(alpha: 0.9),
                                       fontSize: 18,
                                       fontWeight: FontWeight.w500,
-                                      fontFamily: 'Inter',
                                     ),
                                   ),
                                   const SizedBox(height: 32),
@@ -226,12 +215,12 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                                           height: containerHeight,
                                           margin: EdgeInsets.only(bottom: marginBottom),
                                           decoration: BoxDecoration(
-                                            color: Colors.white.withValues(alpha: isCenter ? 0.12 : 0.06),
+                                            color: t.textPrimary.withValues(alpha: isCenter ? 0.12 : 0.06),
                                             borderRadius: BorderRadius.circular(16),
                                             border: Border.all(
-                                              color: isSelected 
-                                                  ? const Color(0xFF2D3FE7)
-                                                  : Colors.white.withValues(alpha: 0.1),
+                                              color: isSelected
+                                                  ? t.accentSolid
+                                                  : t.outline,
                                               width: isSelected ? 2 : 1,
                                             ),
                                             boxShadow: [
@@ -257,10 +246,10 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                                                     width: flagSize,
                                                     height: flagSize,
                                                     decoration: BoxDecoration(
-                                                      color: Colors.white.withValues(alpha: 0.08),
+                                                      color: t.surface,
                                                       borderRadius: BorderRadius.circular(8),
                                                       border: Border.all(
-                                                        color: Colors.white.withValues(alpha: 0.1),
+                                                        color: t.outline,
                                                         width: 1,
                                                       ),
                                                     ),
@@ -272,7 +261,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                                                     ),
                                                   ),
                                                   const SizedBox(width: 20),
-                                                  
+
                                                   // Language info - in same line
                                                   Expanded(
                                                     child: RichText(
@@ -281,40 +270,38 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                                                           TextSpan(
                                                             text: language['name']!,
                                                             style: TextStyle(
-                                                              color: isSelected 
-                                                                  ? const Color(0xFF4C63F7)
-                                                                  : Colors.white.withValues(alpha: isCenter ? 1.0 : 0.8),
+                                                              color: isSelected
+                                                                  ? t.accentSolid
+                                                                  : t.textPrimary.withValues(alpha: isCenter ? 1.0 : 0.8),
                                                               fontSize: fontSize,
                                                               fontWeight: isCenter ? FontWeight.bold : FontWeight.w600,
-                                                              fontFamily: 'Inter',
                                                             ),
                                                           ),
                                                           TextSpan(
                                                             text: ' ${language['code']!.toUpperCase()}',
                                                             style: TextStyle(
-                                                              color: Colors.white.withValues(alpha: 0.6),
+                                                              color: t.textSecondary,
                                                               fontSize: fontSize * 0.75,
                                                               fontWeight: FontWeight.w500,
-                                                              fontFamily: 'Inter',
                                                             ),
                                                           ),
                                                         ],
                                                       ),
                                                     ),
                                                   ),
-                                                  
+
                                                   // Selected indicator
                                                   if (isSelected)
                                                     Container(
                                                       width: isCenter ? 36 : 28,
                                                       height: isCenter ? 36 : 28,
-                                                      decoration: const BoxDecoration(
-                                                        color: Color(0xFF2D3FE7),
+                                                      decoration: BoxDecoration(
+                                                        color: t.accentSolid,
                                                         shape: BoxShape.circle,
                                                       ),
                                                       child: Icon(
                                                         Icons.check,
-                                                        color: Colors.white,
+                                                        color: t.accentForeground,
                                                         size: isCenter ? 22 : 16,
                                                       ),
                                                     )
@@ -326,7 +313,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen>
                                                         color: Colors.transparent,
                                                         shape: BoxShape.circle,
                                                         border: Border.all(
-                                                          color: Colors.white.withValues(alpha: 0.3),
+                                                          color: t.textPrimary.withValues(alpha: 0.3),
                                                           width: 2,
                                                         ),
                                                       ),

@@ -4,6 +4,7 @@ import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:url_launcher/url_launcher.dart';
 import '../l10n/generated/app_localizations.dart';
+import '../theme/app_tokens.dart';
 
 class BoltzScreen extends StatefulWidget {
   const BoltzScreen({super.key});
@@ -87,22 +88,22 @@ class _BoltzScreenState extends State<BoltzScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Scaffold(
-      backgroundColor: const Color(0xFF0F1419),
+      backgroundColor: t.scaffoldBase,
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Boltz',
           style: TextStyle(
-            fontFamily: 'Inter',
             fontSize: 20,
             fontWeight: FontWeight.w600,
-            color: Colors.white,
+            color: t.textPrimary,
           ),
         ),
-        backgroundColor: const Color(0xFF1A1D47),
+        backgroundColor: t.dialogBackground,
         elevation: 0,
-        iconTheme: const IconThemeData(
-          color: Colors.white,
+        iconTheme: IconThemeData(
+          color: t.textPrimary,
         ),
         actions: [
           if (_controller != null && !_hasError)
@@ -115,27 +116,16 @@ class _BoltzScreenState extends State<BoltzScreen> {
         ],
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF0F1419),
-              Color(0xFF1A1D47),
-              Color(0xFF2D3FE7),
-            ],
-            stops: [0.0, 0.5, 1.0],
-          ),
-        ),
-        child: _buildBody(),
+        decoration: BoxDecoration(gradient: t.backgroundGradient),
+        child: _buildBody(t),
       ),
     );
   }
 
-  Widget _buildBody() {
+  Widget _buildBody(AppTokens t) {
     if (_hasError || _controller == null) {
       // Fallback UI for unsupported platforms or errors
-      return _buildFallbackUI();
+      return _buildFallbackUI(t);
     }
 
     return Stack(
@@ -164,26 +154,25 @@ class _BoltzScreenState extends State<BoltzScreen> {
             ),
           ),
         ),
-        
+
         // Loading indicator
         if (_isLoading)
           Container(
-            color: const Color(0xFF0F1419).withValues(alpha: 0.9),
+            color: t.scaffoldBase.withValues(alpha: 0.9),
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF2D3FE7)),
+                  CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(t.accentSolid),
                   ),
                   const SizedBox(height: 16),
                   Text(
                     AppLocalizations.of(context)!.boltz_loading,
-                    style: const TextStyle(
-                      fontFamily: 'Inter',
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color: Colors.white,
+                      color: t.textPrimary,
                     ),
                   ),
                 ],
@@ -194,7 +183,7 @@ class _BoltzScreenState extends State<BoltzScreen> {
     );
   }
 
-  Widget _buildFallbackUI() {
+  Widget _buildFallbackUI(AppTokens t) {
     return Padding(
       padding: const EdgeInsets.all(24),
       child: Column(
@@ -205,73 +194,70 @@ class _BoltzScreenState extends State<BoltzScreen> {
             width: 120,
             height: 120,
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.1),
+              color: t.surface,
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: Colors.white.withValues(alpha: 0.2),
+                color: t.outline,
                 width: 2,
               ),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.currency_exchange,
               size: 60,
-              color: Color(0xFF2D3FE7),
+              color: t.accentSolid,
             ),
           ),
-          
+
           const SizedBox(height: 32),
-          
+
           // Title
-          const Text(
+          Text(
             'Boltz',
             style: TextStyle(
-              fontFamily: 'Inter',
               fontSize: 28,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color: t.textPrimary,
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Description
           Text(
             AppLocalizations.of(context)!.boltz_description,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontFamily: 'Inter',
               fontSize: 16,
               fontWeight: FontWeight.w400,
-              color: Colors.white.withValues(alpha: 0.8),
+              color: t.textPrimary.withValues(alpha: 0.8),
               height: 1.4,
             ),
           ),
-          
+
           if (_errorMessage != null) ...[
             const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.orange.withValues(alpha: 0.2),
+                color: t.statusWarning.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: Colors.orange.withValues(alpha: 0.3),
+                  color: t.statusWarning.withValues(alpha: 0.3),
                 ),
               ),
               child: Text(
                 AppLocalizations.of(context)!.boltz_webview_error,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontFamily: 'Inter',
                   fontSize: 14,
-                  color: Colors.orange.shade200,
+                  color: t.statusWarningSoft,
                 ),
               ),
             ),
           ],
-          
+
           const SizedBox(height: 40),
-          
+
           // Launch button
           SizedBox(
             width: double.infinity,
@@ -285,17 +271,17 @@ class _BoltzScreenState extends State<BoltzScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(AppLocalizations.of(context)!.boltz_error_opening(e.toString())),
-                        backgroundColor: Colors.red,
+                        backgroundColor: t.statusUnhealthy,
                       ),
                     );
                   }
                 }
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF2D3FE7),
-                foregroundColor: Colors.white,
+                backgroundColor: t.accentSolid,
+                foregroundColor: t.accentForeground,
                 elevation: 8,
-                shadowColor: const Color(0xFF2D3FE7).withValues(alpha: 0.3),
+                shadowColor: t.accentSolid.withValues(alpha: 0.3),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
@@ -306,7 +292,6 @@ class _BoltzScreenState extends State<BoltzScreen> {
                   Text(
                     AppLocalizations.of(context)!.boltz_open_button,
                     style: const TextStyle(
-                      fontFamily: 'Inter',
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -320,20 +305,19 @@ class _BoltzScreenState extends State<BoltzScreen> {
               ),
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Info text
           Text(
-            kIsWeb || !(Platform.isAndroid || Platform.isIOS) 
+            kIsWeb || !(Platform.isAndroid || Platform.isIOS)
                 ? AppLocalizations.of(context)!.boltz_external_browser
                 : AppLocalizations.of(context)!.boltz_within_app,
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontFamily: 'Inter',
               fontSize: 12,
               fontWeight: FontWeight.w400,
-              color: Colors.white.withValues(alpha: 0.6),
+              color: t.textPrimary.withValues(alpha: 0.6),
             ),
           ),
         ],

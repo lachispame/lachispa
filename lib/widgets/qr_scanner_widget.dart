@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+import '../theme/app_tokens.dart';
 
 class _QrScannerOverlayShape extends ShapeBorder {
   final Color borderColor;
@@ -178,6 +179,7 @@ class _QRScannerWidgetState extends State<QRScannerWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Scaffold(
       body: Stack(
         children: [
@@ -192,7 +194,7 @@ class _QRScannerWidgetState extends State<QRScannerWidget> {
               Container(
                 decoration: ShapeDecoration(
                   shape: _QrScannerOverlayShape(
-                    borderColor: const Color(0xFF2D3FE7),
+                    borderColor: t.accentSolid,
                     borderRadius: 16,
                     borderLength: 30,
                     borderWidth: 4,
@@ -202,11 +204,12 @@ class _QRScannerWidgetState extends State<QRScannerWidget> {
               ),
             ],
           ),
-          
+
           // Header with gradient background
           Container(
             height: 120,
             decoration: BoxDecoration(
+              // Dark scrim is intrinsic to the camera-overlay UX
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -221,22 +224,22 @@ class _QRScannerWidgetState extends State<QRScannerWidget> {
                 padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
                 child: Row(
                   children: [
-                    // Back button
+                    // Back button (semi-transparent over camera)
                     Container(
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.2),
+                        color: t.textPrimary.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.3),
+                          color: t.textPrimary.withValues(alpha: 0.3),
                           width: 1,
                         ),
                       ),
                       child: IconButton(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.arrow_back,
-                          color: Colors.white,
+                          color: t.textPrimary,
                           size: 20,
                         ),
                         onPressed: () {
@@ -245,17 +248,16 @@ class _QRScannerWidgetState extends State<QRScannerWidget> {
                         padding: EdgeInsets.zero,
                       ),
                     ),
-                    
+
                     const SizedBox(width: 16),
-                    
+
                     // Title
-                    const Text(
+                    Text(
                       'Escanear QR',
                       style: TextStyle(
-                        fontFamily: 'Inter',
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
-                        color: Colors.white,
+                        color: t.textPrimary,
                       ),
                     ),
                   ],
@@ -263,7 +265,7 @@ class _QRScannerWidgetState extends State<QRScannerWidget> {
               ),
             ),
           ),
-          
+
           // Footer with instructions
           Positioned(
             bottom: 0,
@@ -272,6 +274,7 @@ class _QRScannerWidgetState extends State<QRScannerWidget> {
             child: Container(
               padding: const EdgeInsets.fromLTRB(24, 24, 24, 40),
               decoration: BoxDecoration(
+                // Dark scrim is intrinsic to the camera-overlay UX
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -288,28 +291,27 @@ class _QRScannerWidgetState extends State<QRScannerWidget> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.15),
+                      color: t.textPrimary.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.2),
+                        color: t.textPrimary.withValues(alpha: 0.2),
                         width: 1,
                       ),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Point the camera at the QR code\nto scan the invoice or address',
                       style: TextStyle(
-                        fontFamily: 'Inter',
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
-                        color: Colors.white,
+                        color: t.textPrimary,
                         height: 1.4,
                       ),
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // Camera controls
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -319,17 +321,17 @@ class _QRScannerWidgetState extends State<QRScannerWidget> {
                         width: 56,
                         height: 56,
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.15),
+                          color: t.textPrimary.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.2),
+                            color: t.textPrimary.withValues(alpha: 0.2),
                             width: 1,
                           ),
                         ),
                         child: IconButton(
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.flash_on,
-                            color: Colors.white,
+                            color: t.textPrimary,
                             size: 24,
                           ),
                           onPressed: () async {
@@ -337,23 +339,23 @@ class _QRScannerWidgetState extends State<QRScannerWidget> {
                           },
                         ),
                       ),
-                      
+
                       // Switch camera button
                       Container(
                         width: 56,
                         height: 56,
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.15),
+                          color: t.textPrimary.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.2),
+                            color: t.textPrimary.withValues(alpha: 0.2),
                             width: 1,
                           ),
                         ),
                         child: IconButton(
-                          icon: const Icon(
+                          icon: Icon(
                             Icons.flip_camera_ios,
-                            color: Colors.white,
+                            color: t.textPrimary,
                             size: 24,
                           ),
                           onPressed: () async {

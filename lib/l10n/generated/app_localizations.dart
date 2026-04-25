@@ -120,6 +120,30 @@ abstract class AppLocalizations {
   /// **'Lightning para todos'**
   String get welcome_subtitle;
 
+  /// No description provided for @welcome_hero_prefix.
+  ///
+  /// In es, this message translates to:
+  /// **'Paga con'**
+  String get welcome_hero_prefix;
+
+  /// No description provided for @welcome_hero_tagline.
+  ///
+  /// In es, this message translates to:
+  /// **'Lightning, en tu bolsillo.'**
+  String get welcome_hero_tagline;
+
+  /// No description provided for @welcome_server_label.
+  ///
+  /// In es, this message translates to:
+  /// **'SERVIDOR'**
+  String get welcome_server_label;
+
+  /// No description provided for @welcome_server_change.
+  ///
+  /// In es, this message translates to:
+  /// **'Cambiar'**
+  String get welcome_server_change;
+
   /// No description provided for @get_started_button.
   ///
   /// In es, this message translates to:
@@ -1098,6 +1122,60 @@ abstract class AppLocalizations {
   /// **'Saldo insuficiente para realizar el pago'**
   String get insufficient_balance_error;
 
+  /// No description provided for @payment_error_fee_reserve_required.
+  ///
+  /// In es, this message translates to:
+  /// **'Balance insuficiente para cubrir tarifas de ruta'**
+  String get payment_error_fee_reserve_required;
+
+  /// No description provided for @payment_error_already_paid.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta factura ya fue pagada'**
+  String get payment_error_already_paid;
+
+  /// No description provided for @payment_error_still_pending.
+  ///
+  /// In es, this message translates to:
+  /// **'Ya hay un pago en proceso para esta factura'**
+  String get payment_error_still_pending;
+
+  /// No description provided for @payment_error_route_not_found.
+  ///
+  /// In es, this message translates to:
+  /// **'No se encontró ruta para este pago'**
+  String get payment_error_route_not_found;
+
+  /// No description provided for @payment_error_payment_not_found.
+  ///
+  /// In es, this message translates to:
+  /// **'El pago no existe en esta billetera'**
+  String get payment_error_payment_not_found;
+
+  /// No description provided for @payment_error_lnurl_generic.
+  ///
+  /// In es, this message translates to:
+  /// **'Error LNURL: {detail}'**
+  String payment_error_lnurl_generic(Object detail);
+
+  /// No description provided for @payment_error_auth.
+  ///
+  /// In es, this message translates to:
+  /// **'Error de autenticación. Verifica tus credenciales.'**
+  String get payment_error_auth;
+
+  /// No description provided for @payment_error_server.
+  ///
+  /// In es, this message translates to:
+  /// **'Error del servidor Lightning. Intenta de nuevo.'**
+  String get payment_error_server;
+
+  /// No description provided for @payment_error_unknown.
+  ///
+  /// In es, this message translates to:
+  /// **'Error desconocido ({code})'**
+  String payment_error_unknown(Object code);
+
   /// No description provided for @confirm_payment_title.
   ///
   /// In es, this message translates to:
@@ -1487,6 +1565,36 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Establecer como por defecto'**
   String get lightning_address_set_default;
+
+  /// No description provided for @lightning_address_delete_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Eliminar dirección Lightning'**
+  String get lightning_address_delete_title;
+
+  /// No description provided for @lightning_address_delete_confirm.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Seguro que quieres eliminar {address}?'**
+  String lightning_address_delete_confirm(String address);
+
+  /// No description provided for @lightning_address_created_success.
+  ///
+  /// In es, this message translates to:
+  /// **'Dirección Lightning creada'**
+  String get lightning_address_created_success;
+
+  /// No description provided for @lightning_address_deleted_success.
+  ///
+  /// In es, this message translates to:
+  /// **'Dirección Lightning eliminada'**
+  String get lightning_address_deleted_success;
+
+  /// No description provided for @lightning_address_set_default_success.
+  ///
+  /// In es, this message translates to:
+  /// **'{address} es ahora tu dirección Lightning por defecto'**
+  String lightning_address_set_default_success(String address);
 
   /// No description provided for @create_new_wallet_help.
   ///

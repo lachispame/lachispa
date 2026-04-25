@@ -8,6 +8,7 @@ import '../models/lightning_invoice.dart';
 import '../models/decoded_invoice.dart';
 import '../core/utils/proxy_config.dart';
 import 'app_info_service.dart';
+import 'payment_error.dart';
 
 void _debugLog(String message) {
   if (kDebugMode) {
@@ -822,33 +823,19 @@ class InvoiceService {
           _debugLog('[INVOICE_SERVICE] ❌ Failed $url: $e');
           lastException = e is Exception ? e : Exception(e.toString());
 
-          // Check response body for definitive errors (stop trying other endpoints)
-          String responseBody = '';
-          if (e is DioException && e.response?.data != null) {
-            responseBody = e.response!.data.toString().toLowerCase();
-          }
-
-          if (responseBody.contains('amountless') ||
-              (e is DioException && e.response?.statusCode == 520 && responseBody.contains('amountless'))) {
-            _debugLog('[INVOICE_SERVICE] 520 - Server does not support amountless invoices');
-            throw Exception('AMOUNTLESS_INVOICE_NOT_SUPPORTED');
-          }
-
-          if (e.toString().contains('404')) {
+          // On 404 the endpoint doesn't exist at this URL — try the next fallback.
+          if (e is DioException && e.response?.statusCode == 404) {
             _debugLog('[INVOICE_SERVICE] 404 - Endpoint not available: $url');
             continue;
           }
 
-          if (e.toString().contains('402')) {
-            _debugLog('[INVOICE_SERVICE] 402 - Insufficient funds');
-            throw Exception('Insufficient funds to make payment.');
+          // Any other server response (400/401/402/520/...) is definitive —
+          // the server parsed our request and rejected it. Stop retrying.
+          if (e is DioException && e.response != null) {
+            throw PaymentError.fromDio(e);
           }
 
-          if (e.toString().contains('401')) {
-            _debugLog('[INVOICE_SERVICE] 401 - Authentication error');
-            throw Exception('Authentication error. Verify credentials.');
-          }
-
+          // Network/timeout/unknown: try the next endpoint.
           continue;
         }
       }
@@ -864,26 +851,10 @@ class InvoiceService {
       _debugLog('[INVOICE_SERVICE] DioException enviando pago: ${e.type}');
       _debugLog('[INVOICE_SERVICE] Error: ${e.message}');
       _debugLog('[INVOICE_SERVICE] Response: ${e.response?.data}');
-      
-      if (e.response?.statusCode == 401) {
-        throw Exception('Authentication error. Verify credentials.');
-      } else if (e.response?.statusCode == 400) {
-        throw Exception('Invalid or already paid invoice: ${e.response?.data}');
-      } else if (e.response?.statusCode == 402) {
-        throw Exception('Insufficient funds to make payment.');
-      } else if (e.response?.statusCode == 422) {
-        throw Exception('Payment error: ${e.response?.data}');
-      } else if (e.response?.statusCode == 520) {
-        final detail = e.response?.data?.toString() ?? '';
-        if (detail.toLowerCase().contains('amountless')) {
-          throw Exception('AMOUNTLESS_INVOICE_NOT_SUPPORTED');
-        }
-        throw Exception('Lightning server error. Try again in a few moments.');
-      } else {
-        throw Exception('Error sending payment (${e.response?.statusCode ?? 'unknown'}): ${e.message}');
-      }
+      throw PaymentError.fromDio(e);
     } catch (e) {
       _debugLog('[INVOICE_SERVICE] General payment error: $e');
+      if (e is PaymentError) rethrow;
       throw Exception('Unexpected error sending payment: $e');
     }
   }

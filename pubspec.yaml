@@ -36,10 +36,15 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
-  
+
   assets:
     - Logo/
     - assets/images/
+
+  fonts:
+    - family: Manrope
+      fonts:
+        - asset: assets/fonts/Manrope-Variable.ttf
 
 # Configuration for flutter_launcher_icons
 flutter_launcher_icons:

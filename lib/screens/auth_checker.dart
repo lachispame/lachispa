@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
-import '1welcome_screen.dart';
+import '../theme/app_tokens.dart';
+import '2start_screen.dart';
 import '6home_screen.dart';
 
 class AuthChecker extends StatefulWidget {
@@ -40,8 +41,8 @@ class _AuthCheckerState extends State<AuthChecker> {
           print('[AUTH_CHECKER] User is logged in, navigating to HomeScreen');
           _navigateToHome();
         } else {
-          print('[AUTH_CHECKER] User not logged in, navigating to WelcomeScreen');
-          _navigateToWelcome();
+          print('[AUTH_CHECKER] User not logged in, navigating to StartScreen');
+          _navigateToStart();
         }
       }
     } catch (e) {
@@ -50,7 +51,7 @@ class _AuthCheckerState extends State<AuthChecker> {
         setState(() {
           _isInitializing = false;
         });
-        _navigateToWelcome();
+        _navigateToStart();
       }
     }
   }
@@ -63,28 +64,21 @@ class _AuthCheckerState extends State<AuthChecker> {
     );
   }
 
-  void _navigateToWelcome() {
+  void _navigateToStart() {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => const WelcomeScreen(),
+        builder: (context) => const StartScreen(),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFF0F1419),
-              Color(0xFF1A1D47),
-              Color(0xFF2D3FE7),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
+        decoration: BoxDecoration(
+          gradient: t.backgroundGradient,
         ),
         child: Center(
           child: Column(
@@ -95,7 +89,7 @@ class _AuthCheckerState extends State<AuthChecker> {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF2D3FE7).withValues(alpha: 0.3),
+                      color: t.accentSolid.withValues(alpha: 0.3),
                       blurRadius: 20,
                       spreadRadius: 5,
                     ),
@@ -108,17 +102,17 @@ class _AuthCheckerState extends State<AuthChecker> {
                 ),
               ),
               const SizedBox(height: 32),
-              
+
               // App name
               Text(
                 'LaChispa',
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.w700,
-                  color: Colors.white,
+                  color: t.textPrimary,
                   shadows: [
                     Shadow(
-                      color: const Color(0xFF2D3FE7).withValues(alpha: 0.8),
+                      color: t.accentSolid.withValues(alpha: 0.8),
                       blurRadius: 10,
                       offset: const Offset(0, 2),
                     ),
@@ -126,15 +120,15 @@ class _AuthCheckerState extends State<AuthChecker> {
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               // Loading indicator
               if (_isInitializing) ...[
-                const SizedBox(
+                SizedBox(
                   height: 24,
                   width: 24,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    valueColor: AlwaysStoppedAnimation<Color>(t.textPrimary),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -142,7 +136,7 @@ class _AuthCheckerState extends State<AuthChecker> {
                   'Checking session...',
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.white.withValues(alpha: 0.7),
+                    color: t.textPrimary.withValues(alpha: 0.7),
                   ),
                 ),
               ],

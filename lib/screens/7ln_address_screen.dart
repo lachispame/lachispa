@@ -6,6 +6,7 @@ import '../providers/auth_provider.dart';
 import '../providers/wallet_provider.dart';
 import '../models/ln_address.dart';
 import '../l10n/generated/app_localizations.dart';
+import '../theme/app_tokens.dart';
 
 class LNAddressScreen extends StatefulWidget {
   const LNAddressScreen({super.key});
@@ -29,14 +30,13 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
   }
 
   void _initializeScreen() {
-    final authProvider = context.read<AuthProvider>();
     final walletProvider = context.read<WalletProvider>();
     final lnAddressProvider = context.read<LNAddressProvider>();
 
     if (walletProvider.primaryWallet != null) {
       final wallet = walletProvider.primaryWallet!;
       _selectedWalletId = wallet.id;
-      
+
       lnAddressProvider.setAuthHeaders(wallet.inKey, wallet.adminKey);
       lnAddressProvider.setCurrentWallet(_selectedWalletId!);
     }
@@ -52,46 +52,33 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: LayoutBuilder(
         builder: (context, constraints) {
-          final screenWidth = constraints.maxWidth;
-          final isMobile = screenWidth < 768;
-          
           return Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF0F1419),
-                  Color(0xFF1A1D47),
-                  Color(0xFF2D3FE7),
-                ],
-                stops: [0.0, 0.5, 1.0],
-              ),
-            ),
+            decoration: BoxDecoration(gradient: t.backgroundGradient),
             child: SafeArea(
               child: Column(
                 children: [
-                  
-                  _buildHeader(),
-                  
-                  
+
+                  _buildHeader(t),
+
+
                   Expanded(
                     child: Consumer3<LNAddressProvider, WalletProvider, AuthProvider>(
                       builder: (context, lnAddressProvider, walletProvider, authProvider, child) {
                         return Column(
                           children: [
-                            
-                            _buildWalletInfo(walletProvider, authProvider),
-                            
-                            
+
+                            _buildWalletInfo(walletProvider, authProvider, t),
+
+
                             Expanded(
                               child: _showCreateForm
-                                  ? _buildCreateForm(lnAddressProvider, walletProvider)
-                                  : _buildAddressList(lnAddressProvider),
+                                  ? _buildCreateForm(lnAddressProvider, walletProvider, t)
+                                  : _buildAddressList(lnAddressProvider, t),
                             ),
                           ],
                         );
@@ -107,18 +94,18 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
     );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(AppTokens t) {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
       child: Row(
         children: [
-          
+
           Container(
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.1),
+              color: t.surface,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Colors.white.withValues(alpha: 0.2),
+                color: t.outline,
                 width: 1,
               ),
             ),
@@ -127,39 +114,39 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
               child: InkWell(
                 borderRadius: BorderRadius.circular(12),
                 onTap: () => Navigator.pop(context),
-                child: const Padding(
-                  padding: EdgeInsets.all(12),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
                   child: Icon(
                     Icons.arrow_back,
-                    color: Colors.white,
+                    color: t.textPrimary,
                     size: 20,
                   ),
                 ),
               ),
             ),
           ),
-          
+
           const SizedBox(width: 16),
-          
+
           // Title
           Expanded(
             child: Text(
               AppLocalizations.of(context)!.lightning_address_title,
               style: TextStyle(
-                color: Colors.white,
+                color: t.textPrimary,
                 fontSize: 24,
                 fontWeight: FontWeight.w600,
               ),
             ),
           ),
-          
-          
+
+
           Container(
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.1),
+              color: t.surface,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: Colors.white.withValues(alpha: 0.2),
+                color: t.outline,
                 width: 1,
               ),
             ),
@@ -168,11 +155,11 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
               child: InkWell(
                 borderRadius: BorderRadius.circular(12),
                 onTap: _refreshAddresses,
-                child: const Padding(
-                  padding: EdgeInsets.all(12),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
                   child: Icon(
                     Icons.refresh,
-                    color: Colors.white,
+                    color: t.textPrimary,
                     size: 20,
                   ),
                 ),
@@ -184,7 +171,7 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
     );
   }
 
-  Widget _buildWalletInfo(WalletProvider walletProvider, AuthProvider authProvider) {
+  Widget _buildWalletInfo(WalletProvider walletProvider, AuthProvider authProvider, AppTokens t) {
     final serverDomain = authProvider.sessionData?.serverUrl
         .replaceAll('https://', '')
         .replaceAll('http://', '') ?? 'your-server.com';
@@ -194,10 +181,10 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.08),
+          color: t.surface,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: Colors.white.withValues(alpha: 0.1),
+            color: t.outline,
             width: 1,
           ),
         ),
@@ -206,17 +193,17 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
           children: [
             Row(
               children: [
-                const Icon(
+                Icon(
                   Icons.account_balance_wallet,
-                  color: Colors.white,
+                  color: t.textPrimary,
                   size: 20,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     walletProvider.primaryWallet?.name ?? AppLocalizations.of(context)!.wallet_title,
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: t.textPrimary,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -228,7 +215,7 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
             Text(
               '${AppLocalizations.of(context)!.server_settings_title}: $serverDomain',
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.7),
+                color: t.textPrimary.withValues(alpha: 0.7),
                 fontSize: 14,
               ),
             ),
@@ -238,11 +225,11 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
     );
   }
 
-  Widget _buildAddressList(LNAddressProvider lnAddressProvider) {
+  Widget _buildAddressList(LNAddressProvider lnAddressProvider, AppTokens t) {
     if (lnAddressProvider.isLoading) {
-      return const Center(
+      return Center(
         child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          valueColor: AlwaysStoppedAnimation<Color>(t.textPrimary),
         ),
       );
     }
@@ -254,26 +241,26 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
           child: Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.08),
+              color: t.surface,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: Colors.white.withValues(alpha: 0.1),
+                color: t.outline,
                 width: 1,
               ),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(
+                Icon(
                   Icons.error_outline,
-                  color: Colors.red,
+                  color: t.statusUnhealthy,
                   size: 48,
                 ),
                 const SizedBox(height: 16),
                 Text(
                   AppLocalizations.of(context)!.loading_address_error_prefix,
                   style: TextStyle(
-                    color: Colors.white,
+                    color: t.textPrimary,
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
                   ),
@@ -282,7 +269,7 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
                 Text(
                   lnAddressProvider.error!,
                   style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.8),
+                    color: t.textPrimary.withValues(alpha: 0.8),
                     fontSize: 14,
                   ),
                   textAlign: TextAlign.center,
@@ -291,6 +278,7 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
                 _buildPrimaryButton(
                   text: AppLocalizations.of(context)!.connect_button,
                   onPressed: _refreshAddresses,
+                  t: t,
                 ),
               ],
             ),
@@ -309,10 +297,10 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
                 child: Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.08),
+                    color: t.surface,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.1),
+                      color: t.outline,
                       width: 1,
                     ),
                   ),
@@ -321,14 +309,14 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
                     children: [
                       Icon(
                         Icons.alternate_email,
-                        color: Colors.white.withValues(alpha: 0.6),
+                        color: t.textSecondary,
                         size: 64,
                       ),
                       const SizedBox(height: 16),
                       Text(
                         AppLocalizations.of(context)!.not_available_text,
                         style: TextStyle(
-                          color: Colors.white,
+                          color: t.textPrimary,
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                         ),
@@ -337,7 +325,7 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
                       Text(
                         AppLocalizations.of(context)!.lightning_address_title,
                         style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.7),
+                          color: t.textPrimary.withValues(alpha: 0.7),
                           fontSize: 14,
                         ),
                       ),
@@ -356,12 +344,12 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
                 final address = lnAddressProvider.currentWalletAddresses[index];
                 return Container(
                   margin: const EdgeInsets.only(bottom: 12),
-                  child: _buildAddressItem(address, lnAddressProvider),
+                  child: _buildAddressItem(address, lnAddressProvider, t),
                 );
               },
             ),
           ),
-        
+
         if (!_showCreateForm)
           Container(
             padding: const EdgeInsets.all(16),
@@ -375,6 +363,7 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
                   });
                 },
                 icon: Icons.add,
+                t: t,
               ),
             ),
           ),
@@ -382,14 +371,16 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
     );
   }
 
-  Widget _buildAddressItem(LNAddress address, LNAddressProvider lnAddressProvider) {
+  Widget _buildAddressItem(LNAddress address, LNAddressProvider lnAddressProvider, AppTokens t) {
+    // Amber star for default address — semantic indicator unique to this screen, kept literal
+    const amber = Colors.amber;
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
+        color: t.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
+          color: t.outline,
           width: 1,
         ),
       ),
@@ -398,9 +389,9 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
         children: [
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.alternate_email,
-                color: Color(0xFF4C63F7),
+                color: t.accentSolid,
                 size: 20,
               ),
               const SizedBox(width: 12),
@@ -413,8 +404,8 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
                         Expanded(
                           child: Text(
                             address.fullAddress,
-                            style: const TextStyle(
-                              color: Colors.white,
+                            style: TextStyle(
+                              color: t.textPrimary,
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                             ),
@@ -426,7 +417,7 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
                           const SizedBox(width: 8),
                           const Icon(
                             Icons.star,
-                            color: Colors.amber,
+                            color: amber,
                             size: 16,
                           ),
                         ],
@@ -436,8 +427,8 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
                       const SizedBox(height: 4),
                       Text(
                         AppLocalizations.of(context)!.lightning_address_title,
-                        style: TextStyle(
-                          color: Colors.amber,
+                        style: const TextStyle(
+                          color: amber,
                           fontSize: 11,
                           fontWeight: FontWeight.w500,
                         ),
@@ -448,7 +439,7 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
               ),
               PopupMenuButton<String>(
                 onSelected: (value) => _handleAddressAction(value, address, lnAddressProvider),
-                iconColor: Colors.white,
+                iconColor: t.textPrimary,
                 itemBuilder: (context) => [
                   PopupMenuItem(
                     value: 'copy',
@@ -467,12 +458,12 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
                         Icon(
                           address.isDefault ? Icons.star : Icons.star_border,
                           size: 18,
-                          color: address.isDefault ? Colors.amber : null,
+                          color: address.isDefault ? amber : null,
                         ),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            address.isDefault 
+                            address.isDefault
                               ? AppLocalizations.of(context)!.lightning_address_is_default
                               : AppLocalizations.of(context)!.lightning_address_set_default,
                             overflow: TextOverflow.ellipsis,
@@ -486,11 +477,11 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
                     value: 'delete',
                     child: Row(
                       children: [
-                        const Icon(Icons.delete, size: 18, color: Colors.red),
+                        Icon(Icons.delete, size: 18, color: t.statusUnhealthy),
                         const SizedBox(width: 8),
                         Text(
-                          AppLocalizations.of(context)!.lightning_address_delete, 
-                          style: const TextStyle(color: Colors.red)
+                          AppLocalizations.of(context)!.lightning_address_delete,
+                          style: TextStyle(color: t.statusUnhealthy),
                         ),
                       ],
                     ),
@@ -499,42 +490,42 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
               ),
             ],
           ),
-          
+
           if (address.description.isNotEmpty) ...[
             const SizedBox(height: 8),
             Text(
               address.description,
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.7),
+                color: t.textPrimary.withValues(alpha: 0.7),
                 fontSize: 14,
               ),
             ),
           ],
-          
+
           const SizedBox(height: 12),
           Row(
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: address.isDefault 
-                      ? Colors.amber.withValues(alpha: 0.2)
-                      : (address.isActive 
-                          ? Colors.green.withValues(alpha: 0.2) 
-                          : Colors.grey.withValues(alpha: 0.2)),
+                  color: address.isDefault
+                      ? amber.withValues(alpha: 0.2)
+                      : (address.isActive
+                          ? t.statusHealthy.withValues(alpha: 0.2)
+                          : t.outline),
                   borderRadius: BorderRadius.circular(6),
                   border: Border.all(
-                    color: address.isDefault 
-                        ? Colors.amber.withValues(alpha: 0.3)
-                        : (address.isActive 
-                            ? Colors.green.withValues(alpha: 0.3) 
-                            : Colors.grey.withValues(alpha: 0.3)),
+                    color: address.isDefault
+                        ? amber.withValues(alpha: 0.3)
+                        : (address.isActive
+                            ? t.statusHealthy.withValues(alpha: 0.3)
+                            : t.outlineStrong),
                   ),
                 ),
                 child: Text(
                   address.isDefault ? AppLocalizations.of(context)!.lightning_address_title : (address.isActive ? AppLocalizations.of(context)!.valid_status : AppLocalizations.of(context)!.not_available_text),
                   style: TextStyle(
-                    color: address.isDefault ? Colors.amber : (address.isActive ? Colors.green : Colors.grey),
+                    color: address.isDefault ? amber : (address.isActive ? t.statusHealthy : t.textSecondary),
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
                   ),
@@ -544,7 +535,7 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
               Text(
                 'Created: ${_formatDate(address.createdAt)}',
                 style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.6),
+                  color: t.textSecondary,
                   fontSize: 12,
                 ),
               ),
@@ -555,7 +546,7 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
     );
   }
 
-  Widget _buildCreateForm(LNAddressProvider lnAddressProvider, WalletProvider walletProvider) {
+  Widget _buildCreateForm(LNAddressProvider lnAddressProvider, WalletProvider walletProvider, AppTokens t) {
     final serverDomain = context.read<AuthProvider>().sessionData?.serverUrl
         .replaceAll('https://', '')
         .replaceAll('http://', '') ?? 'your-server.com';
@@ -567,22 +558,22 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            
+
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.08),
+                color: t.surface,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.1),
+                  color: t.outline,
                   width: 1,
                 ),
               ),
               child: Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.add_circle_outline,
-                    color: Color(0xFF4C63F7),
+                    color: t.accentSolid,
                     size: 24,
                   ),
                   const SizedBox(width: 12),
@@ -590,7 +581,7 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
                     child: Text(
                       AppLocalizations.of(context)!.lightning_address_title,
                       style: TextStyle(
-                        color: Colors.white,
+                        color: t.textPrimary,
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
                       ),
@@ -598,8 +589,9 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
                   ),
                   Container(
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.1),
+                      color: t.surface,
                       borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: t.outline, width: 1),
                     ),
                     child: Material(
                       color: Colors.transparent,
@@ -611,11 +603,11 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
                             _usernameController.clear();
                           });
                         },
-                        child: const Padding(
-                          padding: EdgeInsets.all(8),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
                           child: Icon(
                             Icons.close,
-                            color: Colors.white,
+                            color: t.textPrimary,
                             size: 20,
                           ),
                         ),
@@ -625,28 +617,28 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
-            
+
+
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.08),
+                color: t.surface,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.1),
+                  color: t.outline,
                   width: 1,
                 ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  
-                  const Text(
+
+                  Text(
                     'Wallet:',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: t.textPrimary,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
@@ -656,35 +648,35 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
                     width: double.infinity,
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.05),
+                      color: t.inputFill,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.1),
+                        color: t.outline,
                       ),
                     ),
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
                         value: _selectedWalletId,
                         isExpanded: true,
-                        dropdownColor: const Color(0xFF1A1D47),
-                        style: const TextStyle(color: Colors.white),
-                        icon: const Icon(Icons.arrow_drop_down, color: Colors.white),
+                        dropdownColor: t.dialogBackground,
+                        style: TextStyle(color: t.textPrimary),
+                        icon: Icon(Icons.arrow_drop_down, color: t.textPrimary),
                         items: walletProvider.wallets.map((wallet) {
                           return DropdownMenuItem<String>(
                             value: wallet.id,
                             child: Row(
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.account_balance_wallet,
-                                  color: Color(0xFF4C63F7),
+                                  color: t.accentSolid,
                                   size: 18,
                                 ),
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Text(
                                     wallet.name,
-                                    style: const TextStyle(
-                                      color: Colors.white,
+                                    style: TextStyle(
+                                      color: t.textPrimary,
                                       fontSize: 16,
                                     ),
                                     overflow: TextOverflow.ellipsis,
@@ -700,8 +692,8 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
                             setState(() {
                               _selectedWalletId = newValue;
                             });
-                            
-                            
+
+
                             final selectedWallet = walletProvider.wallets.firstWhere(
                               (w) => w.id == newValue,
                             );
@@ -712,49 +704,49 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
                       ),
                     ),
                   ),
-                  
+
                   const SizedBox(height: 20),
-                  
+
                   // Username input
-                  const Text(
+                  Text(
                     'Lightning Address:',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: t.textPrimary,
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   const SizedBox(height: 8),
-                  
+
                   Row(
                     children: [
                       Expanded(
                         child: TextFormField(
                           controller: _usernameController,
-                          style: const TextStyle(color: Colors.white),
+                          style: TextStyle(color: t.textPrimary),
                           decoration: InputDecoration(
                             hintText: 'satoshi',
                             hintStyle: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.5),
+                              color: t.textSecondary,
                             ),
                             filled: true,
-                            fillColor: Colors.white.withValues(alpha: 0.05),
+                            fillColor: t.inputFill,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide(
-                                color: Colors.white.withValues(alpha: 0.1),
+                                color: t.outline,
                               ),
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide(
-                                color: Colors.white.withValues(alpha: 0.1),
+                                color: t.outline,
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: const BorderSide(
-                                color: Color(0xFF4C63F7),
+                              borderSide: BorderSide(
+                                color: t.accentSolid,
                               ),
                             ),
                           ),
@@ -774,39 +766,39 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
                       Text(
                         '@$serverDomain',
                         style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.7),
+                          color: t.textPrimary.withValues(alpha: 0.7),
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],
                   ),
-                  
+
                   // Error message
                   if (lnAddressProvider.error != null) ...[
                     const SizedBox(height: 12),
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.red.withValues(alpha: 0.1),
+                        color: t.statusUnhealthy.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
-                          color: Colors.red.withValues(alpha: 0.3),
+                          color: t.statusUnhealthy.withValues(alpha: 0.3),
                         ),
                       ),
                       child: Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.error_outline,
-                            color: Colors.red,
+                            color: t.statusUnhealthy,
                             size: 16,
                           ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               lnAddressProvider.error!,
-                              style: const TextStyle(
-                                color: Colors.red,
+                              style: TextStyle(
+                                color: t.statusUnhealthy,
                                 fontSize: 14,
                               ),
                             ),
@@ -815,9 +807,9 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
                       ),
                     ),
                   ],
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   Row(
                     children: [
                       Expanded(
@@ -829,6 +821,7 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
                               _usernameController.clear();
                             });
                           },
+                          t: t,
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -836,6 +829,7 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
                         child: _buildPrimaryButton(
                           text: lnAddressProvider.isCreating ? AppLocalizations.of(context)!.loading_text : AppLocalizations.of(context)!.connect_button,
                           onPressed: lnAddressProvider.isCreating ? null : _createAddress,
+                          t: t,
                         ),
                       ),
                     ],
@@ -852,13 +846,14 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
   Widget _buildPrimaryButton({
     required String text,
     required VoidCallback? onPressed,
+    required AppTokens t,
     IconData? icon,
   }) {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFF2D3FE7),
-        foregroundColor: Colors.white,
+        backgroundColor: t.accentSolid,
+        foregroundColor: t.accentForeground,
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -887,13 +882,14 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
   Widget _buildSecondaryButton({
     required String text,
     required VoidCallback? onPressed,
+    required AppTokens t,
   }) {
     return OutlinedButton(
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
-        foregroundColor: Colors.white,
+        foregroundColor: t.textPrimary,
         side: BorderSide(
-          color: Colors.white.withValues(alpha: 0.3),
+          color: t.textPrimary.withValues(alpha: 0.3),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         shape: RoundedRectangleBorder(
@@ -917,7 +913,7 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('${address.fullAddress} ${AppLocalizations.of(context)!.address_copied_message}'),
-            backgroundColor: Colors.green,
+            backgroundColor: context.tokens.statusHealthy,
             behavior: SnackBarBehavior.floating,
           ),
         );
@@ -936,13 +932,13 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
       // If already default, do nothing
       return;
     }
-    
+
     final success = await lnAddressProvider.setAsDefault(address.id);
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('${address.fullAddress} ${AppLocalizations.of(context)!.lightning_address_title}'),
-          backgroundColor: Colors.green,
+          content: Text(AppLocalizations.of(context)!.lightning_address_set_default_success(address.fullAddress)),
+          backgroundColor: context.tokens.statusHealthy,
           behavior: SnackBarBehavior.floating,
         ),
       );
@@ -950,17 +946,18 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
   }
 
   void _showDeleteConfirmation(LNAddress address, LNAddressProvider lnAddressProvider) {
+    final t = context.tokens;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1D47),
+        backgroundColor: t.dialogBackground,
         title: Text(
-          AppLocalizations.of(context)!.lightning_address_title,
-          style: TextStyle(color: Colors.white),
+          AppLocalizations.of(context)!.lightning_address_delete_title,
+          style: TextStyle(color: t.textPrimary),
         ),
         content: Text(
-          'Are you sure you want to delete ${address.fullAddress}?',
-          style: const TextStyle(color: Colors.white),
+          AppLocalizations.of(context)!.lightning_address_delete_confirm(address.fullAddress),
+          style: TextStyle(color: t.textPrimary),
         ),
         actions: [
           TextButton(
@@ -974,14 +971,17 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
               if (success && mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(AppLocalizations.of(context)!.lightning_address_title),
-                    backgroundColor: Colors.green,
+                    content: Text(AppLocalizations.of(context)!.lightning_address_deleted_success),
+                    backgroundColor: context.tokens.statusHealthy,
                     behavior: SnackBarBehavior.floating,
                   ),
                 );
               }
             },
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            child: Text(
+              AppLocalizations.of(context)!.lightning_address_delete,
+              style: TextStyle(color: t.statusUnhealthy),
+            ),
           ),
         ],
       ),
@@ -993,12 +993,12 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
     if (_selectedWalletId == null) return;
 
     context.read<LNAddressProvider>().clearError();
-    
+
     final walletProvider = context.read<WalletProvider>();
     final selectedWallet = walletProvider.wallets.firstWhere(
       (w) => w.id == _selectedWalletId!,
     );
-    
+
     final success = await context.read<LNAddressProvider>().createLNAddress(
       username: _usernameController.text.trim().toLowerCase(),
       walletId: _selectedWalletId!,
@@ -1011,11 +1011,11 @@ class _LNAddressScreenState extends State<LNAddressScreen> {
         _showCreateForm = false;
         _usernameController.clear();
       });
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(AppLocalizations.of(context)!.lightning_address_title),
-          backgroundColor: Colors.green,
+          content: Text(AppLocalizations.of(context)!.lightning_address_created_success),
+          backgroundColor: context.tokens.statusHealthy,
           behavior: SnackBarBehavior.floating,
         ),
       );
