@@ -1422,7 +1422,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                         subtitle: Text(
                           wallet.balanceFormatted,
                           style: TextStyle(
-                            color: isSelected ? context.tokens.accentBright : context.tokens.textPrimary.withValues(alpha: 0.7),
+                            color: isSelected ? context.tokens.textAccent : context.tokens.textPrimary.withValues(alpha: 0.7),
                             fontSize: 14,
                             fontWeight: FontWeight.w500,
                           ),
@@ -1555,7 +1555,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
             onPressed: () => Navigator.pop(context),
             child: Text(
               AppLocalizations.of(context)!.cancel_button,
-              style: TextStyle(color: context.tokens.accentBright),
+              style: TextStyle(color: context.tokens.textAccent),
             ),
           ),
         ],
@@ -1603,7 +1603,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                   style: TextStyle(
                                         fontSize: 16,
                     fontWeight: FontWeight.w500, // Weight for secondary buttons
-                    color: _isInHistory ? context.tokens.accentBright : context.tokens.textPrimary,
+                    color: _isInHistory ? context.tokens.textAccent : context.tokens.textPrimary,
                   ),
                 ),
               ],
@@ -1709,7 +1709,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                                     walletProvider.primaryWallet!.balanceFormatted,
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: context.tokens.accentBright,
+                                      color: context.tokens.textAccent,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
@@ -1983,7 +1983,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
                   Text(
                     AppInfoService.getVersionDisplay(languageProvider.currentLocale.languageCode),
                     style: TextStyle(
-                      color: context.tokens.accentBright,
+                      color: context.tokens.textAccent,
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
                     ),
@@ -1998,7 +1998,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver, Ti
             onPressed: () => Navigator.pop(context),
             child: Text(
               AppLocalizations.of(context)!.cancel_button,
-              style: TextStyle(color: context.tokens.accentBright),
+              style: TextStyle(color: context.tokens.textAccent),
             ),
           ),
         ],
