@@ -880,7 +880,9 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
             child: QrImageView(
               data: invoice,
               version: QrVersions.auto,
-              size: 300.0,
+              // Cap at 300 on wide screens; shrink to fit narrow phones (sheet
+              // padding 24*2 + container padding 8*2 = 64 logical pixels reserved).
+              size: math.min(300.0, MediaQuery.of(context).size.width - 64),
               backgroundColor: Colors.white,
               errorCorrectionLevel: QrErrorCorrectLevel.H,
               eyeStyle: const QrEyeStyle(
