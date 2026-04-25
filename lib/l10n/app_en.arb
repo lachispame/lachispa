@@ -251,6 +251,9 @@
   "theme_light": "Light",
   "theme_dark": "Dark",
 
+  "copy_invoice_button": "Copy invoice",
+  "invoice_copied_message": "Invoice copied to clipboard",
+
 
   "no_wallet_error": "No primary wallet available",
   "invalid_session_error": "No active session",

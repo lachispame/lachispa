@@ -182,6 +182,9 @@
   "theme_light": "Chiaro",
   "theme_dark": "Scuro",
 
+  "copy_invoice_button": "Copia fattura",
+  "invoice_copied_message": "Fattura copiata negli appunti",
+
 
   "no_wallet_error": "Nessun portafoglio principale disponibile",
   "invalid_session_error": "Nessuna sessione attiva",

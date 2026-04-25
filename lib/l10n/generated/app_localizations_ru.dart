@@ -660,6 +660,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get theme_dark => 'Тёмная';
 
   @override
+  String get copy_invoice_button => 'Копировать счёт';
+
+  @override
+  String get invoice_copied_message => 'Счёт скопирован в буфер обмена';
+
+  @override
   String get no_wallet_error => 'Нет доступного основного кошелька';
 
   @override

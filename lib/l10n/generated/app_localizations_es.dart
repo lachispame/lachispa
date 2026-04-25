@@ -665,6 +665,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get theme_dark => 'Oscuro';
 
   @override
+  String get copy_invoice_button => 'Copiar factura';
+
+  @override
+  String get invoice_copied_message => 'Factura copiada al portapapeles';
+
+  @override
   String get no_wallet_error => 'Sin billetera principal disponible';
 
   @override

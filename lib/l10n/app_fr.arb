@@ -182,6 +182,9 @@
   "theme_light": "Clair",
   "theme_dark": "Sombre",
 
+  "copy_invoice_button": "Copier la facture",
+  "invoice_copied_message": "Facture copiée dans le presse-papiers",
+
 
   "no_wallet_error": "Aucun portefeuille principal disponible",
   "invalid_session_error": "Aucune session active",

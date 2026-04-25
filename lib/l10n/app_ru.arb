@@ -182,6 +182,9 @@
   "theme_light": "Светлая",
   "theme_dark": "Тёмная",
 
+  "copy_invoice_button": "Копировать счёт",
+  "invoice_copied_message": "Счёт скопирован в буфер обмена",
+
 
   "no_wallet_error": "Нет доступного основного кошелька",
   "invalid_session_error": "Нет активной сессии",

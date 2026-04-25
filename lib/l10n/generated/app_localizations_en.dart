@@ -659,6 +659,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get theme_dark => 'Dark';
 
   @override
+  String get copy_invoice_button => 'Copy invoice';
+
+  @override
+  String get invoice_copied_message => 'Invoice copied to clipboard';
+
+  @override
   String get no_wallet_error => 'No primary wallet available';
 
   @override

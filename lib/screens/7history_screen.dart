@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'dart:async';
 import 'dart:math' as math;
 import '../providers/auth_provider.dart';
@@ -831,6 +833,11 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
 
             const SizedBox(height: 24),
 
+            if (transaction.invoice != null && transaction.invoice!.isNotEmpty) ...[
+              _buildInvoiceQRSection(transaction, t),
+              const SizedBox(height: 24),
+            ],
+
             _buildDetailRow(t, 'Date', transaction.formattedDate),
             _buildDetailRow(t, 'Description', transaction.memo.isEmpty ? AppLocalizations.of(context)!.no_description_text : transaction.memo),
             if (transaction.originalFiatAmount != null && transaction.originalFiatCurrency != null) ...[
@@ -846,32 +853,85 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
             if (transaction.paymentHash != null)
               _buildDetailRow(t, 'Hash', transaction.paymentHash!, copyable: true),
             if (transaction.fee != null)
-              _buildDetailRow(t, 'Fee', '${transaction.fee} msat'),
+              _buildDetailRow(t, 'Fee', '${(transaction.fee! / 1000).toStringAsFixed(3)} sats'),
             _buildDetailRow(t, AppLocalizations.of(context)!.invoice_status_label, _getTransactionStatus(transaction)),
-
-            const SizedBox(height: 16),
-
-            // Close button
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => Navigator.pop(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: t.accentSolid,
-                  foregroundColor: t.accentForeground,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: Text(AppLocalizations.of(context)!.cancel_button),
-              ),
-            ),
                 ],
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildInvoiceQRSection(TransactionInfo transaction, AppTokens t) {
+    final invoice = transaction.invoice!;
+    final l = AppLocalizations.of(context)!;
+    return Column(
+      children: [
+        Center(
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: t.textPrimary,
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: t.outlineStrong),
+            ),
+            child: QrImageView(
+              data: invoice,
+              version: QrVersions.auto,
+              size: 300.0,
+              backgroundColor: Colors.white,
+              errorCorrectionLevel: QrErrorCorrectLevel.H,
+              eyeStyle: const QrEyeStyle(
+                eyeShape: QrEyeShape.square,
+                color: Colors.black,
+              ),
+              dataModuleStyle: const QrDataModuleStyle(
+                dataModuleShape: QrDataModuleShape.square,
+                color: Colors.black,
+              ),
+              embeddedImage: const AssetImage('Logo/chispalogoredondo.png'),
+              embeddedImageStyle: const QrEmbeddedImageStyle(
+                size: Size(60, 60),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton.icon(
+            onPressed: () => _copyInvoice(invoice),
+            icon: Icon(Icons.copy, size: 18, color: t.textPrimary),
+            label: Text(
+              l.copy_invoice_button,
+              style: TextStyle(
+                color: t.textPrimary,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            style: OutlinedButton.styleFrom(
+              side: BorderSide(color: t.outlineStrong, width: 1),
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _copyInvoice(String invoice) async {
+    await Clipboard.setData(ClipboardData(text: invoice));
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(AppLocalizations.of(context)!.invoice_copied_message),
+        duration: const Duration(seconds: 2),
       ),
     );
   }

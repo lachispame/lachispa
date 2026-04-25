@@ -664,6 +664,13 @@ class AppLocalizationsPt extends AppLocalizations {
   String get theme_dark => 'Escuro';
 
   @override
+  String get copy_invoice_button => 'Copiar fatura';
+
+  @override
+  String get invoice_copied_message =>
+      'Fatura copiada para a área de transferência';
+
+  @override
   String get no_wallet_error => 'Sem carteira principal disponível';
 
   @override

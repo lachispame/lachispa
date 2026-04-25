@@ -182,6 +182,9 @@
   "theme_light": "Claro",
   "theme_dark": "Escuro",
 
+  "copy_invoice_button": "Copiar fatura",
+  "invoice_copied_message": "Fatura copiada para a área de transferência",
+
 
   "no_wallet_error": "Sem carteira principal disponível",
   "invalid_session_error": "Sem sessão ativa",

@@ -182,6 +182,9 @@
   "theme_light": "Hell",
   "theme_dark": "Dunkel",
 
+  "copy_invoice_button": "Rechnung kopieren",
+  "invoice_copied_message": "Rechnung in die Zwischenablage kopiert",
+
 
   "no_wallet_error": "Keine primäre Wallet verfügbar",
   "invalid_session_error": "Keine aktive Sitzung",

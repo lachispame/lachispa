@@ -677,6 +677,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get theme_dark => 'Scuro';
 
   @override
+  String get copy_invoice_button => 'Copia fattura';
+
+  @override
+  String get invoice_copied_message => 'Fattura copiata negli appunti';
+
+  @override
   String get no_wallet_error => 'Nessun portafoglio principale disponibile';
 
   @override

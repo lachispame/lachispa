@@ -1332,6 +1332,18 @@ abstract class AppLocalizations {
   /// **'Oscuro'**
   String get theme_dark;
 
+  /// No description provided for @copy_invoice_button.
+  ///
+  /// In es, this message translates to:
+  /// **'Copiar factura'**
+  String get copy_invoice_button;
+
+  /// No description provided for @invoice_copied_message.
+  ///
+  /// In es, this message translates to:
+  /// **'Factura copiada al portapapeles'**
+  String get invoice_copied_message;
+
   /// No description provided for @no_wallet_error.
   ///
   /// In es, this message translates to:

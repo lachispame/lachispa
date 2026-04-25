@@ -678,6 +678,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get theme_dark => 'Sombre';
 
   @override
+  String get copy_invoice_button => 'Copier la facture';
+
+  @override
+  String get invoice_copied_message => 'Facture copiée dans le presse-papiers';
+
+  @override
   String get no_wallet_error => 'Aucun portefeuille principal disponible';
 
   @override

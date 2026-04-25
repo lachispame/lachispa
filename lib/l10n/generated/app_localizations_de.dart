@@ -675,6 +675,12 @@ class AppLocalizationsDe extends AppLocalizations {
   String get theme_dark => 'Dunkel';
 
   @override
+  String get copy_invoice_button => 'Rechnung kopieren';
+
+  @override
+  String get invoice_copied_message => 'Rechnung in die Zwischenablage kopiert';
+
+  @override
   String get no_wallet_error => 'Keine primäre Wallet verfügbar';
 
   @override
