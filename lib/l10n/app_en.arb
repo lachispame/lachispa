@@ -372,5 +372,29 @@
   "error_checking_currency": "Error checking {currency}: {error}",
   
   "deep_link_login_required_title": "Login Required",
-  "deep_link_login_required_message": "You must log in to your LaChispa account to process this payment."
+  "deep_link_login_required_message": "You must log in to your LaChispa account to process this payment.",
+  
+  "invoice_key_qr_title": "Invoice Key QR",
+  "invoice_key_qr_description": "Use this QR code with LaChispaPOS or other Lightning apps to receive payments without exposing your admin key.",
+  "invoice_key_qr_subtitle": "Show QR for other apps",
+  "copy_invoice_key": "Copy Key",
+  "invoice_key_copied": "Invoice key copied to clipboard",
+  "invoice_key_unavailable_title": "No wallet found",
+  "invoice_key_unavailable_subtitle": "Please create a wallet first",
+  "@invoice_key_unavailable_title": {
+    "description": "Title when no wallet is available"
+  },
+  "@invoice_key_unavailable_subtitle": {
+    "description": "Subtitle when no wallet is available"
+  },
+  
+  "currency_count": "{count, plural, =1{1 currency} other{{count} currencies}}",
+  "@currency_count": {
+    "description": "Number of selected currencies",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

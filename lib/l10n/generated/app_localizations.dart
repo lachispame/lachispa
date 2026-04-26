@@ -1811,6 +1811,54 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Debes iniciar sesión en tu cuenta LaChispa para procesar este pago.'**
   String get deep_link_login_required_message;
+
+  /// No description provided for @invoice_key_qr_title.
+  ///
+  /// In es, this message translates to:
+  /// **'QR de Clave de Facturación'**
+  String get invoice_key_qr_title;
+
+  /// No description provided for @invoice_key_qr_description.
+  ///
+  /// In es, this message translates to:
+  /// **'Usa este código QR con LaChispaPOS u otras apps Lightning para recibir pagos sin exponer tu clave de administrador.'**
+  String get invoice_key_qr_description;
+
+  /// No description provided for @invoice_key_qr_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Mostrar QR para otras apps'**
+  String get invoice_key_qr_subtitle;
+
+  /// No description provided for @copy_invoice_key.
+  ///
+  /// In es, this message translates to:
+  /// **'Copiar Clave'**
+  String get copy_invoice_key;
+
+  /// No description provided for @invoice_key_copied.
+  ///
+  /// In es, this message translates to:
+  /// **'Clave de facturación copiada al portapapeles'**
+  String get invoice_key_copied;
+
+  /// Título cuando no hay billetera disponible
+  ///
+  /// In es, this message translates to:
+  /// **'Billetera no encontrada'**
+  String get invoice_key_unavailable_title;
+
+  /// Subtítulo cuando no hay billetera disponible
+  ///
+  /// In es, this message translates to:
+  /// **'Por favor crea una billetera primero'**
+  String get invoice_key_unavailable_subtitle;
+
+  /// Cantidad de monedas seleccionadas
+  ///
+  /// In es, this message translates to:
+  /// **'{count, plural, =1{1 moneda} other{{count} monedas}}'**
+  String currency_count(int count);
 }
 
 class _AppLocalizationsDelegate
