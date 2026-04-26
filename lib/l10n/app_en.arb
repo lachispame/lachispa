@@ -93,7 +93,6 @@
   "logout_confirm_button": "Logout",
   
   "receive_title": "Receive",
-  "create_invoice_label": "Create an invoice to receive payments directly in your wallet",
   "amount_sats_label": "Request Amount",
   "amount_label": "Amount",
   "currency_label": "Currency",
@@ -107,7 +106,6 @@
   "generating_button": "GENERATING...",
   "invoice_generated_message": "Invoice generated successfully",
   "invoice_generation_error_prefix": "Error generating invoice: ",
-  "invoice_empty_response_error": "Failed to generate invoice",
   
   "send_title": "Send",
   "paste_invoice_placeholder": "Paste invoice, LNURL or address",
@@ -177,9 +175,6 @@
   
   "send_to_title": "Send to",
   "clear_button": "C",
-  "invoice_cleared_message": "Invoice cleared",
-  "clear_invoice_button": "Clear invoice",
-  "invoice_copied_message": "Invoice copied",
   "decimal_button": ".",
   "calculating_text": "calculating...",
   "loading_rates_text": "Loading rates...",
@@ -233,12 +228,6 @@
   "sending_button": "Sending...",
   "invoice_expired_error": "The invoice has expired and cannot be paid",
   "amountless_invoice_error": "Invoice without amount not supported. Please request an invoice with a specific amount.",
-  "invoice_amount_label": "Invoice: {amount}",
-  "@invoice_amount_label": {
-    "placeholders": {
-      "amount": {"type": "Object"}
-    }
-  },
   "payment_sent_status": "Payment sent - Status: {status}",
   "@payment_sent_status": {
     "placeholders": {
@@ -385,27 +374,8 @@
   
   "deep_link_login_required_title": "Login Required",
   "deep_link_login_required_message": "You must log in to your LaChispa account to process this payment.",
-  
-  "invoice_key_qr_title": "Invoice Key QR",
-  "invoice_key_qr_description": "Use this QR code with LaChispaPOS or other Lightning apps to receive payments without exposing your admin key.",
-  "invoice_key_qr_subtitle": "Show QR for other apps",
-  "copy_invoice_key": "Copy Key",
-  "invoice_key_copied": "Invoice key copied to clipboard",
-  "invoice_key_unavailable_title": "No wallet found",
-  "invoice_key_unavailable_subtitle": "Please create a wallet first",
-  "@invoice_key_unavailable_title": {
-    "description": "Title shown when no wallet is available"
-  },
-  "@invoice_key_unavailable_subtitle": {
-    "description": "Subtitle shown when no wallet is available"
-  },
-  "currency_count": "{count, plural, =1{1 currency} other{{count} currencies}}",
-  "@currency_count": {
-    "description": "Number of available currencies",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  }
+
+  "clear_invoice_button": "Clear invoice",
+  "invoice_cleared_message": "Invoice cleared",
+  "invoice_monitoring_timeout_message": "Monitoring stopped. Generate a new invoice."
 }

@@ -261,10 +261,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get receive_title => 'Receive';
 
   @override
-  String get create_invoice_label =>
-      'Create an invoice to receive payments directly in your wallet';
-
-  @override
   String get amount_sats_label => 'Request Amount';
 
   @override
@@ -302,9 +298,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get invoice_generation_error_prefix => 'Error generating invoice: ';
-
-  @override
-  String get invoice_empty_response_error => 'Failed to generate invoice';
 
   @override
   String get send_title => 'Send';
@@ -478,15 +471,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get clear_button => 'C';
 
   @override
-  String get invoice_cleared_message => 'Invoice cleared';
-
-  @override
-  String get clear_invoice_button => 'Clear invoice';
-
-  @override
-  String get invoice_copied_message => 'Invoice copied to clipboard';
-
-  @override
   String get decimal_button => '.';
 
   @override
@@ -628,11 +612,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Invoice without amount not supported. Please request an invoice with a specific amount.';
 
   @override
-  String invoice_amount_label(Object amount) {
-    return 'Invoice: $amount';
-  }
-
-  @override
   String payment_sent_status(Object status) {
     return 'Payment sent - Status: $status';
   }
@@ -684,6 +663,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get copy_invoice_button => 'Copy invoice';
+
+  @override
+  String get invoice_copied_message => 'Invoice copied to clipboard';
 
   @override
   String get no_wallet_error => 'No primary wallet available';
@@ -951,35 +933,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'You must log in to your LaChispa account to process this payment.';
 
   @override
-  String get invoice_key_qr_title => 'Invoice Key QR';
+  String get clear_invoice_button => 'Clear invoice';
 
   @override
-  String get invoice_key_qr_description =>
-      'Use this QR code with LaChispaPOS or other Lightning apps to receive payments without exposing your admin key.';
+  String get invoice_cleared_message => 'Invoice cleared';
 
   @override
-  String get invoice_key_qr_subtitle => 'Show QR for other apps';
-
-  @override
-  String get copy_invoice_key => 'Copy Key';
-
-  @override
-  String get invoice_key_copied => 'Invoice key copied to clipboard';
-
-  @override
-  String get invoice_key_unavailable_title => 'No wallet found';
-
-  @override
-  String get invoice_key_unavailable_subtitle => 'Please create a wallet first';
-
-  @override
-  String currency_count(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count currencies',
-      one: '1 currency',
-    );
-    return '$_temp0';
-  }
+  String get invoice_monitoring_timeout_message =>
+      'Monitoring stopped. Generate a new invoice.';
 }

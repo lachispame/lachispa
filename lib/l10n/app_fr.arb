@@ -93,7 +93,6 @@
   "logout_confirm_button": "Se déconnecter",
   
   "receive_title": "Recevoir",
-  "create_invoice_label": "Créez une facture pour recevoir des paiements directement dans votre portefeuille",
   "amount_sats_label": "Montant demandé",
   "amount_label": "Montant",
   "currency_label": "Devise",
@@ -107,7 +106,6 @@
   "generating_button": "GÉNÉRATION...",
   "invoice_generated_message": "Facture générée avec succès",
   "invoice_generation_error_prefix": "Erreur lors de la génération de la facture : ",
-  "invoice_empty_response_error": "Échec de la génération de la facture",
   
   "send_title": "Envoyer",
   "paste_invoice_placeholder": "Coller la facture, LNURL ou adresse",
@@ -123,9 +121,6 @@
   
   "send_to_title": "Envoyer à",
   "clear_button": "C",
-  "invoice_cleared_message": "Facture effacée",
-  "clear_invoice_button": "Effacer la facture",
-  "invoice_copied_message": "Facture copiée",
   "decimal_button": ".",
   "calculating_text": "calcul...",
   "loading_rates_text": "Chargement des taux...",
@@ -169,7 +164,6 @@
   "sending_button": "Envoi...",
   "invoice_expired_error": "La facture a expiré et ne peut pas être payée",
   "amountless_invoice_error": "Facture sans montant non prise en charge. Veuillez demander une facture avec un montant spécifique.",
-  "invoice_amount_label": "Facture: {amount}",
   "payment_sent_status": "Paiement envoyé - Statut : {status}",
   "confirm_no_session_error": "Aucune session active",
   "confirm_no_wallet_error": "Aucun portefeuille principal disponible",
@@ -365,27 +359,8 @@
   
   "deep_link_login_required_title": "Connexion requise",
   "deep_link_login_required_message": "Vous devez vous connecter à votre compte LaChispa pour traiter ce paiement.",
-  
-  "invoice_key_qr_title": "QR de clé de facturation",
-  "invoice_key_qr_description": "Utilisez ce code QR avec LaChispaPOS ou d'autres applications Lightning pour recevoir des paiements sans exposer votre clé administrateur.",
-  "invoice_key_qr_subtitle": "Afficher le QR pour d'autres apps",
-  "copy_invoice_key": "Copier la clé",
-  "invoice_key_copied": "Clé de facturation copiée dans le presse-papiers",
-  "invoice_key_unavailable_title": "Portefeuille non trouvé",
-  "invoice_key_unavailable_subtitle": "Veuillez d'abord créer un portefeuille",
-  "@invoice_key_unavailable_title": {
-    "description": "Titre quand aucun portefeuille n'est disponible"
-  },
-  "@invoice_key_unavailable_subtitle": {
-    "description": "Sous-titre quand aucun portefeuille n'est disponible"
-  },
-  "currency_count": "{count, plural, =1{1 devise} other{{count} devises}}",
-  "@currency_count": {
-    "description": "Nombre de devises disponibles",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  }
+
+  "clear_invoice_button": "Effacer la facture",
+  "invoice_cleared_message": "Facture effacée",
+  "invoice_monitoring_timeout_message": "Surveillance arrêtée. Générez une nouvelle facture."
 }

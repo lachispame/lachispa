@@ -93,7 +93,6 @@
   "logout_confirm_button": "Disconnetti",
   
   "receive_title": "Ricevi",
-  "create_invoice_label": "Crea una fattura per ricevere pagamenti direttamente nel tuo portafoglio",
   "amount_sats_label": "Importo richiesto",
   "amount_label": "Importo",
   "currency_label": "Valuta",
@@ -107,7 +106,6 @@
   "generating_button": "GENERAZIONE...",
   "invoice_generated_message": "Fattura generata con successo",
   "invoice_generation_error_prefix": "Errore nella generazione della fattura: ",
-  "invoice_empty_response_error": "Impossibile generare la fattura",
   
   "send_title": "Invia",
   "paste_invoice_placeholder": "Incolla fattura, LNURL o indirizzo",
@@ -123,9 +121,6 @@
   
   "send_to_title": "Invia a",
   "clear_button": "C",
-  "invoice_cleared_message": "Fattura cancellata",
-  "clear_invoice_button": "Cancella fattura",
-  "invoice_copied_message": "Fattura copiata",
   "decimal_button": ".",
   "calculating_text": "calcolo...",
   "loading_rates_text": "Caricamento tassi...",
@@ -169,7 +164,6 @@
   "sending_button": "Invio...",
   "invoice_expired_error": "La fattura è scaduta e non può essere pagata",
   "amountless_invoice_error": "Fattura senza importo non supportata. Richiedere una fattura con un importo specifico.",
-  "invoice_amount_label": "Fattura: {amount}",
   "payment_sent_status": "Pagamento inviato - Stato: {status}",
   "confirm_no_session_error": "Nessuna sessione attiva",
   "confirm_no_wallet_error": "Nessun portafoglio principale disponibile",
@@ -365,27 +359,8 @@
   
   "deep_link_login_required_title": "Accesso richiesto",
   "deep_link_login_required_message": "Devi accedere al tuo account LaChispa per elaborare questo pagamento.",
-  
-  "invoice_key_qr_title": "QR Chiave fattura",
-  "invoice_key_qr_description": "Usa questo codice QR con LaChispaPOS o altre app Lightning per ricevere pagamenti senza esporre la tua chiave amministratore.",
-  "invoice_key_qr_subtitle": "Mostra QR per altre app",
-  "copy_invoice_key": "Copia chiave",
-  "invoice_key_copied": "Chiave fattura copiata negli appunti",
-  "invoice_key_unavailable_title": "Portafoglio non trovato",
-  "invoice_key_unavailable_subtitle": "Crea prima un portafoglio",
-  "@invoice_key_unavailable_title": {
-    "description": "Titolo quando nessun portafoglio è disponibile"
-  },
-  "@invoice_key_unavailable_subtitle": {
-    "description": "Sottotitolo quando nessun portafoglio è disponibile"
-  },
-  "currency_count": "{count, plural, =1{1 valuta} other{{count} valute}}",
-  "@currency_count": {
-    "description": "Numero di valute disponibili",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  }
+
+  "clear_invoice_button": "Cancella fattura",
+  "invoice_cleared_message": "Fattura cancellata",
+  "invoice_monitoring_timeout_message": "Monitoraggio interrotto. Genera una nuova fattura."
 }

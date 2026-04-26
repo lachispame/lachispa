@@ -264,10 +264,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get receive_title => 'Recibir';
 
   @override
-  String get create_invoice_label =>
-      'Crea una factura para recibir pagos directamente en tu billetera';
-
-  @override
   String get amount_sats_label => 'Solicitar Monto';
 
   @override
@@ -305,9 +301,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get invoice_generation_error_prefix => 'Error generando factura: ';
-
-  @override
-  String get invoice_empty_response_error => 'Error al generar la factura';
 
   @override
   String get send_title => 'Enviar';
@@ -481,15 +474,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get clear_button => 'C';
 
   @override
-  String get invoice_cleared_message => 'Factura limpiada';
-
-  @override
-  String get clear_invoice_button => 'Limpiar factura';
-
-  @override
-  String get invoice_copied_message => 'Factura copiada al portapapeles';
-
-  @override
   String get decimal_button => '.';
 
   @override
@@ -633,11 +617,6 @@ class AppLocalizationsEs extends AppLocalizations {
       'Factura sin monto no soportada. Solicite una factura con un monto específico.';
 
   @override
-  String invoice_amount_label(Object amount) {
-    return 'Factura: $amount';
-  }
-
-  @override
   String payment_sent_status(Object status) {
     return 'Pago enviado - Estado: $status';
   }
@@ -690,6 +669,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get copy_invoice_button => 'Copiar factura';
+
+  @override
+  String get invoice_copied_message => 'Factura copiada al portapapeles';
 
   @override
   String get no_wallet_error => 'Sin billetera principal disponible';
@@ -964,37 +946,12 @@ class AppLocalizationsEs extends AppLocalizations {
       'Debes iniciar sesión en tu cuenta LaChispa para procesar este pago.';
 
   @override
-  String get invoice_key_qr_title => 'QR de Clave de Facturación';
+  String get clear_invoice_button => 'Limpiar factura';
 
   @override
-  String get invoice_key_qr_description =>
-      'Usa este código QR con LaChispaPOS u otras apps Lightning para recibir pagos sin exponer tu clave de administrador.';
+  String get invoice_cleared_message => 'Factura limpiada';
 
   @override
-  String get invoice_key_qr_subtitle => 'Mostrar QR para otras apps';
-
-  @override
-  String get copy_invoice_key => 'Copiar Clave';
-
-  @override
-  String get invoice_key_copied =>
-      'Clave de facturación copiada al portapapeles';
-
-  @override
-  String get invoice_key_unavailable_title => 'Billetera no encontrada';
-
-  @override
-  String get invoice_key_unavailable_subtitle =>
-      'Por favor crea una billetera primero';
-
-  @override
-  String currency_count(int count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: '$count monedas',
-      one: '1 moneda',
-    );
-    return '$_temp0';
-  }
+  String get invoice_monitoring_timeout_message =>
+      'Monitoreo detenido. Genera una nueva factura.';
 }
