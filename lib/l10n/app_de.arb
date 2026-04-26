@@ -3,6 +3,10 @@
   
   "welcome_title": "Willkommen bei La Chispa!",
   "welcome_subtitle": "Lightning für alle",
+  "welcome_hero_prefix": "Zahlen mit",
+  "welcome_hero_tagline": "Lightning, in deiner Tasche.",
+  "welcome_server_label": "SERVER",
+  "welcome_server_change": "Ändern",
   "get_started_button": "Loslegen",
   "tap_to_start_hint": "So einfach wie einen Funken zu entzünden",
   
@@ -139,6 +143,15 @@
   "lightning_payment_pending": "Lightning-Adresse-Zahlung ausstehend - Hold-Rechnung erkannt",
   "lightning_payment_success": "Lightning-Adresse-Zahlung erfolgreich abgeschlossen!",
   "insufficient_balance_error": "Unzureichendes Guthaben für die Zahlung",
+  "payment_error_fee_reserve_required": "Guthaben reicht nicht für Routing-Gebühren",
+  "payment_error_already_paid": "Diese Rechnung wurde bereits bezahlt",
+  "payment_error_still_pending": "Eine Zahlung für diese Rechnung ist bereits unterwegs",
+  "payment_error_route_not_found": "Keine Route für diese Zahlung gefunden",
+  "payment_error_payment_not_found": "Zahlung in dieser Wallet nicht gefunden",
+  "payment_error_lnurl_generic": "LNURL-Fehler: {detail}",
+  "payment_error_auth": "Authentifizierungsfehler. Zugangsdaten überprüfen.",
+  "payment_error_server": "Lightning-Server-Fehler. Bitte erneut versuchen.",
+  "payment_error_unknown": "Unbekannter Fehler ({code})",
   
   "confirm_payment_title": "Zahlung bestätigen",
   "invoice_description_label": "Beschreibung",
@@ -168,7 +181,18 @@
   "language_selector_title": "Sprache",
   "language_selector_description": "Anwendungssprache ändern",
   "select_language": "Sprache auswählen",
-  
+
+  "theme_selector_title": "Design",
+  "theme_selector_description": "Erscheinungsbild der Anwendung ändern",
+  "select_theme": "Design auswählen",
+  "theme_lachispa": "LaChispa",
+  "theme_light": "Hell",
+  "theme_dark": "Dunkel",
+
+  "copy_invoice_button": "Rechnung kopieren",
+  "invoice_copied_message": "Rechnung in die Zwischenablage kopiert",
+
+
   "no_wallet_error": "Keine primäre Wallet verfügbar",
   "invalid_session_error": "Keine aktive Sitzung",
   "send_error_prefix": "Fehler beim Verarbeiten des Sendens: ",
@@ -212,6 +236,25 @@
   "lightning_address_delete": "Löschen",
   "lightning_address_is_default": "Ist Standard",
   "lightning_address_set_default": "Als Standard festlegen",
+  "lightning_address_delete_title": "Lightning-Adresse löschen",
+  "lightning_address_delete_confirm": "Möchten Sie {address} wirklich löschen?",
+  "@lightning_address_delete_confirm": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "lightning_address_created_success": "Lightning-Adresse erstellt",
+  "lightning_address_deleted_success": "Lightning-Adresse gelöscht",
+  "lightning_address_set_default_success": "{address} ist jetzt Ihre Standard-Lightning-Adresse",
+  "@lightning_address_set_default_success": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
   "create_new_wallet_help": "Neue Wallet erstellen",
   "create_wallet_short_description": "Um eine neue Wallet zu erstellen, greifen Sie über den Browser auf Ihr LNBits-Panel zu und verwenden Sie die Option \"Wallet erstellen\".",
   "create_wallet_detailed_instructions": "Um eine neue Wallet zu erstellen:\\n\\n1. Öffnen Sie Ihren Webbrowser\\n2. Greifen Sie auf Ihren LNBits-Server zu\\n3. Melden Sie sich mit Ihrem Konto an\\n4. Suchen Sie nach der Schaltfläche \"Wallet erstellen\"\\n5. Vergeben Sie einen Namen für Ihre neue Wallet\\n6. Kehren Sie zu LaChispa zurück und aktualisieren Sie Ihre Wallets\\n\\nDie neue Wallet wird automatisch in Ihrer Liste angezeigt.",

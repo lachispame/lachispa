@@ -1017,7 +1017,7 @@ abstract class AppLocalizations {
   /// No description provided for @invoice_copied_message.
   ///
   /// In es, this message translates to:
-  /// **'Factura copiada'**
+  /// **'Factura copiada al portapapeles'**
   String get invoice_copied_message;
 
   /// No description provided for @decimal_button.
@@ -1379,12 +1379,6 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Copiar factura'**
   String get copy_invoice_button;
-
-  /// No description provided for @invoice_copied_message.
-  ///
-  /// In es, this message translates to:
-  /// **'Factura copiada al portapapeles'**
-  String get invoice_copied_message;
 
   /// No description provided for @no_wallet_error.
   ///

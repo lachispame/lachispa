@@ -3,6 +3,10 @@
   
   "welcome_title": "Bem-vindo ao La Chispa!",
   "welcome_subtitle": "Lightning para todos",
+  "welcome_hero_prefix": "Paga com",
+  "welcome_hero_tagline": "Lightning, no teu bolso.",
+  "welcome_server_label": "SERVIDOR",
+  "welcome_server_change": "Mudar",
   "get_started_button": "Começar",
   "tap_to_start_hint": "Tão fácil como acender uma faísca",
   
@@ -139,6 +143,15 @@
   "lightning_payment_pending": "Pagamento Lightning Address pendente - Fatura Hold detetada",
   "lightning_payment_success": "Pagamento Lightning Address concluído com sucesso!",
   "insufficient_balance_error": "Saldo insuficiente para efetuar o pagamento",
+  "payment_error_fee_reserve_required": "Saldo insuficiente para cobrir taxas de roteamento",
+  "payment_error_already_paid": "Esta fatura já foi paga",
+  "payment_error_still_pending": "Já existe um pagamento em andamento para esta fatura",
+  "payment_error_route_not_found": "Nenhuma rota encontrada para este pagamento",
+  "payment_error_payment_not_found": "Pagamento não encontrado nesta carteira",
+  "payment_error_lnurl_generic": "Erro LNURL: {detail}",
+  "payment_error_auth": "Erro de autenticação. Verifique as suas credenciais.",
+  "payment_error_server": "Erro do servidor Lightning. Tente de novo.",
+  "payment_error_unknown": "Erro desconhecido ({code})",
   
   "confirm_payment_title": "Confirmar Pagamento",
   "invoice_description_label": "Descrição",
@@ -168,7 +181,18 @@
   "language_selector_title": "Idioma",
   "language_selector_description": "Alterar idioma da aplicação",
   "select_language": "Selecionar idioma",
-  
+
+  "theme_selector_title": "Tema",
+  "theme_selector_description": "Alterar aparência da aplicação",
+  "select_theme": "Selecionar tema",
+  "theme_lachispa": "LaChispa",
+  "theme_light": "Claro",
+  "theme_dark": "Escuro",
+
+  "copy_invoice_button": "Copiar fatura",
+  "invoice_copied_message": "Fatura copiada para a área de transferência",
+
+
   "no_wallet_error": "Sem carteira principal disponível",
   "invalid_session_error": "Sem sessão ativa",
   "send_error_prefix": "Erro ao processar envio: ",
@@ -212,6 +236,25 @@
   "lightning_address_delete": "Eliminar",
   "lightning_address_is_default": "É por defeito",
   "lightning_address_set_default": "Definir como por defeito",
+  "lightning_address_delete_title": "Eliminar endereço Lightning",
+  "lightning_address_delete_confirm": "Tem a certeza de que deseja eliminar {address}?",
+  "@lightning_address_delete_confirm": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "lightning_address_created_success": "Endereço Lightning criado",
+  "lightning_address_deleted_success": "Endereço Lightning eliminado",
+  "lightning_address_set_default_success": "{address} é agora o seu endereço Lightning por defeito",
+  "@lightning_address_set_default_success": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
   "create_new_wallet_help": "Criar nova carteira",
   "create_wallet_short_description": "Para criar uma nova carteira, aceda ao seu painel LNBits pelo navegador e use a opção \\\"Criar carteira\\\".",
   "create_wallet_detailed_instructions": "Para criar uma nova carteira:\\n\\n1. Abra o seu navegador web\\n2. Aceda ao seu servidor LNBits\\n3. Inicie sessão com a sua conta\\n4. Procure o botão \\\"Criar carteira\\\"\\n5. Atribua um nome à sua nova carteira\\n6. Regresse ao LaChispa e atualize as suas carteiras\\n\\nA nova carteira aparecerá automaticamente na sua lista.",

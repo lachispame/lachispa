@@ -3,6 +3,10 @@
   
   "welcome_title": "¡Bienvenido a La Chispa!",
   "welcome_subtitle": "Lightning para todos",
+  "welcome_hero_prefix": "Paga con",
+  "welcome_hero_tagline": "Lightning, en tu bolsillo.",
+  "welcome_server_label": "SERVIDOR",
+  "welcome_server_change": "Cambiar",
   "get_started_button": "Comenzar",
   "tap_to_start_hint": "Tan fácil como encender una chispa",
   
@@ -193,6 +197,15 @@
   "lightning_payment_pending": "Pago Lightning Address pendiente - Factura Hold detectada",
   "lightning_payment_success": "Pago Lightning Address completado exitosamente!",
   "insufficient_balance_error": "Saldo insuficiente para realizar el pago",
+  "payment_error_fee_reserve_required": "Balance insuficiente para cubrir tarifas de ruta",
+  "payment_error_already_paid": "Esta factura ya fue pagada",
+  "payment_error_still_pending": "Ya hay un pago en proceso para esta factura",
+  "payment_error_route_not_found": "No se encontró ruta para este pago",
+  "payment_error_payment_not_found": "El pago no existe en esta billetera",
+  "payment_error_lnurl_generic": "Error LNURL: {detail}",
+  "payment_error_auth": "Error de autenticación. Verifica tus credenciales.",
+  "payment_error_server": "Error del servidor Lightning. Intenta de nuevo.",
+  "payment_error_unknown": "Error desconocido ({code})",
   
   "confirm_payment_title": "Confirmar Pago",
   "invoice_description_label": "Descripción",
@@ -229,7 +242,18 @@
   "language_selector_title": "Idioma",
   "language_selector_description": "Cambiar idioma de la aplicación",
   "select_language": "Seleccionar idioma",
-  
+
+  "theme_selector_title": "Tema",
+  "theme_selector_description": "Cambiar apariencia de la aplicación",
+  "select_theme": "Seleccionar tema",
+  "theme_lachispa": "LaChispa",
+  "theme_light": "Claro",
+  "theme_dark": "Oscuro",
+
+  "copy_invoice_button": "Copiar factura",
+  "invoice_copied_message": "Factura copiada al portapapeles",
+
+
   "no_wallet_error": "Sin billetera principal disponible",
   "invalid_session_error": "Sin sesión activa",
   "send_error_prefix": "Error procesando el envío: ",
@@ -273,6 +297,25 @@
   "lightning_address_delete": "Eliminar",
   "lightning_address_is_default": "Es por defecto",
   "lightning_address_set_default": "Establecer como por defecto",
+  "lightning_address_delete_title": "Eliminar dirección Lightning",
+  "lightning_address_delete_confirm": "¿Seguro que quieres eliminar {address}?",
+  "@lightning_address_delete_confirm": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
+  "lightning_address_created_success": "Dirección Lightning creada",
+  "lightning_address_deleted_success": "Dirección Lightning eliminada",
+  "lightning_address_set_default_success": "{address} es ahora tu dirección Lightning por defecto",
+  "@lightning_address_set_default_success": {
+    "placeholders": {
+      "address": {
+        "type": "String"
+      }
+    }
+  },
   "create_new_wallet_help": "Crear nueva billetera",
   "create_wallet_short_description": "Para crear una nueva billetera, accede a tu panel LNBits desde el navegador y usa la opción \"Crear billetera\".",
   "create_wallet_detailed_instructions": "Para crear una nueva billetera:\\n\\n1. Abre tu navegador web\\n2. Accede a tu servidor LNBits\\n3. Inicia sesión con tu cuenta\\n4. Busca el botón \"Crear billetera\"\\n5. Asigna un nombre a tu nueva billetera\\n6. Regresa a LaChispa y actualiza tus billeteras\\n\\nLa nueva billetera aparecerá automáticamente en tu lista.",
