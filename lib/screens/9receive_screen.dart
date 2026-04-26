@@ -682,7 +682,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             Icon(Icons.check_circle, color: context.tokens.textPrimary, size: 20),
             const SizedBox(width: 12),
             Text(
-              AppLocalizations.of(context)!.copy_button,
+              AppLocalizations.of(context)!.invoice_copied_message,
               style: const TextStyle(fontWeight: FontWeight.w500),
             ),
           ],
