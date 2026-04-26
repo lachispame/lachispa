@@ -492,6 +492,12 @@ abstract class AppLocalizations {
   /// **'Error cargando transacciones: '**
   String get loading_transactions_error_prefix;
 
+  /// No description provided for @create_lnaddress_label.
+  ///
+  /// In es, this message translates to:
+  /// **'o también puedes crear una:'**
+  String get create_lnaddress_label;
+
   /// No description provided for @lightning_address_title.
   ///
   /// In es, this message translates to:
@@ -1859,6 +1865,23 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'{count, plural, =1{1 moneda} other{{count} monedas}}'**
   String currency_count(int count);
+  /// No description provided for @clear_invoice_button.
+  ///
+  /// In es, this message translates to:
+  /// **'Limpiar factura'**
+  String get clear_invoice_button;
+
+  /// No description provided for @invoice_cleared_message.
+  ///
+  /// In es, this message translates to:
+  /// **'Factura limpiada'**
+  String get invoice_cleared_message;
+
+  /// No description provided for @invoice_monitoring_timeout_message.
+  ///
+  /// In es, this message translates to:
+  /// **'Monitoreo detenido. Genera una nueva factura.'**
+  String get invoice_monitoring_timeout_message;
 }
 
 class _AppLocalizationsDelegate

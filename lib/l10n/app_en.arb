@@ -71,7 +71,8 @@
   "pending_label": "Pending",
   "failed_label": "Failed",
   "loading_transactions_error_prefix": "Error loading transactions: ",
-  
+
+  "create_lnaddress_label": "or create a:",
   "lightning_address_title": "Lightning Address",
   "loading_address_text": "Loading address...",
   "your_lightning_address_label": "Your Lightning address:",
@@ -397,4 +398,8 @@
       }
     }
   }
+
+  "clear_invoice_button": "Clear invoice",
+  "invoice_cleared_message": "Invoice cleared",
+  "invoice_monitoring_timeout_message": "Monitoring stopped. Generate a new invoice."
 }

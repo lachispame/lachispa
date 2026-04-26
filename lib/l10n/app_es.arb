@@ -72,6 +72,7 @@
   "failed_label": "Fallida",
   "loading_transactions_error_prefix": "Error cargando transacciones: ",
   
+  "create_lnaddress_label": "o también puedes crear una:",
   "lightning_address_title": "Dirección Lightning",
   "loading_address_text": "Cargando dirección...",
   "your_lightning_address_label": "Tu dirección Lightning:",
@@ -105,7 +106,7 @@
   "generating_button": "GENERANDO...",
   "invoice_generated_message": "Factura generada correctamente",
   "invoice_generation_error_prefix": "Error generando factura: ",
-  
+
   "send_title": "Enviar",
   "paste_invoice_placeholder": "Pega factura, LNURL o dirección",
   "paste_button": "Pegar",
@@ -382,4 +383,8 @@
       }
     }
   }
+
+  "clear_invoice_button": "Limpiar factura",
+  "invoice_cleared_message": "Factura limpiada",
+  "invoice_monitoring_timeout_message": "Monitoreo detenido. Genera una nueva factura."
 }

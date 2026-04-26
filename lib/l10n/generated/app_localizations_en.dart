@@ -203,6 +203,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Error loading transactions: ';
 
   @override
+  String get create_lnaddress_label => 'or create a:';
+
+  @override
   String get lightning_address_title => 'Lightning Address';
 
   @override
@@ -961,4 +964,12 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+  String get clear_invoice_button => 'Clear invoice';
+
+  @override
+  String get invoice_cleared_message => 'Invoice cleared';
+
+  @override
+  String get invoice_monitoring_timeout_message =>
+      'Monitoring stopped. Generate a new invoice.';
 }

@@ -71,7 +71,8 @@
   "pending_label": "In attesa",
   "failed_label": "Fallito",
   "loading_transactions_error_prefix": "Errore nel caricamento delle transazioni: ",
-  
+
+  "create_lnaddress_label": "oppure crea un indirizzo:",
   "lightning_address_title": "Indirizzo Lightning",
   "loading_address_text": "Caricamento indirizzo...",
   "your_lightning_address_label": "Il tuo indirizzo Lightning:",
@@ -382,4 +383,8 @@
       }
     }
   }
+
+  "clear_invoice_button": "Cancella fattura",
+  "invoice_cleared_message": "Fattura cancellata",
+  "invoice_monitoring_timeout_message": "Monitoraggio interrotto. Genera una nuova fattura."
 }

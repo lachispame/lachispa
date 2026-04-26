@@ -51,6 +51,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
   // Timer to verify invoice payment
   Timer? _invoicePaymentTimer;
 
+  // Timer that stops invoice monitoring after a long idle window
+  Timer? _invoicePaymentTimeoutTimer;
+
   @override
   void initState() {
     super.initState();
@@ -162,6 +165,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     _invoiceService.dispose();
     _yadioService.dispose();
     _invoicePaymentTimer?.cancel();
+    _invoicePaymentTimeoutTimer?.cancel();
     super.dispose();
   }
 
@@ -333,9 +337,12 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     }
     
     if (defaultAddress == null) {
+      if (_generatedInvoice != null) {
+        return _buildNoAddressInvoiceCard();
+      }
       return _buildNoAddressState();
     }
-    
+
     // Show Lightning Address with QR
     return _buildLightningAddressCard(defaultAddress, walletProvider);
   }
@@ -491,14 +498,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                 ],
               ),
               child: ElevatedButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LNAddressScreen(),
-                    ),
-                  );
-                },
+                onPressed: _showRequestAmountModal,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
                   shadowColor: Colors.transparent,
@@ -507,19 +507,192 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
-                icon: Icon(Icons.add, color: context.tokens.textPrimary),
+                icon: Icon(Icons.request_quote, color: context.tokens.textPrimary),
                 label: Text(
-                  AppLocalizations.of(context)!.lightning_address_title,
+                  AppLocalizations.of(context)!.amount_sats_label,
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                                        color: context.tokens.textPrimary,
+                    color: context.tokens.textPrimary,
                   ),
                 ),
               ),
             ),
           ),
+          const SizedBox(height: 16),
+          Text(
+            AppLocalizations.of(context)!.create_lnaddress_label,
+            style: TextStyle(
+              color: context.tokens.textPrimary.withValues(alpha: 0.6),
+              fontSize: 14,
+            ),
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LNAddressScreen(),
+                  ),
+                );
+              },
+              style: OutlinedButton.styleFrom(
+                foregroundColor: context.tokens.accentForeground,
+                side: BorderSide(
+                  color: context.tokens.textTertiary,
+                  width: 1.5,
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+              icon: const Icon(Icons.add, size: 20),
+              label: Text(
+                AppLocalizations.of(context)!.lightning_address_title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildNoAddressInvoiceCard() {
+    final invoice = _generatedInvoice!;
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: context.tokens.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: context.tokens.outline,
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Center(child: _buildInvoiceQR(invoice)),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            decoration: BoxDecoration(
+              color: context.tokens.accentSolid.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: context.tokens.accentSolid.withValues(alpha: 0.2),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.bolt, color: context.tokens.accentSolid, size: 22),
+                const SizedBox(width: 8),
+                Text(
+                  invoice.formattedAmount,
+                  style: TextStyle(
+                    color: context.tokens.textPrimary,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (invoice.memo.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(
+              invoice.memo,
+              style: TextStyle(
+                color: context.tokens.textPrimary.withValues(alpha: 0.7),
+                fontSize: 14,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+          const SizedBox(height: 16),
+          _buildCopyInvoiceButton(),
+          const SizedBox(height: 12),
+          _buildClearInvoiceButton(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCopyInvoiceButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [context.tokens.accentSolid, context.tokens.accentSolid],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: context.tokens.accentSolid.withValues(alpha: 0.3),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
+            ),
+          ],
+        ),
+        child: ElevatedButton.icon(
+          onPressed: _copyInvoice,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
+          icon: Icon(Icons.copy, color: context.tokens.textPrimary, size: 20),
+          label: Text(
+            AppLocalizations.of(context)!.copy_button,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: context.tokens.textPrimary,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _copyInvoice() async {
+    final invoice = _generatedInvoice;
+    if (invoice == null) return;
+    await Clipboard.setData(ClipboardData(text: invoice.paymentRequest));
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(Icons.check_circle, color: context.tokens.textPrimary, size: 20),
+            const SizedBox(width: 12),
+            Text(
+              AppLocalizations.of(context)!.invoice_copied_message,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+        backgroundColor: context.tokens.accentSolid,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        duration: const Duration(seconds: 2),
       ),
     );
   }
@@ -970,7 +1143,8 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         onPressed: () {
           // Cancel monitoring of current invoice
           _invoicePaymentTimer?.cancel();
-          
+          _invoicePaymentTimeoutTimer?.cancel();
+
           setState(() {
             _generatedInvoice = null;
           });
@@ -978,10 +1152,10 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             SnackBar(
               content: Row(
                 children: [
-                  Icon(Icons.refresh, color: context.tokens.textPrimary, size: 20),
+                  Icon(Icons.check_circle, color: context.tokens.textPrimary, size: 20),
                   SizedBox(width: 12),
                   Text(
-                    AppLocalizations.of(context)!.lightning_address_title,
+                    AppLocalizations.of(context)!.invoice_cleared_message,
                     style: TextStyle(
                                             fontWeight: FontWeight.w500,
                     ),
@@ -1008,9 +1182,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             borderRadius: BorderRadius.circular(16),
           ),
         ),
-        icon: const Icon(Icons.refresh, size: 20),
+        icon: const Icon(Icons.close, size: 20),
         label: Text(
-          AppLocalizations.of(context)!.receive_title,
+          AppLocalizations.of(context)!.clear_invoice_button,
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
@@ -1417,10 +1591,11 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         finalMemo = '${amount.toStringAsFixed(amount.truncateToDouble() == amount ? 0 : 2)} $_selectedCurrency';
       }
 
-      // Generate invoice with amount in satoshis and original fiat information
+      // Generate invoice with amount in satoshis and original fiat information.
+      // Receiving only needs LNbits invoice key (read+create), not admin.
       final invoice = await _invoiceService.createInvoice(
         serverUrl: serverUrl,
-        adminKey: wallet.adminKey,
+        adminKey: wallet.inKey,
         amount: amountInSats,
         memo: finalMemo,
         comment: _noteController.text.trim().isNotEmpty ? _noteController.text.trim() : null,
@@ -1581,22 +1756,23 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
 
   void _startInvoicePaymentMonitoring(LightningInvoice invoice, WalletInfo wallet, String serverUrl) {
     print('[RECEIVE_SCREEN] Iniciando monitoreo de pago para factura: ${invoice.paymentHash}');
-    
-    // Cancel previous timer if it exists
+
+    // Cancel previous timers if they exist
     _invoicePaymentTimer?.cancel();
-    
-    // Check every 2 seconds if the invoice was paid
-    _invoicePaymentTimer = Timer.periodic(const Duration(seconds: 2), (timer) async {
+    _invoicePaymentTimeoutTimer?.cancel();
+
+    // Check every 5 seconds if the invoice was paid (gentle on rate-limited servers)
+    _invoicePaymentTimer = Timer.periodic(const Duration(seconds: 5), (timer) async {
       if (!mounted) {
         timer.cancel();
         return;
       }
-      
+
       try {
-        // Check invoice status
+        // Check invoice status — read-only operation, invoice key is enough
         final isPaid = await _invoiceService.checkInvoiceStatus(
           serverUrl: serverUrl,
-          adminKey: wallet.adminKey,
+          adminKey: wallet.inKey,
           paymentHash: invoice.paymentHash,
         );
         
@@ -1647,10 +1823,18 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       }
     });
     
-    // Auto-cancel after 10 minutes to avoid infinite monitoring
-    Timer(const Duration(minutes: 10), () {
+    // Auto-cancel after 10 minutes to avoid infinite monitoring.
+    // Notify the user and clear the QR so they can regenerate a fresh invoice.
+    _invoicePaymentTimeoutTimer = Timer(const Duration(minutes: 10), () {
       _invoicePaymentTimer?.cancel();
       print('[RECEIVE_SCREEN] Timeout: Deteniendo monitoreo de factura');
+      if (!mounted) return;
+      setState(() {
+        _generatedInvoice = null;
+      });
+      _showInfoSnackBar(
+        AppLocalizations.of(context)!.invoice_monitoring_timeout_message,
+      );
     });
   }
 

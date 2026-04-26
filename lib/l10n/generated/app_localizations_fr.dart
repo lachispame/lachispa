@@ -208,6 +208,9 @@ class AppLocalizationsFr extends AppLocalizations {
       'Erreur lors du chargement des transactions : ';
 
   @override
+  String get create_lnaddress_label => 'ou vous pouvez aussi créer un :';
+
+  @override
   String get lightning_address_title => 'Adresse Lightning';
 
   @override
@@ -993,4 +996,12 @@ class AppLocalizationsFr extends AppLocalizations {
     );
     return '$_temp0';
   }
+  String get clear_invoice_button => 'Effacer la facture';
+
+  @override
+  String get invoice_cleared_message => 'Facture effacée';
+
+  @override
+  String get invoice_monitoring_timeout_message =>
+      'Surveillance arrêtée. Générez une nouvelle facture.';
 }

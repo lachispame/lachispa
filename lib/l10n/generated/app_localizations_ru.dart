@@ -204,6 +204,9 @@ class AppLocalizationsRu extends AppLocalizations {
       'Ошибка загрузки транзакций: ';
 
   @override
+  String get create_lnaddress_label => 'или вы также можете создать:';
+
+  @override
   String get lightning_address_title => 'Lightning адрес';
 
   @override
@@ -967,4 +970,12 @@ class AppLocalizationsRu extends AppLocalizations {
     );
     return '$_temp0';
   }
+  String get clear_invoice_button => 'Очистить счёт';
+
+  @override
+  String get invoice_cleared_message => 'Счёт очищен';
+
+  @override
+  String get invoice_monitoring_timeout_message =>
+      'Мониторинг остановлен. Создайте новый счёт.';
 }

@@ -71,7 +71,8 @@
   "pending_label": "En attente",
   "failed_label": "Échoué",
   "loading_transactions_error_prefix": "Erreur lors du chargement des transactions : ",
-  
+
+  "create_lnaddress_label": "ou vous pouvez aussi créer un :",
   "lightning_address_title": "Adresse Lightning",
   "loading_address_text": "Chargement de l'adresse...",
   "your_lightning_address_label": "Votre adresse Lightning :",
@@ -382,4 +383,8 @@
       }
     }
   }
+
+  "clear_invoice_button": "Effacer la facture",
+  "invoice_cleared_message": "Facture effacée",
+  "invoice_monitoring_timeout_message": "Surveillance arrêtée. Générez une nouvelle facture."
 }
