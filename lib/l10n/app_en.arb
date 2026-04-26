@@ -3,10 +3,6 @@
   
   "welcome_title": "Welcome to La Chispa!",
   "welcome_subtitle": "Lightning for everyone",
-  "welcome_hero_prefix": "Pay with",
-  "welcome_hero_tagline": "Lightning, in your pocket.",
-  "welcome_server_label": "SERVER",
-  "welcome_server_change": "Change",
   "get_started_button": "Get Started",
   "tap_to_start_hint": "As easy as lighting a spark",
   
@@ -197,25 +193,6 @@
   "lightning_payment_pending": "Lightning Address payment pending - Hold invoice detected",
   "lightning_payment_success": "Lightning Address payment completed successfully!",
   "insufficient_balance_error": "Insufficient balance to make payment",
-  "payment_error_fee_reserve_required": "Insufficient balance to cover routing fees",
-  "payment_error_already_paid": "This invoice has already been paid",
-  "payment_error_still_pending": "A payment for this invoice is already in progress",
-  "payment_error_route_not_found": "No route found for this payment",
-  "payment_error_payment_not_found": "Payment not found in this wallet",
-  "payment_error_lnurl_generic": "LNURL error: {detail}",
-  "@payment_error_lnurl_generic": {
-    "placeholders": {
-      "detail": { "type": "Object" }
-    }
-  },
-  "payment_error_auth": "Authentication error. Check your credentials.",
-  "payment_error_server": "Lightning server error. Try again.",
-  "payment_error_unknown": "Unknown error ({code})",
-  "@payment_error_unknown": {
-    "placeholders": {
-      "code": { "type": "Object" }
-    }
-  },
   
   "confirm_payment_title": "Confirm Payment",
   "invoice_description_label": "Description",
@@ -255,18 +232,7 @@
   "language_selector_title": "Language",
   "language_selector_description": "Change application language",
   "select_language": "Select language",
-
-  "theme_selector_title": "Theme",
-  "theme_selector_description": "Change application appearance",
-  "select_theme": "Select theme",
-  "theme_lachispa": "LaChispa",
-  "theme_light": "Light",
-  "theme_dark": "Dark",
-
-  "copy_invoice_button": "Copy invoice",
-  "invoice_copied_message": "Invoice copied to clipboard",
-
-
+  
   "no_wallet_error": "No primary wallet available",
   "invalid_session_error": "No active session",
   "send_error_prefix": "Error processing send: ",
@@ -310,25 +276,6 @@
   "lightning_address_delete": "Delete",
   "lightning_address_is_default": "Is default",
   "lightning_address_set_default": "Set as default",
-  "lightning_address_delete_title": "Delete Lightning address",
-  "lightning_address_delete_confirm": "Are you sure you want to delete {address}?",
-  "@lightning_address_delete_confirm": {
-    "placeholders": {
-      "address": {
-        "type": "String"
-      }
-    }
-  },
-  "lightning_address_created_success": "Lightning address created",
-  "lightning_address_deleted_success": "Lightning address deleted",
-  "lightning_address_set_default_success": "{address} is now your default Lightning address",
-  "@lightning_address_set_default_success": {
-    "placeholders": {
-      "address": {
-        "type": "String"
-      }
-    }
-  },
   "create_new_wallet_help": "Create new wallet",
   "create_wallet_short_description": "To create a new wallet, access your LNBits panel from the browser and use the \"Create wallet\" option.",
   "create_wallet_detailed_instructions": "To create a new wallet:\\n\\n1. Open your web browser\\n2. Access your LNBits server\\n3. Log in with your account\\n4. Look for the \"Create wallet\" button\\n5. Assign a name to your new wallet\\n6. Return to LaChispa and refresh your wallets\\n\\nThe new wallet will appear automatically in your list.",

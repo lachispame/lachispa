@@ -3,10 +3,6 @@
   
   "welcome_title": "Benvenuto a La Chispa!",
   "welcome_subtitle": "Lightning per tutti",
-  "welcome_hero_prefix": "Paga con",
-  "welcome_hero_tagline": "Lightning, in tasca.",
-  "welcome_server_label": "SERVER",
-  "welcome_server_change": "Cambia",
   "get_started_button": "Iniziamo",
   "tap_to_start_hint": "Semplice come accendere una scintilla",
   
@@ -143,15 +139,6 @@
   "lightning_payment_pending": "Pagamento Lightning Address in attesa - Fattura di blocco rilevata",
   "lightning_payment_success": "Pagamento Lightning Address completato con successo!",
   "insufficient_balance_error": "Saldo insufficiente per effettuare il pagamento",
-  "payment_error_fee_reserve_required": "Saldo insufficiente per coprire le tariffe di routing",
-  "payment_error_already_paid": "Questa fattura è già stata pagata",
-  "payment_error_still_pending": "Un pagamento per questa fattura è già in corso",
-  "payment_error_route_not_found": "Nessuna rotta trovata per questo pagamento",
-  "payment_error_payment_not_found": "Pagamento non trovato in questo portafoglio",
-  "payment_error_lnurl_generic": "Errore LNURL: {detail}",
-  "payment_error_auth": "Errore di autenticazione. Controlla le credenziali.",
-  "payment_error_server": "Errore del server Lightning. Riprova.",
-  "payment_error_unknown": "Errore sconosciuto ({code})",
   
   "confirm_payment_title": "Conferma pagamento",
   "invoice_description_label": "Descrizione",
@@ -181,18 +168,7 @@
   "language_selector_title": "Lingua",
   "language_selector_description": "Cambia lingua dell'applicazione",
   "select_language": "Seleziona lingua",
-
-  "theme_selector_title": "Tema",
-  "theme_selector_description": "Cambia aspetto dell'applicazione",
-  "select_theme": "Seleziona tema",
-  "theme_lachispa": "LaChispa",
-  "theme_light": "Chiaro",
-  "theme_dark": "Scuro",
-
-  "copy_invoice_button": "Copia fattura",
-  "invoice_copied_message": "Fattura copiata negli appunti",
-
-
+  
   "no_wallet_error": "Nessun portafoglio principale disponibile",
   "invalid_session_error": "Nessuna sessione attiva",
   "send_error_prefix": "Errore nell'elaborazione dell'invio: ",
@@ -236,25 +212,6 @@
   "lightning_address_delete": "Elimina",
   "lightning_address_is_default": "È predefinito",
   "lightning_address_set_default": "Imposta come predefinito",
-  "lightning_address_delete_title": "Elimina indirizzo Lightning",
-  "lightning_address_delete_confirm": "Sei sicuro di voler eliminare {address}?",
-  "@lightning_address_delete_confirm": {
-    "placeholders": {
-      "address": {
-        "type": "String"
-      }
-    }
-  },
-  "lightning_address_created_success": "Indirizzo Lightning creato",
-  "lightning_address_deleted_success": "Indirizzo Lightning eliminato",
-  "lightning_address_set_default_success": "{address} è ora il tuo indirizzo Lightning predefinito",
-  "@lightning_address_set_default_success": {
-    "placeholders": {
-      "address": {
-        "type": "String"
-      }
-    }
-  },
   "create_new_wallet_help": "Crea nuovo portafoglio",
   "create_wallet_short_description": "Per creare un nuovo portafoglio, accedi al tuo pannello LNBits dal browser e usa l'opzione \"Crea portafoglio\".",
   "create_wallet_detailed_instructions": "Per creare un nuovo portafoglio:\\n\\n1. Apri il tuo browser web\\n2. Accedi al tuo server LNBits\\n3. Effettua l'accesso con il tuo account\\n4. Cerca il pulsante \"Crea portafoglio\"\\n5. Assegna un nome al tuo nuovo portafoglio\\n6. Torna a LaChispa e aggiorna i tuoi portafogli\\n\\nIl nuovo portafoglio apparirà automaticamente nella tua lista.",

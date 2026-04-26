@@ -3,10 +3,6 @@
   
   "welcome_title": "Добро пожаловать в La Chispa!",
   "welcome_subtitle": "Lightning для всех",
-  "welcome_hero_prefix": "Плати через",
-  "welcome_hero_tagline": "Lightning, в твоём кармане.",
-  "welcome_server_label": "СЕРВЕР",
-  "welcome_server_change": "Сменить",
   "get_started_button": "Начать",
   "tap_to_start_hint": "Просто как зажечь искру",
   
@@ -143,15 +139,6 @@
   "lightning_payment_pending": "Lightning Address платеж ожидает - Обнаружен счет-холд",
   "lightning_payment_success": "Lightning Address платеж успешно завершен!",
   "insufficient_balance_error": "Недостаточно средств для совершения платежа",
-  "payment_error_fee_reserve_required": "Недостаточно средств для покрытия комиссий маршрутизации",
-  "payment_error_already_paid": "Этот счёт уже оплачен",
-  "payment_error_still_pending": "Платёж по этому счёту уже выполняется",
-  "payment_error_route_not_found": "Маршрут для платежа не найден",
-  "payment_error_payment_not_found": "Платёж не найден в этом кошельке",
-  "payment_error_lnurl_generic": "Ошибка LNURL: {detail}",
-  "payment_error_auth": "Ошибка аутентификации. Проверьте учётные данные.",
-  "payment_error_server": "Ошибка сервера Lightning. Попробуйте ещё раз.",
-  "payment_error_unknown": "Неизвестная ошибка ({code})",
   
   "confirm_payment_title": "Подтвердить платеж",
   "invoice_description_label": "Описание",
@@ -181,18 +168,7 @@
   "language_selector_title": "Язык",
   "language_selector_description": "Изменить язык приложения",
   "select_language": "Выбрать язык",
-
-  "theme_selector_title": "Тема",
-  "theme_selector_description": "Изменить оформление приложения",
-  "select_theme": "Выбрать тему",
-  "theme_lachispa": "LaChispa",
-  "theme_light": "Светлая",
-  "theme_dark": "Тёмная",
-
-  "copy_invoice_button": "Копировать счёт",
-  "invoice_copied_message": "Счёт скопирован в буфер обмена",
-
-
+  
   "no_wallet_error": "Нет доступного основного кошелька",
   "invalid_session_error": "Нет активной сессии",
   "send_error_prefix": "Ошибка обработки отправки: ",
@@ -236,25 +212,6 @@
   "lightning_address_delete": "Удалить",
   "lightning_address_is_default": "По умолчанию",
   "lightning_address_set_default": "Установить по умолчанию",
-  "lightning_address_delete_title": "Удалить Lightning-адрес",
-  "lightning_address_delete_confirm": "Вы уверены, что хотите удалить {address}?",
-  "@lightning_address_delete_confirm": {
-    "placeholders": {
-      "address": {
-        "type": "String"
-      }
-    }
-  },
-  "lightning_address_created_success": "Lightning-адрес создан",
-  "lightning_address_deleted_success": "Lightning-адрес удалён",
-  "lightning_address_set_default_success": "{address} теперь ваш Lightning-адрес по умолчанию",
-  "@lightning_address_set_default_success": {
-    "placeholders": {
-      "address": {
-        "type": "String"
-      }
-    }
-  },
   "create_new_wallet_help": "Создать новый кошелек",
   "create_wallet_short_description": "Чтобы создать новый кошелек, войдите в панель LNBits через браузер и используйте опцию \\\"Создать кошелек\\\".",
   "create_wallet_detailed_instructions": "Чтобы создать новый кошелек:\\\\n\\\\n1. Откройте веб-браузер\\\\n2. Войдите на ваш сервер LNBits\\\\n3. Войдите в свой аккаунт\\\\n4. Найдите кнопку \\\"Создать кошелек\\\"\\\\n5. Дайте имя вашему новому кошельку\\\\n6. Вернитесь в LaChispa и обновите ваши кошельки\\\\n\\\\nНовый кошелек автоматически появится в вашем списке.",
