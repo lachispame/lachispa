@@ -207,6 +207,9 @@ class AppLocalizationsDe extends AppLocalizations {
       'Fehler beim Laden der Transaktionen: ';
 
   @override
+  String get create_lnaddress_label => 'oder Sie können auch eine erstellen:';
+
+  @override
   String get lightning_address_title => 'Lightning-Adresse';
 
   @override
@@ -263,6 +266,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get receive_title => 'Empfangen';
 
   @override
+  String get create_invoice_label =>
+      'Erstellen Sie eine Rechnung, um Zahlungen direkt in Ihrer Wallet zu erhalten';
+
+  @override
   String get amount_sats_label => 'Angeforderten Betrag';
 
   @override
@@ -301,6 +308,10 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get invoice_generation_error_prefix =>
       'Fehler beim Erstellen der Rechnung: ';
+
+  @override
+  String get invoice_empty_response_error =>
+      'Rechnung konnte nicht erstellt werden';
 
   @override
   String get send_title => 'Senden';
@@ -477,6 +488,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get clear_button => 'C';
 
   @override
+  String get invoice_cleared_message => 'Rechnung gelöscht';
+
+  @override
+  String get clear_invoice_button => 'Rechnung löschen';
+
+  @override
+  String get invoice_copied_message => 'Rechnung in die Zwischenablage kopiert';
+
+  @override
   String get decimal_button => '.';
 
   @override
@@ -623,6 +643,11 @@ class AppLocalizationsDe extends AppLocalizations {
       'Rechnung ohne Betrag wird nicht unterstützt. Bitte fordern Sie eine Rechnung mit einem bestimmten Betrag an.';
 
   @override
+  String invoice_amount_label(Object amount) {
+    return 'Rechnung: $amount';
+  }
+
+  @override
   String payment_sent_status(Object status) {
     return 'Zahlung gesendet - Status: $status';
   }
@@ -676,9 +701,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get copy_invoice_button => 'Rechnung kopieren';
-
-  @override
-  String get invoice_copied_message => 'Rechnung in die Zwischenablage kopiert';
 
   @override
   String get no_wallet_error => 'Keine primäre Wallet verfügbar';
@@ -952,4 +974,39 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get deep_link_login_required_message =>
       'Sie müssen sich in Ihr LaChispa-Konto einloggen, um diese Zahlung zu verarbeiten.';
+
+  @override
+  String get invoice_key_qr_title => 'Rechnungsschlüssel QR';
+
+  @override
+  String get invoice_key_qr_description =>
+      'Verwenden Sie diesen QR-Code mit LaChispaPOS oder anderen Lightning-Apps, um Zahlungen zu empfangen, ohne Ihren Admin-Schlüssel preiszugeben.';
+
+  @override
+  String get invoice_key_qr_subtitle => 'QR für andere Apps anzeigen';
+
+  @override
+  String get copy_invoice_key => 'Schlüssel kopieren';
+
+  @override
+  String get invoice_key_copied =>
+      'Rechnungsschlüssel in die Zwischenablage kopiert';
+
+  @override
+  String get invoice_key_unavailable_title => 'Keine Wallet gefunden';
+
+  @override
+  String get invoice_key_unavailable_subtitle =>
+      'Bitte erstellen Sie zuerst eine Wallet';
+
+  @override
+  String currency_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Währungen',
+      one: '1 Währung',
+    );
+    return '$_temp0';
+  }
 }

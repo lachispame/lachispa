@@ -206,6 +206,9 @@ class AppLocalizationsIt extends AppLocalizations {
       'Errore nel caricamento delle transazioni: ';
 
   @override
+  String get create_lnaddress_label => 'oppure crea un indirizzo:';
+
+  @override
   String get lightning_address_title => 'Indirizzo Lightning';
 
   @override
@@ -262,6 +265,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get receive_title => 'Ricevi';
 
   @override
+  String get create_invoice_label =>
+      'Crea una fattura per ricevere pagamenti direttamente nel tuo portafoglio';
+
+  @override
   String get amount_sats_label => 'Importo richiesto';
 
   @override
@@ -300,6 +307,9 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get invoice_generation_error_prefix =>
       'Errore nella generazione della fattura: ';
+
+  @override
+  String get invoice_empty_response_error => 'Impossibile generare la fattura';
 
   @override
   String get send_title => 'Invia';
@@ -477,6 +487,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String get clear_button => 'C';
 
   @override
+  String get invoice_cleared_message => 'Fattura cancellata';
+
+  @override
+  String get clear_invoice_button => 'Cancella fattura';
+
+  @override
+  String get invoice_copied_message => 'Fattura copiata negli appunti';
+
+  @override
   String get decimal_button => '.';
 
   @override
@@ -623,6 +642,11 @@ class AppLocalizationsIt extends AppLocalizations {
       'Fattura senza importo non supportata. Richiedere una fattura con un importo specifico.';
 
   @override
+  String invoice_amount_label(Object amount) {
+    return 'Fattura: $amount';
+  }
+
+  @override
   String payment_sent_status(Object status) {
     return 'Pagamento inviato - Stato: $status';
   }
@@ -678,9 +702,6 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get copy_invoice_button => 'Copia fattura';
-
-  @override
-  String get invoice_copied_message => 'Fattura copiata negli appunti';
 
   @override
   String get no_wallet_error => 'Nessun portafoglio principale disponibile';
@@ -953,4 +974,37 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get deep_link_login_required_message =>
       'Devi accedere al tuo account LaChispa per elaborare questo pagamento.';
+
+  @override
+  String get invoice_key_qr_title => 'QR Chiave fattura';
+
+  @override
+  String get invoice_key_qr_description =>
+      'Usa questo codice QR con LaChispaPOS o altre app Lightning per ricevere pagamenti senza esporre la tua chiave amministratore.';
+
+  @override
+  String get invoice_key_qr_subtitle => 'Mostra QR per altre app';
+
+  @override
+  String get copy_invoice_key => 'Copia chiave';
+
+  @override
+  String get invoice_key_copied => 'Chiave fattura copiata negli appunti';
+
+  @override
+  String get invoice_key_unavailable_title => 'Portafoglio non trovato';
+
+  @override
+  String get invoice_key_unavailable_subtitle => 'Crea prima un portafoglio';
+
+  @override
+  String currency_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count valute',
+      one: '1 valuta',
+    );
+    return '$_temp0';
+  }
 }

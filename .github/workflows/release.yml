@@ -1,135 +1,86 @@
-name: Release
+name: Build and Release Android
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_run:
+    workflows: ["docker-release.yml"]
+    types: [completed]
+    branches: [main]
 
 permissions:
   contents: write
-  packages: write
 
 jobs:
   build-android:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
+      
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '17'
-
+          
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.27.3'
           channel: 'stable'
-
+          
       - name: Install dependencies
         run: flutter pub get
-
-      - name: Build split APKs per ABI
-        run: flutter build apk --release --split-per-abi
-
-      - name: Build universal APK
+        
+      - name: Build APK
         run: flutter build apk --release
-
-      - name: Rename APKs
-        run: |
-          VERSION=${GITHUB_REF_NAME}
-          mkdir -p release-apks
-          cp build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk release-apks/lachispa-${VERSION}-armeabi-v7a.apk
-          cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk   release-apks/lachispa-${VERSION}-arm64-v8a.apk
-          cp build/app/outputs/flutter-apk/app-x86_64-release.apk       release-apks/lachispa-${VERSION}-x86_64.apk
-          cp build/app/outputs/flutter-apk/app-release.apk              release-apks/lachispa-${VERSION}-universal.apk
-          cp build/app/outputs/flutter-apk/app-release.apk              release-apks/lachispa-universal.apk
-
-      - name: Upload APK artifacts
+        
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: android-apks
-          path: release-apks/*.apk
-
-  build-docker:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/${{ github.repository }}
-          tags: |
-            type=ref,event=tag
-            type=sha,prefix=
-            type=raw,value=latest,enable={{is_default_branch}}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: docker/Dockerfile
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            FLUTTER_WEB_RENDERER=html
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          name: android-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
 
   release:
-    needs: [build-android, build-docker]
+    needs: [build-android]
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Download APK artifacts
+      
+      - name: Download APK artifact
         uses: actions/download-artifact@v4
         with:
-          name: android-apks
-          path: release-apks
-
+          name: android-apk
+      
+      - name: Get tag version
+        id: tag
+        run: |
+          # Get tag from workflow run head branch (e.g., v1.0.0)
+          TAG=${{ github.event.workflow_run.head_branch }}
+          echo "VERSION=$TAG" >> $GITHUB_OUTPUT
+        
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}
-          name: LaChispa ${{ github.ref_name }}
+          tag_name: ${{ steps.tag.outputs.VERSION }}
+          name: LaChispa ${{ steps.tag.outputs.VERSION }}
           body: |
-            ## LaChispa ${{ github.ref_name }}
-
-            ### Descargas Android
-
-            - **Universal (recomendado)**: `lachispa-${{ github.ref_name }}-universal.apk`
-              - Enlace estable a la última versión: `lachispa-universal.apk`
-            - **arm64-v8a** (mayoría de dispositivos modernos): `lachispa-${{ github.ref_name }}-arm64-v8a.apk`
-            - **armeabi-v7a** (dispositivos antiguos 32-bit): `lachispa-${{ github.ref_name }}-armeabi-v7a.apk`
-            - **x86_64** (emuladores): `lachispa-${{ github.ref_name }}-x86_64.apk`
-
-            URL estable para botón de descarga en la web (siempre apunta a la última release):
-            `https://github.com/${{ github.repository }}/releases/latest/download/lachispa-universal.apk`
-
+            ## LaChispa ${{ steps.tag.outputs.VERSION }}
+            
+            ### Descarga disponible:
+            - **Android**: `app-release.apk`
+            - **Docker**: `ghcr.io/${{ github.repository }}:${{ steps.tag.outputs.VERSION }}`
+            
+            ### Instalación:
+            - Descargar APK e instalar en Android
+            
             ### Docker
-
             ```bash
-            docker pull ghcr.io/${{ github.repository }}:${{ github.ref_name }}
-            docker run -p 7777:80 ghcr.io/${{ github.repository }}:${{ github.ref_name }}
+            docker pull ghcr.io/${{ github.repository }}:${{ steps.tag.outputs.VERSION }}
+            docker run -p 7777:80 ghcr.io/${{ github.repository }}:${{ steps.tag.outputs.VERSION }}
             ```
+            
           files: |
-            release-apks/*.apk
+            app-release.apk
           draft: false
           prerelease: false
         env:

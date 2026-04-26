@@ -205,6 +205,9 @@ class AppLocalizationsPt extends AppLocalizations {
       'Erro ao carregar transações: ';
 
   @override
+  String get create_lnaddress_label => 'ou também pode criar um:';
+
+  @override
   String get lightning_address_title => 'Endereço Lightning';
 
   @override
@@ -262,6 +265,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get receive_title => 'Receber';
 
   @override
+  String get create_invoice_label =>
+      'Crie uma fatura para receber pagamentos diretamente na sua carteira';
+
+  @override
   String get amount_sats_label => 'Solicitar Quantia';
 
   @override
@@ -299,6 +306,9 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get invoice_generation_error_prefix => 'Erro ao gerar fatura: ';
+
+  @override
+  String get invoice_empty_response_error => 'Falha ao gerar fatura';
 
   @override
   String get send_title => 'Enviar';
@@ -471,6 +481,16 @@ class AppLocalizationsPt extends AppLocalizations {
   String get clear_button => 'C';
 
   @override
+  String get invoice_cleared_message => 'Fatura limpa';
+
+  @override
+  String get clear_invoice_button => 'Limpar fatura';
+
+  @override
+  String get invoice_copied_message =>
+      'Fatura copiada para a área de transferência';
+
+  @override
   String get decimal_button => '.';
 
   @override
@@ -613,6 +633,11 @@ class AppLocalizationsPt extends AppLocalizations {
       'Fatura sem valor não suportada. Solicite uma fatura com um valor específico.';
 
   @override
+  String invoice_amount_label(Object amount) {
+    return 'Fatura: $amount';
+  }
+
+  @override
   String payment_sent_status(Object status) {
     return 'Pagamento enviado - Estado: $status';
   }
@@ -665,10 +690,6 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get copy_invoice_button => 'Copiar fatura';
-
-  @override
-  String get invoice_copied_message =>
-      'Fatura copiada para a área de transferência';
 
   @override
   String get no_wallet_error => 'Sem carteira principal disponível';
@@ -940,4 +961,39 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get deep_link_login_required_message =>
       'Você deve fazer login em sua conta LaChispa para processar este pagamento.';
+
+  @override
+  String get invoice_key_qr_title => 'QR Chave da Fatura';
+
+  @override
+  String get invoice_key_qr_description =>
+      'Use este código QR com LaChispaPOS ou outros aplicativos Lightning para receber pagamentos sem expor sua chave de administrador.';
+
+  @override
+  String get invoice_key_qr_subtitle => 'Mostrar QR para outros apps';
+
+  @override
+  String get copy_invoice_key => 'Copiar Chave';
+
+  @override
+  String get invoice_key_copied =>
+      'Chave da fatura copiada para a área de transferência';
+
+  @override
+  String get invoice_key_unavailable_title => 'Carteira não encontrada';
+
+  @override
+  String get invoice_key_unavailable_subtitle =>
+      'Por favor crie uma carteira primeiro';
+
+  @override
+  String currency_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count moedas',
+      one: '1 moeda',
+    );
+    return '$_temp0';
+  }
 }
