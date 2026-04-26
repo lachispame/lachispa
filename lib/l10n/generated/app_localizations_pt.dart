@@ -474,7 +474,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get decimal_button => '.';
 
   @override
-  String get calculating_text => 'Calculando...';
+  String get calculating_text => 'calculando...';
 
   @override
   String get loading_rates_text => 'Carregando taxas...';
@@ -942,36 +942,36 @@ class AppLocalizationsPt extends AppLocalizations {
       'Você deve fazer login em sua conta LaChispa para processar este pagamento.';
 
   @override
-  String get invoice_key_qr_title => 'QR de Clave de Facturación';
+  String get invoice_key_qr_title => 'QR da Chave de Fatura';
 
   @override
   String get invoice_key_qr_description =>
-      'Usa este código QR con LaChispaPOS u otras apps Lightning para recibir pagos sin exponer tu clave de administrador.';
+      'Use este código QR com LaChispaPOS ou outras apps Lightning para receber pagamentos sem expor a sua chave de administrador.';
 
   @override
-  String get invoice_key_qr_subtitle => 'Mostrar QR para otras apps';
+  String get invoice_key_qr_subtitle => 'Mostrar QR para outras apps';
 
   @override
-  String get copy_invoice_key => 'Copiar Clave';
+  String get copy_invoice_key => 'Copiar Chave';
 
   @override
   String get invoice_key_copied =>
-      'Clave de facturación copiada al portapapeles';
+      'Chave de fatura copiada para a área de transferência';
 
   @override
-  String get invoice_key_unavailable_title => 'Billetera no encontrada';
+  String get invoice_key_unavailable_title => 'Carteira não encontrada';
 
   @override
   String get invoice_key_unavailable_subtitle =>
-      'Por favor crea una billetera primero';
+      'Por favor, crie uma carteira primeiro';
 
   @override
   String currency_count(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
       locale: localeName,
-      other: '$count monedas',
-      one: '1 moneda',
+      other: '$count moedas',
+      one: '1 moeda',
     );
     return '$_temp0';
   }

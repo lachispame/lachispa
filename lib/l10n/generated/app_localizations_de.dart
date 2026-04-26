@@ -954,7 +954,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Sie müssen sich in Ihr LaChispa-Konto einloggen, um diese Zahlung zu verarbeiten.';
 
   @override
-  String get invoice_key_qr_title => 'Rechnungsschlüssel QR';
+  String get invoice_key_qr_title => 'Rechnungsschlüssel-QR';
 
   @override
   String get invoice_key_qr_description =>

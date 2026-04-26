@@ -4,34 +4,25 @@ import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../providers/wallet_provider.dart';
 import '../l10n/generated/app_localizations.dart';
+import '../theme/app_tokens.dart';
 
 class InvoiceKeyScreen extends StatelessWidget {
   const InvoiceKeyScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final t = context.tokens;
     return Scaffold(
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF0F1419),
-              Color(0xFF1A1D47),
-              Color(0xFF2D3FE7),
-            ],
-            stops: [0.0, 0.5, 1.0],
-          ),
-        ),
+        decoration: BoxDecoration(gradient: t.backgroundGradient),
         child: SafeArea(
           child: Column(
             children: [
-              _buildHeader(context),
+              _buildHeader(context, t),
               Expanded(
-                child: _buildContent(context),
+                child: _buildContent(context, t),
               ),
             ],
           ),
@@ -40,7 +31,7 @@ class InvoiceKeyScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context) {
+  Widget _buildHeader(BuildContext context, AppTokens t) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: Row(
@@ -50,12 +41,13 @@ class InvoiceKeyScreen extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.1),
+                color: t.surface,
                 borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: t.outline, width: 1),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.arrow_back,
-                color: Colors.white,
+                color: t.textPrimary,
                 size: 24,
               ),
             ),
@@ -64,11 +56,11 @@ class InvoiceKeyScreen extends StatelessWidget {
           Expanded(
             child: Text(
               AppLocalizations.of(context)!.invoice_key_qr_title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
-                color: Colors.white,
+                color: t.textPrimary,
               ),
             ),
           ),
@@ -77,7 +69,7 @@ class InvoiceKeyScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildContent(BuildContext context) {
+  Widget _buildContent(BuildContext context, AppTokens t) {
     return Consumer<WalletProvider>(
       builder: (context, walletProvider, child) {
         final wallet = walletProvider.primaryWallet;
@@ -97,21 +89,21 @@ class InvoiceKeyScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'No wallet found',
+                    AppLocalizations.of(context)!.invoice_key_unavailable_title,
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 18,
                       fontWeight: FontWeight.w600,
-                      color: Colors.white.withValues(alpha: 0.9),
+                      color: t.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Please create a wallet first',
+                    AppLocalizations.of(context)!.invoice_key_unavailable_subtitle,
                     style: TextStyle(
                       fontFamily: 'Inter',
                       fontSize: 14,
-                      color: Colors.white.withValues(alpha: 0.6),
+                      color: t.textSecondary,
                     ),
                   ),
                 ],
@@ -125,13 +117,13 @@ class InvoiceKeyScreen extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 20),
-              _buildQRCode(inKey),
+              _buildQRCode(t, inKey),
               const SizedBox(height: 24),
-              _buildKeyInfo(context, inKey),
+              _buildKeyInfo(context, t, inKey),
               const SizedBox(height: 24),
-              _buildCopyButton(context, inKey),
+              _buildCopyButton(context, t, inKey),
               const SizedBox(height: 24),
-              _buildWarning(context),
+              _buildWarning(context, t),
             ],
           ),
         );
@@ -139,11 +131,11 @@ class InvoiceKeyScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildQRCode(String inKey) {
+  Widget _buildQRCode(AppTokens t, String inKey) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: t.surface,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -163,17 +155,14 @@ class InvoiceKeyScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildKeyInfo(BuildContext context, String inKey) {
+  Widget _buildKeyInfo(BuildContext context, AppTokens t, String inKey) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.08),
+        color: t.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.1),
-          width: 1,
-        ),
+        border: Border.all(color: t.outline, width: 1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -184,16 +173,16 @@ class InvoiceKeyScreen extends StatelessWidget {
               fontFamily: 'Inter',
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: Colors.white.withValues(alpha: 0.6),
+              color: t.textSecondary,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             inKey,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'monospace',
               fontSize: 12,
-              color: Colors.white,
+              color: t.textPrimary,
             ),
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -203,11 +192,11 @@ class InvoiceKeyScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCopyButton(BuildContext context, String inKey) {
+  Widget _buildCopyButton(BuildContext context, AppTokens t, String inKey) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton.icon(
-        onPressed: () => _copyToClipboard(context, inKey),
+        onPressed: () => _copyToClipboard(context, t, inKey),
         icon: const Icon(Icons.copy, size: 20),
         label: Text(
           AppLocalizations.of(context)!.copy_invoice_key,
@@ -218,7 +207,7 @@ class InvoiceKeyScreen extends StatelessWidget {
           ),
         ),
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF4C63F7),
+          backgroundColor: t.accentSolid,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
@@ -229,7 +218,7 @@ class InvoiceKeyScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildWarning(BuildContext context) {
+  Widget _buildWarning(BuildContext context, AppTokens t) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -255,7 +244,7 @@ class InvoiceKeyScreen extends StatelessWidget {
               style: TextStyle(
                 fontFamily: 'Inter',
                 fontSize: 14,
-                color: Colors.white.withValues(alpha: 0.8),
+                color: t.textSecondary,
               ),
             ),
           ),
@@ -264,7 +253,7 @@ class InvoiceKeyScreen extends StatelessWidget {
     );
   }
 
-  void _copyToClipboard(BuildContext context, String text) {
+  void _copyToClipboard(BuildContext context, AppTokens t, String text) {
     Clipboard.setData(ClipboardData(text: text));
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -272,7 +261,7 @@ class InvoiceKeyScreen extends StatelessWidget {
           AppLocalizations.of(context)!.invoice_key_copied,
           style: const TextStyle(fontFamily: 'Inter'),
         ),
-        backgroundColor: const Color(0xFF4C63F7),
+        backgroundColor: t.accentSolid,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),

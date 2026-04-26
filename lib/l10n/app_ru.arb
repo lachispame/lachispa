@@ -1,6 +1,6 @@
 {
   "@@locale": "ru",
-  
+
   "welcome_title": "Добро пожаловать в La Chispa!",
   "welcome_subtitle": "Lightning для всех",
   "welcome_hero_prefix": "Плати через",
@@ -9,13 +9,13 @@
   "welcome_server_change": "Сменить",
   "get_started_button": "Начать",
   "tap_to_start_hint": "Просто как зажечь искру",
-  
+
   "choose_option_title": "Подключитесь к вашему любимому серверу LNBits",
   "create_new_wallet_title": "Создать новый кошелек",
   "create_new_wallet_subtitle": "Настройте ваш Lightning кошелек",
   "use_existing_wallet_title": "Использовать существующий кошелек",
   "use_existing_wallet_subtitle": "Подключитесь к Lightning кошельку",
-  
+
   "server_settings_title": "Текущий сервер",
   "change_server_button": "Изменить сервер",
   "server_url_label": "URL сервера",
@@ -28,7 +28,7 @@
   "connect_button": "Подключить",
   "connecting_button": "ПОДКЛЮЧЕНИЕ...",
   "connection_error_prefix": "Ошибка подключения: ",
-  
+
   "login_title": "Войти",
   "username_label": "Имя пользователя",
   "password_label": "Пароль",
@@ -39,7 +39,7 @@
   "no_account_question": "Нет аккаунта? ",
   "register_link": "Зарегистрироваться",
   "login_error_prefix": "Ошибка входа: ",
-  
+
   "create_account_title": "Создать аккаунт",
   "signup_username_label": "Имя пользователя",
   "signup_password_label": "Пароль",
@@ -53,7 +53,7 @@
   "login_link": "Войти",
   "passwords_mismatch_error": "Пароли не совпадают",
   "account_creation_error_prefix": "Ошибка создания аккаунта: ",
-  
+
   "wallet_title": "Кошелек",
   "balance_label": "Баланс",
   "receive_button": "Получить",
@@ -61,7 +61,7 @@
   "history_button": "История",
   "settings_button": "Настройки",
   "loading_text": "Загрузка...",
-  
+
   "history_title": "История",
   "loading_transactions_text": "Загрузка транзакций...",
   "no_transactions_text": "Нет транзакций",
@@ -71,7 +71,7 @@
   "pending_label": "В ожидании",
   "failed_label": "Не удалось",
   "loading_transactions_error_prefix": "Ошибка загрузки транзакций: ",
-  
+
   "lightning_address_title": "Lightning адрес",
   "loading_address_text": "Загрузка адреса...",
   "your_lightning_address_label": "Ваш Lightning адрес:",
@@ -80,7 +80,7 @@
   "copy_button": "Копировать",
   "address_copied_message": "Адрес скопирован в буфер обмена",
   "loading_address_error_prefix": "Ошибка загрузки Lightning адреса: ",
-  
+
   "settings_title": "Информация",
   "lightning_address_option": "Lightning адрес",
   "lightning_address_description": "Просмотреть ваш Lightning адрес",
@@ -90,7 +90,7 @@
   "confirm_logout_message": "Вы уверены, что хотите выйти?",
   "cancel_button": "Отмена",
   "logout_confirm_button": "Выйти",
-  
+
   "receive_title": "Получить",
   "amount_sats_label": "Запрашиваемая сумма",
   "amount_label": "Сумма",
@@ -105,7 +105,7 @@
   "generating_button": "СОЗДАНИЕ...",
   "invoice_generated_message": "Счет успешно создан",
   "invoice_generation_error_prefix": "Ошибка создания счета: ",
-  
+
   "send_title": "Отправить",
   "paste_invoice_placeholder": "Вставьте счет, LNURL или адрес",
   "paste_button": "Вставить",
@@ -117,7 +117,7 @@
   "no_active_session_error": "Нет активной сессии",
   "no_primary_wallet_error": "Нет доступного основного кошелька",
   "invoice_decoding_error_prefix": "Ошибка декодирования счета: ",
-  
+
   "send_to_title": "Отправить на",
   "clear_button": "C",
   "decimal_button": ".",
@@ -146,7 +146,7 @@
   "payment_error_auth": "Ошибка аутентификации. Проверьте учётные данные.",
   "payment_error_server": "Ошибка сервера Lightning. Попробуйте ещё раз.",
   "payment_error_unknown": "Неизвестная ошибка ({code})",
-  
+
   "confirm_payment_title": "Подтвердить платеж",
   "invoice_description_label": "Описание",
   "no_description_text": "Нет описания",
@@ -170,7 +170,7 @@
   "payment_completed_success": "Платеж успешно завершен",
   "payment_sent_status_prefix": "Платеж отправлен - Статус: ",
   "payment_sending_error_prefix": "Ошибка отправки платежа: ",
-  
+
   "language_selector_title": "Язык",
   "language_selector_description": "Изменить язык приложения",
   "select_language": "Выбрать язык",
@@ -185,7 +185,6 @@
   "copy_invoice_button": "Копировать счёт",
   "invoice_copied_message": "Счёт скопирован в буфер обмена",
 
-
   "no_wallet_error": "Нет доступного основного кошелька",
   "invalid_session_error": "Нет активной сессии",
   "send_error_prefix": "Ошибка обработки отправки: ",
@@ -195,14 +194,14 @@
   "processing_text": "обработка",
   "paste_input_hint": "Вставьте счет, LNURL или адрес",
   "conversion_rate_error": "Ошибка загрузки обменных курсов",
-  
+
   "instant_payments_feature": "Мгновенные платежи",
   "favorite_server_feature": "С вашим любимым сервером",
-  
+
   "receive_info_text": "• Поделитесь своим Lightning адресом для получения платежей любой суммы\\n\\n• QR-код автоматически разрешается в LNURL для максимальной совместимости\\n\\n• Платежи поступают непосредственно в этот кошелек",
-  
+
   "payment_description_example": "Например: Оплата услуг",
-  
+
   "remember_password_label": "Запомнить пароль",
   "server_prefix": "Сервер: ",
   "login_subtitle": "Введите ваши учетные данные для доступа к кошельку",
@@ -221,7 +220,7 @@
   "password_will_be_remembered": "Пароль будет запомнен после входа",
   "password_saved_successfully": "Пароль успешно сохранен",
   "password_save_failed": "Не удалось сохранить пароль",
-  
+
   "about_app_subtitle": "Lightning кошелек",
   "about_app_description": "Мобильное приложение для управления Bitcoin через Lightning Network с использованием LNBits в качестве бэкенда.",
   "lightning_address_copy": "Копировать",
@@ -287,15 +286,14 @@
   "currency_settings_title": "Выбор валют",
   "currency_settings_subtitle": "Выберите ваши предпочитаемые валюты",
   "available_currencies": "Доступные валюты",
-  "selected_currencies": "Выбранные валюты", 
+  "selected_currencies": "Выбранные валюты",
   "no_currencies_available": "Нет доступных валют с сервера",
   "select_currencies_hint": "Выберите валюты из списка выше",
   "preview_title": "Предпросмотр",
   "tap_to_cycle": "Нажмите для переключения валют",
-  "calculating_text": "Вычисление...",
   "settings_screen_title": "Настройки",
   "about_title": "Информация",
-  
+
   "voucher_scan_title": "Сканировать ваучер",
   "voucher_scan_instructions": "Наведите камеру на QR-код ваучера LNURL-withdraw",
   "voucher_scan_subtitle": "Приложение автоматически обнаружит ваучер и позволит вам его активировать",
@@ -306,7 +304,7 @@
   "voucher_manual_input_hint": "Вставьте код ваучера LNURL-withdraw:",
   "voucher_manual_input_placeholder": "lnurl1...",
   "process_button": "Обработать",
-  
+
   "voucher_detected_title": "Ваучер обнаружен",
   "voucher_fixed_amount": "Фиксированная сумма:",
   "voucher_amount_range": "Доступный диапазон:",
@@ -326,13 +324,13 @@
       "max": {"type": "int"}
     }
   },
-  
+
   "voucher_claimed_title": "Ваучер активирован!",
   "voucher_claimed_subtitle": "Средства вскоре появятся в вашем кошельке.",
   "voucher_invalid_code": "Неверный код",
   "voucher_not_valid_lnurl": "Отсканированный код не является действительным ваучером LNURL-withdraw.",
   "voucher_processing_error": "Ошибка обработки ваучера",
-  
+
   "voucher_already_claimed": "Ваучер уже активирован",
   "voucher_already_claimed_desc": "Этот ваучер уже был использован и не может быть активирован повторно.",
   "voucher_expired": "Ваучер истек",
@@ -349,13 +347,36 @@
   "voucher_insufficient_funds_desc": "У ваучера недостаточно доступных средств.",
   "voucher_generic_error": "Не удается обработать ваучер",
   "voucher_generic_error_desc": "Произошла неожиданная ошибка при обработке этого ваучера. Попробуйте еще раз или обратитесь в поддержку.",
-  
+
   "currency_validation_info": "При выборе валюты будет проверено, доступна ли она на этом сервере",
   "checking_currency_availability": "Проверка доступности {currency}...",
   "currency_added_successfully": "{currency} успешно добавлен",
   "currency_not_available_on_server": "{currencyName} ({currency}) недоступна на этом сервере",
   "error_checking_currency": "Ошибка при проверке {currency}: {error}",
-  
+
   "deep_link_login_required_title": "Требуется вход в систему",
-  "deep_link_login_required_message": "Вы должны войти в свою учетную запись LaChispa для обработки этого платежа."
+  "deep_link_login_required_message": "Вы должны войти в свою учетную запись LaChispa для обработки этого платежа.",
+
+  "invoice_key_qr_title": "QR-код ключа счёта",
+  "invoice_key_qr_description": "Используйте этот QR-код с LaChispaPOS или другими Lightning-приложениями для получения платежей без раскрытия ключа администратора.",
+  "invoice_key_qr_subtitle": "Показать QR для других приложений",
+  "copy_invoice_key": "Скопировать ключ",
+  "invoice_key_copied": "Ключ счёта скопирован в буфер обмена",
+  "invoice_key_unavailable_title": "Кошелёк не найден",
+  "@invoice_key_unavailable_title": {
+    "description": "Заголовок когда кошелёк недоступен"
+  },
+  "invoice_key_unavailable_subtitle": "Пожалуйста, сначала создайте кошелёк",
+  "@invoice_key_unavailable_subtitle": {
+    "description": "Подзаголовок когда кошелёк недоступен"
+  },
+  "currency_count": "{count, plural, =1{1 валюта} few{{count} валюты} other{{count} валют}}",
+  "@currency_count": {
+    "description": "Количество выбранных валют",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

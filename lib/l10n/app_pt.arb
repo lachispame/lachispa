@@ -1,6 +1,6 @@
 {
   "@@locale": "pt",
-  
+
   "welcome_title": "Bem-vindo ao La Chispa!",
   "welcome_subtitle": "Lightning para todos",
   "welcome_hero_prefix": "Paga com",
@@ -9,13 +9,13 @@
   "welcome_server_change": "Mudar",
   "get_started_button": "Começar",
   "tap_to_start_hint": "Tão fácil como acender uma faísca",
-  
+
   "choose_option_title": "Conecte com o seu servidor LNBits favorito",
   "create_new_wallet_title": "Criar Nova Carteira",
   "create_new_wallet_subtitle": "Configure a sua própria carteira Lightning",
   "use_existing_wallet_title": "Usar Carteira Existente",
   "use_existing_wallet_subtitle": "Conectar a uma carteira Lightning",
-  
+
   "server_settings_title": "Servidor Atual",
   "change_server_button": "Alterar Servidor",
   "server_url_label": "URL do Servidor",
@@ -28,7 +28,7 @@
   "connect_button": "Conectar",
   "connecting_button": "CONECTANDO...",
   "connection_error_prefix": "Erro de conexão: ",
-  
+
   "login_title": "Iniciar Sessão",
   "username_label": "Nome de Utilizador",
   "password_label": "Palavra-passe",
@@ -39,7 +39,7 @@
   "no_account_question": "Não tem conta? ",
   "register_link": "Registar",
   "login_error_prefix": "Erro no início de sessão: ",
-  
+
   "create_account_title": "Criar Conta",
   "signup_username_label": "Nome de Utilizador",
   "signup_password_label": "Palavra-passe",
@@ -53,7 +53,7 @@
   "login_link": "Iniciar Sessão",
   "passwords_mismatch_error": "As palavras-passe não coincidem",
   "account_creation_error_prefix": "Erro ao criar conta: ",
-  
+
   "wallet_title": "Carteira",
   "balance_label": "Saldo",
   "receive_button": "Receber",
@@ -61,7 +61,7 @@
   "history_button": "Histórico",
   "settings_button": "Configurações",
   "loading_text": "Carregando...",
-  
+
   "history_title": "Histórico",
   "loading_transactions_text": "Carregando transações...",
   "no_transactions_text": "Sem transações",
@@ -71,7 +71,7 @@
   "pending_label": "Pendente",
   "failed_label": "Falhada",
   "loading_transactions_error_prefix": "Erro ao carregar transações: ",
-  
+
   "lightning_address_title": "Endereço Lightning",
   "loading_address_text": "Carregando endereço...",
   "your_lightning_address_label": "O seu endereço Lightning:",
@@ -80,7 +80,7 @@
   "copy_button": "Copiar",
   "address_copied_message": "Endereço copiado para a área de transferência",
   "loading_address_error_prefix": "Erro ao carregar endereço Lightning: ",
-  
+
   "settings_title": "Acerca de",
   "lightning_address_option": "Endereço Lightning",
   "lightning_address_description": "Ver o seu endereço Lightning",
@@ -90,7 +90,7 @@
   "confirm_logout_message": "Tem a certeza de que deseja terminar a sessão?",
   "cancel_button": "Cancelar",
   "logout_confirm_button": "Terminar Sessão",
-  
+
   "receive_title": "Receber",
   "amount_sats_label": "Solicitar Quantia",
   "amount_label": "Quantia",
@@ -105,7 +105,7 @@
   "generating_button": "GERANDO...",
   "invoice_generated_message": "Fatura gerada com sucesso",
   "invoice_generation_error_prefix": "Erro ao gerar fatura: ",
-  
+
   "send_title": "Enviar",
   "paste_invoice_placeholder": "Colar fatura, LNURL ou endereço",
   "paste_button": "Colar",
@@ -117,7 +117,7 @@
   "no_active_session_error": "Sem sessão ativa",
   "no_primary_wallet_error": "Sem carteira principal disponível",
   "invoice_decoding_error_prefix": "Erro ao descodificar fatura: ",
-  
+
   "send_to_title": "Enviar para",
   "clear_button": "C",
   "decimal_button": ".",
@@ -146,7 +146,7 @@
   "payment_error_auth": "Erro de autenticação. Verifique as suas credenciais.",
   "payment_error_server": "Erro do servidor Lightning. Tente de novo.",
   "payment_error_unknown": "Erro desconhecido ({code})",
-  
+
   "confirm_payment_title": "Confirmar Pagamento",
   "invoice_description_label": "Descrição",
   "no_description_text": "Sem descrição",
@@ -170,7 +170,7 @@
   "payment_completed_success": "Pagamento concluído com sucesso",
   "payment_sent_status_prefix": "Pagamento enviado - Estado: ",
   "payment_sending_error_prefix": "Erro ao enviar pagamento: ",
-  
+
   "language_selector_title": "Idioma",
   "language_selector_description": "Alterar idioma da aplicação",
   "select_language": "Selecionar idioma",
@@ -185,7 +185,6 @@
   "copy_invoice_button": "Copiar fatura",
   "invoice_copied_message": "Fatura copiada para a área de transferência",
 
-
   "no_wallet_error": "Sem carteira principal disponível",
   "invalid_session_error": "Sem sessão ativa",
   "send_error_prefix": "Erro ao processar envio: ",
@@ -195,14 +194,14 @@
   "processing_text": "processando",
   "paste_input_hint": "Colar fatura, LNURL ou endereço",
   "conversion_rate_error": "Erro ao carregar taxas de câmbio",
-  
+
   "instant_payments_feature": "Pagamentos instantâneos",
   "favorite_server_feature": "Com o seu servidor favorito",
-  
+
   "receive_info_text": "• Partilhe o seu Endereço Lightning para receber pagamentos de qualquer quantia\\n\\n• O código QR resolve automaticamente para LNURL para máxima compatibilidade\\n\\n• Os pagamentos são recebidos diretamente nesta carteira",
-  
+
   "payment_description_example": "Ex: Pagamento por serviços",
-  
+
   "remember_password_label": "Lembrar palavra-passe",
   "server_prefix": "Servidor: ",
   "login_subtitle": "Insira as suas credenciais para aceder à sua carteira",
@@ -221,7 +220,7 @@
   "password_will_be_remembered": "A palavra-passe será lembrada após o início de sessão",
   "password_saved_successfully": "Palavra-passe guardada com sucesso",
   "password_save_failed": "Não foi possível guardar a palavra-passe",
-  
+
   "about_app_subtitle": "Carteira Lightning",
   "about_app_description": "Uma aplicação móvel para gerir Bitcoin através da Lightning Network usando LNBits como backend.",
   "lightning_address_copy": "Copiar",
@@ -294,7 +293,7 @@
   "voucher_manual_input_hint": "Cole o código LNURL-withdraw do voucher:",
   "voucher_manual_input_placeholder": "lnurl1...",
   "process_button": "Processar",
-  
+
   "voucher_detected_title": "Voucher Detetado",
   "voucher_fixed_amount": "Quantia fixa:",
   "voucher_amount_range": "Intervalo disponível:",
@@ -314,13 +313,13 @@
       "max": {"type": "int"}
     }
   },
-  
+
   "voucher_claimed_title": "Voucher resgatado!",
   "voucher_claimed_subtitle": "Os fundos aparecerão na sua carteira em breve.",
   "voucher_invalid_code": "Código inválido",
   "voucher_not_valid_lnurl": "O código digitalizado não é um voucher LNURL-withdraw válido.",
   "voucher_processing_error": "Erro ao processar o voucher",
-  
+
   "voucher_already_claimed": "Voucher já resgatado",
   "voucher_already_claimed_desc": "Este voucher já foi usado e não pode ser resgatado novamente.",
   "voucher_expired": "Voucher expirado",
@@ -346,16 +345,38 @@
   "select_currencies_hint": "Selecione moedas da lista acima",
   "preview_title": "Visualização",
   "tap_to_cycle": "Toque para alternar moedas",
-  "calculating_text": "Calculando...",
   "settings_screen_title": "Configurações",
   "about_title": "Sobre",
-  
+
   "currency_validation_info": "Ao selecionar uma moeda, será verificado se está disponível neste servidor",
   "checking_currency_availability": "Verificando disponibilidade de {currency}...",
   "currency_added_successfully": "{currency} adicionado com sucesso",
   "currency_not_available_on_server": "{currencyName} ({currency}) não está disponível neste servidor",
   "error_checking_currency": "Erro ao verificar {currency}: {error}",
-  
+
   "deep_link_login_required_title": "Login Necessário",
-  "deep_link_login_required_message": "Você deve fazer login em sua conta LaChispa para processar este pagamento."
+  "deep_link_login_required_message": "Você deve fazer login em sua conta LaChispa para processar este pagamento.",
+
+  "invoice_key_qr_title": "QR da Chave de Fatura",
+  "invoice_key_qr_description": "Use este código QR com LaChispaPOS ou outras apps Lightning para receber pagamentos sem expor a sua chave de administrador.",
+  "invoice_key_qr_subtitle": "Mostrar QR para outras apps",
+  "copy_invoice_key": "Copiar Chave",
+  "invoice_key_copied": "Chave de fatura copiada para a área de transferência",
+  "invoice_key_unavailable_title": "Carteira não encontrada",
+  "@invoice_key_unavailable_title": {
+    "description": "Título quando não há carteira disponível"
+  },
+  "invoice_key_unavailable_subtitle": "Por favor, crie uma carteira primeiro",
+  "@invoice_key_unavailable_subtitle": {
+    "description": "Subtítulo quando não há carteira disponível"
+  },
+  "currency_count": "{count, plural, =1{1 moeda} other{{count} moedas}}",
+  "@currency_count": {
+    "description": "Quantidade de moedas selecionadas",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

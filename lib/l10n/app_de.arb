@@ -359,7 +359,7 @@
   "deep_link_login_required_title": "Anmeldung erforderlich",
   "deep_link_login_required_message": "Sie müssen sich in Ihr LaChispa-Konto einloggen, um diese Zahlung zu verarbeiten.",
   
-  "invoice_key_qr_title": "Rechnungsschlüssel QR",
+  "invoice_key_qr_title": "Rechnungsschlüssel-QR",
   "invoice_key_qr_description": "Verwenden Sie diesen QR-Code mit LaChispaPOS oder anderen Lightning-Apps, um Zahlungen zu empfangen, ohne Ihren Admin-Schlüssel preiszugeben.",
   "invoice_key_qr_subtitle": "QR für andere Apps anzeigen",
   "copy_invoice_key": "Schlüssel kopieren",
