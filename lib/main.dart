@@ -6,6 +6,7 @@ import 'providers/auth_provider.dart';
 import 'providers/wallet_provider.dart';
 import 'providers/ln_address_provider.dart';
 import 'providers/language_provider.dart';
+import 'providers/theme_provider.dart';
 import 'providers/currency_settings_provider.dart';
 import 'services/wallet_service.dart';
 import 'services/ln_address_service.dart';
@@ -14,7 +15,6 @@ import 'services/deep_link_service.dart';
 import 'screens/auth_checker.dart';
 import 'screens/10send_screen.dart';
 import 'l10n/generated/app_localizations.dart';
-import 'theme/themes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -126,6 +126,7 @@ class _LaChispaAppState extends State<LaChispaApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => ServerProvider()),
         ChangeNotifierProvider(create: (_) => AuthProviderFactory.create()),
         
@@ -186,12 +187,12 @@ class _LaChispaAppState extends State<LaChispaApp> {
             _setupWalletLNAddressConnection(context);
           });
           
-          return Consumer<LanguageProvider>(
-            builder: (context, languageProvider, child) {
+          return Consumer2<LanguageProvider, ThemeProvider>(
+            builder: (context, languageProvider, themeProvider, child) {
               return MaterialApp(
                 navigatorKey: _navigatorKey,
                 title: 'LaChispa',
-                theme: chispaTheme(),
+                theme: themeProvider.themeData,
                 locale: languageProvider.currentLocale,
                 localizationsDelegates: const [
                   AppLocalizations.delegate,

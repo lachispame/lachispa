@@ -181,7 +181,18 @@
   "language_selector_title": "Sprache",
   "language_selector_description": "Anwendungssprache ändern",
   "select_language": "Sprache auswählen",
-  
+
+  "theme_selector_title": "Design",
+  "theme_selector_description": "Erscheinungsbild der Anwendung ändern",
+  "select_theme": "Design auswählen",
+  "theme_lachispa": "LaChispa",
+  "theme_light": "Hell",
+  "theme_dark": "Dunkel",
+
+  "copy_invoice_button": "Rechnung kopieren",
+  "invoice_copied_message": "Rechnung in die Zwischenablage kopiert",
+
+
   "no_wallet_error": "Keine primäre Wallet verfügbar",
   "invalid_session_error": "Keine aktive Sitzung",
   "send_error_prefix": "Fehler beim Verarbeiten des Sendens: ",

@@ -181,7 +181,18 @@
   "language_selector_title": "Langue",
   "language_selector_description": "Changer la langue de l'application",
   "select_language": "Sélectionner la langue",
-  
+
+  "theme_selector_title": "Thème",
+  "theme_selector_description": "Changer l'apparence de l'application",
+  "select_theme": "Sélectionner le thème",
+  "theme_lachispa": "LaChispa",
+  "theme_light": "Clair",
+  "theme_dark": "Sombre",
+
+  "copy_invoice_button": "Copier la facture",
+  "invoice_copied_message": "Facture copiée dans le presse-papiers",
+
+
   "no_wallet_error": "Aucun portefeuille principal disponible",
   "invalid_session_error": "Aucune session active",
   "send_error_prefix": "Erreur lors du traitement de l'envoi : ",

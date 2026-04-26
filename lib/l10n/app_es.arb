@@ -242,7 +242,18 @@
   "language_selector_title": "Idioma",
   "language_selector_description": "Cambiar idioma de la aplicación",
   "select_language": "Seleccionar idioma",
-  
+
+  "theme_selector_title": "Tema",
+  "theme_selector_description": "Cambiar apariencia de la aplicación",
+  "select_theme": "Seleccionar tema",
+  "theme_lachispa": "LaChispa",
+  "theme_light": "Claro",
+  "theme_dark": "Oscuro",
+
+  "copy_invoice_button": "Copiar factura",
+  "invoice_copied_message": "Factura copiada al portapapeles",
+
+
   "no_wallet_error": "Sin billetera principal disponible",
   "invalid_session_error": "Sin sesión activa",
   "send_error_prefix": "Error procesando el envío: ",

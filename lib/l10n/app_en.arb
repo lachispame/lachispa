@@ -255,7 +255,18 @@
   "language_selector_title": "Language",
   "language_selector_description": "Change application language",
   "select_language": "Select language",
-  
+
+  "theme_selector_title": "Theme",
+  "theme_selector_description": "Change application appearance",
+  "select_theme": "Select theme",
+  "theme_lachispa": "LaChispa",
+  "theme_light": "Light",
+  "theme_dark": "Dark",
+
+  "copy_invoice_button": "Copy invoice",
+  "invoice_copied_message": "Invoice copied to clipboard",
+
+
   "no_wallet_error": "No primary wallet available",
   "invalid_session_error": "No active session",
   "send_error_prefix": "Error processing send: ",

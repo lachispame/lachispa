@@ -181,7 +181,18 @@
   "language_selector_title": "Idioma",
   "language_selector_description": "Alterar idioma da aplicação",
   "select_language": "Selecionar idioma",
-  
+
+  "theme_selector_title": "Tema",
+  "theme_selector_description": "Alterar aparência da aplicação",
+  "select_theme": "Selecionar tema",
+  "theme_lachispa": "LaChispa",
+  "theme_light": "Claro",
+  "theme_dark": "Escuro",
+
+  "copy_invoice_button": "Copiar fatura",
+  "invoice_copied_message": "Fatura copiada para a área de transferência",
+
+
   "no_wallet_error": "Sem carteira principal disponível",
   "invalid_session_error": "Sem sessão ativa",
   "send_error_prefix": "Erro ao processar envio: ",

@@ -605,16 +605,7 @@ class _SettingsScreenState extends State<SettingsScreen>
       builder: (modalContext) => Consumer<LanguageProvider>(
         builder: (context, langProvider, child) => Container(
         decoration: BoxDecoration(
-          // Modal-specific darker gradient kept literal — unique to this sheet
-          gradient: const LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF1A1A2E),
-              Color(0xFF16213E),
-              Color(0xFF0F0F23),
-            ],
-          ),
+          color: t.dialogBackground,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
