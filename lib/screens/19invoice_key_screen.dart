@@ -75,8 +75,15 @@ class _InvoiceKeyScreenStyles {
       );
 }
 
-class InvoiceKeyScreen extends StatelessWidget {
+class InvoiceKeyScreen extends StatefulWidget {
   const InvoiceKeyScreen({super.key});
+
+  @override
+  State<InvoiceKeyScreen> createState() => _InvoiceKeyScreenState();
+}
+
+class _InvoiceKeyScreenState extends State<InvoiceKeyScreen> {
+  bool _showFullKey = false;
 
   @override
   Widget build(BuildContext context) {
@@ -240,6 +247,7 @@ class InvoiceKeyScreen extends StatelessWidget {
   }
 
   Widget _buildKeyInfo(BuildContext context, AppTokens t, String inKey) {
+    final displayKey = _showFullKey ? inKey : _maskKey(inKey);
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(
@@ -262,15 +270,38 @@ class InvoiceKeyScreen extends StatelessWidget {
           const SizedBox(
             height: _InvoiceKeyScreenConstants.smallSpacing,
           ),
-          Text(
-            inKey,
-            style: _InvoiceKeyScreenStyles.monoStyle(t),
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+          Row(
+            children: [
+              Expanded(
+                child: GestureDetector(
+                  onTap: () => _copyToClipboard(context, t, inKey),
+                  child: Text(
+                    displayKey,
+                    style: _InvoiceKeyScreenStyles.monoStyle(t),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+              IconButton(
+                icon: Icon(
+                  _showFullKey ? Icons.visibility_off : Icons.visibility,
+                  size: 20,
+                  color: t.textSecondary,
+                ),
+                onPressed: () => setState(() => _showFullKey = !_showFullKey),
+                tooltip: _showFullKey ? 'Hide key' : 'Show key',
+              ),
+            ],
           ),
         ],
       ),
     );
+  }
+
+  String _maskKey(String key) {
+    if (key.length <= 12) return key;
+    return '${key.substring(0, 6)}…${key.substring(key.length - 6)}';
   }
 
   Widget _buildCopyButton(BuildContext context, AppTokens t, String inKey) {
@@ -321,8 +352,8 @@ class InvoiceKeyScreen extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              AppLocalizations.of(context)?.invoice_key_qr_description ??
-                  'Use this QR code to receive payments',
+              AppLocalizations.of(context)?.invoice_key_security_warning ??
+                  'This key allows third parties to create invoices. Only share with trusted POS devices. Never post or share publicly.',
               style: _InvoiceKeyScreenStyles.bodyStyle(t),
             ),
           ),
@@ -331,14 +362,14 @@ class InvoiceKeyScreen extends StatelessWidget {
     );
   }
 
-  void _copyToClipboard(BuildContext context, AppTokens t, String text) {
-    // Validate input
+void _copyToClipboard(BuildContext context, AppTokens t, String text) async {
     if (text.isEmpty) {
       _showErrorMessage(context, 'Invoice key cannot be empty');
       return;
     }
 
-    Clipboard.setData(ClipboardData(text: text));
+    await Clipboard.setData(ClipboardData(text: text));
+    if (!context.mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(

@@ -1860,11 +1860,18 @@ abstract class AppLocalizations {
   /// **'Por favor crea una billetera primero'**
   String get invoice_key_unavailable_subtitle;
 
+  /// Advertencia de seguridad para clave de facturación
+  ///
+  /// In es, this message translates to:
+  /// **'Esta clave permite a terceros crear facturas. Solo compártela con dispositivos POS confiables. Nunca publiques ni compartas públicamente.'**
+  String get invoice_key_security_warning;
+
   /// Cantidad de monedas seleccionadas
   ///
   /// In es, this message translates to:
   /// **'{count, plural, =1{1 moneda} other{{count} monedas}}'**
   String currency_count(int count);
+
   /// No description provided for @clear_invoice_button.
   ///
   /// In es, this message translates to:

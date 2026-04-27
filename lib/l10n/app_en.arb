@@ -388,7 +388,10 @@
   "@invoice_key_unavailable_subtitle": {
     "description": "Subtitle when no wallet is available"
   },
-  
+"invoice_key_security_warning": "This key allows third parties to create invoices. Only share with trusted POS devices. Never post or share publicly.",
+  "@invoice_key_security_warning": {
+    "description": "Security warning for invoice key"
+  },
   "currency_count": "{count, plural, =1{1 currency} other{{count} currencies}}",
   "@currency_count": {
     "description": "Number of selected currencies",
@@ -397,7 +400,7 @@
         "type": "int"
       }
     }
-  }
+  },
 
   "clear_invoice_button": "Clear invoice",
   "invoice_cleared_message": "Invoice cleared",

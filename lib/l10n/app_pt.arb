@@ -144,9 +144,23 @@
   "payment_error_route_not_found": "Nenhuma rota encontrada para este pagamento",
   "payment_error_payment_not_found": "Pagamento não encontrado nesta carteira",
   "payment_error_lnurl_generic": "Erro LNURL: {detail}",
+  "@payment_error_lnurl_generic": {
+    "placeholders": {
+      "detail": {
+        "type": "Object"
+      }
+    }
+  },
   "payment_error_auth": "Erro de autenticação. Verifique as suas credenciais.",
   "payment_error_server": "Erro do servidor Lightning. Tente de novo.",
   "payment_error_unknown": "Erro desconhecido ({code})",
+  "@payment_error_unknown": {
+    "placeholders": {
+      "code": {
+        "type": "Object"
+      }
+    }
+  },
 
   "confirm_payment_title": "Confirmar Pagamento",
   "invoice_description_label": "Descrição",
@@ -165,6 +179,13 @@
   "invoice_expired_error": "A fatura expirou e não pode ser paga",
   "amountless_invoice_error": "Fatura sem valor não suportada. Solicite uma fatura com um valor específico.",
   "payment_sent_status": "Pagamento enviado - Estado: {status}",
+  "@payment_sent_status": {
+    "placeholders": {
+      "status": {
+        "type": "Object"
+      }
+    }
+  },
   "confirm_no_session_error": "Sem sessão ativa",
   "confirm_no_wallet_error": "Sem carteira principal disponível",
   "payment_pending_hold": "Pagamento pendente - Fatura Hold detetada",
@@ -371,6 +392,10 @@
   "@invoice_key_unavailable_subtitle": {
     "description": "Subtítulo quando não há carteira disponível"
   },
+  "invoice_key_security_warning": "Esta chave permite a terceiros criar faturas. Compartilhe apenas com dispositivos POS confiáveis. Nunca publique ou compartilhe publicamente.",
+  "@invoice_key_security_warning": {
+    "description": "Aviso de segurança para a chave de fatura"
+  },
   "currency_count": "{count, plural, =1{1 moeda} other{{count} moedas}}",
   "@currency_count": {
     "description": "Quantidade de moedas selecionadas",
@@ -379,7 +404,8 @@
         "type": "int"
       }
     }
-  }
+  },
+
   "clear_invoice_button": "Limpar fatura",
   "invoice_cleared_message": "Fatura limpa",
   "invoice_monitoring_timeout_message": "Monitoramento parado. Gera uma nova fatura."

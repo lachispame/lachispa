@@ -980,6 +980,10 @@ class AppLocalizationsIt extends AppLocalizations {
   String get invoice_key_unavailable_subtitle => 'Crea prima un portafoglio';
 
   @override
+  String get invoice_key_security_warning =>
+      'Questa chiave permette a terzi di creare fatture. Condividila solo con dispositivi POS affidabili. Non pubblicare mai o condividere pubblicamente.';
+
+  @override
   String currency_count(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -989,6 +993,8 @@ class AppLocalizationsIt extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
   String get clear_invoice_button => 'Cancella fattura';
 
   @override

@@ -144,9 +144,23 @@
   "payment_error_route_not_found": "Маршрут для платежа не найден",
   "payment_error_payment_not_found": "Платёж не найден в этом кошельке",
   "payment_error_lnurl_generic": "Ошибка LNURL: {detail}",
+  "@payment_error_lnurl_generic": {
+    "placeholders": {
+      "detail": {
+        "type": "Object"
+      }
+    }
+  },
   "payment_error_auth": "Ошибка аутентификации. Проверьте учётные данные.",
   "payment_error_server": "Ошибка сервера Lightning. Попробуйте ещё раз.",
   "payment_error_unknown": "Неизвестная ошибка ({code})",
+  "@payment_error_unknown": {
+    "placeholders": {
+      "code": {
+        "type": "Object"
+      }
+    }
+  },
 
   "confirm_payment_title": "Подтвердить платеж",
   "invoice_description_label": "Описание",
@@ -165,6 +179,13 @@
   "invoice_expired_error": "Счет истек и не может быть оплачен",
   "amountless_invoice_error": "Счет без суммы не поддерживается. Запросите счет с указанной суммой.",
   "payment_sent_status": "Платеж отправлен - Статус: {status}",
+  "@payment_sent_status": {
+    "placeholders": {
+      "status": {
+        "type": "Object"
+      }
+    }
+  },
   "confirm_no_session_error": "Нет активной сессии",
   "confirm_no_wallet_error": "Нет доступного основного кошелька",
   "payment_pending_hold": "Платеж ожидает - Обнаружен счет-холд",
@@ -371,6 +392,10 @@
   "@invoice_key_unavailable_subtitle": {
     "description": "Подзаголовок когда кошелёк недоступен"
   },
+  "invoice_key_security_warning": "Этот ключ позволяет третьим лицам создавать счета. Предоставляйте только доверенным устройствам POS. Никогда не публикуйте и не распространяйте публично.",
+  "@invoice_key_security_warning": {
+    "description": "Предупреждение о безопасности для ключа счета"
+  },
   "currency_count": "{count, plural, =1{1 валюта} few{{count} валюты} other{{count} валют}}",
   "@currency_count": {
     "description": "Количество выбранных валют",
@@ -379,7 +404,8 @@
         "type": "int"
       }
     }
-  }
+  },
+
   "clear_invoice_button": "Очистить счёт",
   "invoice_cleared_message": "Счёт очищен",
   "invoice_monitoring_timeout_message": "Мониторинг остановлен. Создайте новый счёт."

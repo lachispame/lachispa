@@ -981,6 +981,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Bitte erstellen Sie zuerst eine Wallet';
 
   @override
+  String get invoice_key_security_warning =>
+      'Dieser Schlüssel ermöglicht Dritten, Rechnungen zu erstellen. Nur mit vertrauenswürdigen POS-Geräten teilen. Nie öffentlich posten oder teilen.';
+
+  @override
   String currency_count(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -990,6 +994,8 @@ class AppLocalizationsDe extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
   String get clear_invoice_button => 'Rechnung löschen';
 
   @override

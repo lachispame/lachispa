@@ -198,10 +198,24 @@
   "payment_error_route_not_found": "No se encontró ruta para este pago",
   "payment_error_payment_not_found": "El pago no existe en esta billetera",
   "payment_error_lnurl_generic": "Error LNURL: {detail}",
+  "@payment_error_lnurl_generic": {
+    "placeholders": {
+      "detail": {
+        "type": "Object"
+      }
+    }
+  },
   "payment_error_auth": "Error de autenticación. Verifica tus credenciales.",
   "payment_error_server": "Error del servidor Lightning. Intenta de nuevo.",
   "payment_error_unknown": "Error desconocido ({code})",
-  
+  "@payment_error_unknown": {
+    "placeholders": {
+      "code": {
+        "type": "Object"
+      }
+    }
+  },
+
   "confirm_payment_title": "Confirmar Pago",
   "invoice_description_label": "Descripción",
   "no_description_text": "Sin descripción",
@@ -219,6 +233,13 @@
   "invoice_expired_error": "La factura ha expirado y no se puede pagar",
   "amountless_invoice_error": "Factura sin monto no soportada. Solicite una factura con un monto específico.",
   "payment_sent_status": "Pago enviado - Estado: {status}",
+  "@payment_sent_status": {
+    "placeholders": {
+      "status": {
+        "type": "Object"
+      }
+    }
+  },
   "confirm_no_session_error": "Sin sesión activa",
   "confirm_no_wallet_error": "No hay wallet principal disponible",
   "payment_pending_hold": "Pago pendiente - Factura Hold detectada",
@@ -373,7 +394,10 @@
   "@invoice_key_unavailable_subtitle": {
     "description": "Subtítulo cuando no hay billetera disponible"
   },
-  
+  "invoice_key_security_warning": "Esta clave permite a terceros crear facturas. Solo compártela con dispositivos POS confiables. Nunca publiques ni compartas públicamente.",
+  "@invoice_key_security_warning": {
+    "description": "Advertencia de seguridad para clave de facturación"
+  },
   "currency_count": "{count, plural, =1{1 moneda} other{{count} monedas}}",
   "@currency_count": {
     "description": "Cantidad de monedas seleccionadas",
@@ -382,7 +406,7 @@
         "type": "int"
       }
     }
-  }
+  },
 
   "clear_invoice_button": "Limpiar factura",
   "invoice_cleared_message": "Factura limpiada",

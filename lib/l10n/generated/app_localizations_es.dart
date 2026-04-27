@@ -970,6 +970,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Por favor crea una billetera primero';
 
   @override
+  String get invoice_key_security_warning =>
+      'Esta clave permite a terceros crear facturas. Solo compártela con dispositivos POS confiables. Nunca publiques ni compartas públicamente.';
+
+  @override
   String currency_count(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -979,6 +983,8 @@ class AppLocalizationsEs extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
   String get clear_invoice_button => 'Limpiar factura';
 
   @override

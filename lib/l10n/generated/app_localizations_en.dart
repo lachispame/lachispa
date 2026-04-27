@@ -955,6 +955,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invoice_key_unavailable_subtitle => 'Please create a wallet first';
 
   @override
+  String get invoice_key_security_warning =>
+      'This key allows third parties to create invoices. Only share with trusted POS devices. Never post or share publicly.';
+
+  @override
   String currency_count(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -964,6 +968,8 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
   String get clear_invoice_button => 'Clear invoice';
 
   @override

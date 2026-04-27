@@ -144,9 +144,23 @@
   "payment_error_route_not_found": "Keine Route für diese Zahlung gefunden",
   "payment_error_payment_not_found": "Zahlung in dieser Wallet nicht gefunden",
   "payment_error_lnurl_generic": "LNURL-Fehler: {detail}",
+  "@payment_error_lnurl_generic": {
+    "placeholders": {
+      "detail": {
+        "type": "Object"
+      }
+    }
+  },
   "payment_error_auth": "Authentifizierungsfehler. Zugangsdaten überprüfen.",
   "payment_error_server": "Lightning-Server-Fehler. Bitte erneut versuchen.",
   "payment_error_unknown": "Unbekannter Fehler ({code})",
+  "@payment_error_unknown": {
+    "placeholders": {
+      "code": {
+        "type": "Object"
+      }
+    }
+  },
   
   "confirm_payment_title": "Zahlung bestätigen",
   "invoice_description_label": "Beschreibung",
@@ -165,6 +179,13 @@
   "invoice_expired_error": "Die Rechnung ist abgelaufen und kann nicht bezahlt werden",
   "amountless_invoice_error": "Rechnung ohne Betrag wird nicht unterstützt. Bitte fordern Sie eine Rechnung mit einem bestimmten Betrag an.",
   "payment_sent_status": "Zahlung gesendet - Status: {status}",
+  "@payment_sent_status": {
+    "placeholders": {
+      "status": {
+        "type": "Object"
+      }
+    }
+  },
   "confirm_no_session_error": "Keine aktive Sitzung",
   "confirm_no_wallet_error": "Keine primäre Wallet verfügbar",
   "payment_pending_hold": "Zahlung ausstehend - Hold-Rechnung erkannt",
@@ -373,7 +394,10 @@
   "@invoice_key_unavailable_subtitle": {
     "description": "Untertitel wenn keine Wallet verfügbar ist"
   },
-  
+  "invoice_key_security_warning": "Dieser Schlüssel ermöglicht Dritten, Rechnungen zu erstellen. Nur mit vertrauenswürdigen POS-Geräten teilen. Nie öffentlich posten oder teilen.",
+  "@invoice_key_security_warning": {
+    "description": "Sicherheitswarnung für Rechnungsschlüssel"
+  },
   "currency_count": "{count, plural, =1{1 Währung} other{{count} Währungen}}",
   "@currency_count": {
     "description": "Anzahl der ausgewählten Währungen",
@@ -382,7 +406,7 @@
         "type": "int"
       }
     }
-  }
+  },
 
   "clear_invoice_button": "Rechnung löschen",
   "invoice_cleared_message": "Rechnung gelöscht",

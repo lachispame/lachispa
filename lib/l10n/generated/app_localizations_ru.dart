@@ -960,6 +960,10 @@ class AppLocalizationsRu extends AppLocalizations {
       'Пожалуйста, сначала создайте кошелёк';
 
   @override
+  String get invoice_key_security_warning =>
+      'Этот ключ позволяет третьим лицам создавать счета. Предоставляйте только доверенным устройствам POS. Никогда не публикуйте и не распространяйте публично.';
+
+  @override
   String currency_count(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -970,6 +974,8 @@ class AppLocalizationsRu extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
   String get clear_invoice_button => 'Очистить счёт';
 
   @override

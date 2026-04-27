@@ -143,10 +143,24 @@
   "payment_error_still_pending": "Un paiement pour cette facture est déjà en cours",
   "payment_error_route_not_found": "Aucune route trouvée pour ce paiement",
   "payment_error_payment_not_found": "Paiement introuvable dans ce portefeuille",
-  "payment_error_lnurl_generic": "Erreur LNURL : {detail}",
+"payment_error_lnurl_generic": "Erreur LNURL : {detail}",
+  "@payment_error_lnurl_generic": {
+    "placeholders": {
+      "detail": {
+        "type": "Object"
+      }
+    }
+  },
   "payment_error_auth": "Erreur d'authentification. Vérifiez vos identifiants.",
-  "payment_error_server": "Erreur du serveur Lightning. Réessayez.",
+  "payment_error_server": "Erreur serveur Lightning. Réessayez.",
   "payment_error_unknown": "Erreur inconnue ({code})",
+  "@payment_error_unknown": {
+    "placeholders": {
+      "code": {
+        "type": "Object"
+      }
+    }
+  },
   
   "confirm_payment_title": "Confirmer le paiement",
   "invoice_description_label": "Description",
@@ -165,6 +179,13 @@
   "invoice_expired_error": "La facture a expiré et ne peut pas être payée",
   "amountless_invoice_error": "Facture sans montant non prise en charge. Veuillez demander une facture avec un montant spécifique.",
   "payment_sent_status": "Paiement envoyé - Statut : {status}",
+  "@payment_sent_status": {
+    "placeholders": {
+      "status": {
+        "type": "Object"
+      }
+    }
+  },
   "confirm_no_session_error": "Aucune session active",
   "confirm_no_wallet_error": "Aucun portefeuille principal disponible",
   "payment_pending_hold": "Paiement en attente - Facture de retenue détectée",
@@ -373,7 +394,10 @@
   "@invoice_key_unavailable_subtitle": {
     "description": "Sous-titre quand aucun portefeuille n'est disponible"
   },
-  
+  "invoice_key_security_warning": "Cette clé permet à des tiers de créer des factures. Ne la partagez qu'avec des appareils POS de confiance. Ne publiez jamais ni ne partagez publiquement.",
+  "@invoice_key_security_warning": {
+    "description": "Avertissement de sécurité pour la clé de facturation"
+  },
   "currency_count": "{count, plural, =1{1 devise} other{{count} devises}}",
   "@currency_count": {
     "description": "Nombre de devises sélectionnées",
@@ -382,7 +406,7 @@
         "type": "int"
       }
     }
-  }
+  },
 
   "clear_invoice_button": "Effacer la facture",
   "invoice_cleared_message": "Facture effacée",

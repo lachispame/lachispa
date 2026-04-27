@@ -144,10 +144,24 @@
   "payment_error_route_not_found": "Nessuna rotta trovata per questo pagamento",
   "payment_error_payment_not_found": "Pagamento non trovato in questo portafoglio",
   "payment_error_lnurl_generic": "Errore LNURL: {detail}",
+  "@payment_error_lnurl_generic": {
+    "placeholders": {
+      "detail": {
+        "type": "Object"
+      }
+    }
+  },
   "payment_error_auth": "Errore di autenticazione. Controlla le credenziali.",
   "payment_error_server": "Errore del server Lightning. Riprova.",
   "payment_error_unknown": "Errore sconosciuto ({code})",
-  
+  "@payment_error_unknown": {
+    "placeholders": {
+      "code": {
+        "type": "Object"
+      }
+    }
+  },
+
   "confirm_payment_title": "Conferma pagamento",
   "invoice_description_label": "Descrizione",
   "no_description_text": "Nessuna descrizione",
@@ -165,6 +179,13 @@
   "invoice_expired_error": "La fattura è scaduta e non può essere pagata",
   "amountless_invoice_error": "Fattura senza importo non supportata. Richiedere una fattura con un importo specifico.",
   "payment_sent_status": "Pagamento inviato - Stato: {status}",
+  "@payment_sent_status": {
+    "placeholders": {
+      "status": {
+        "type": "Object"
+      }
+    }
+  },
   "confirm_no_session_error": "Nessuna sessione attiva",
   "confirm_no_wallet_error": "Nessun portafoglio principale disponibile",
   "payment_pending_hold": "Pagamento in attesa - Fattura di blocco rilevata",
@@ -373,7 +394,10 @@
   "@invoice_key_unavailable_subtitle": {
     "description": "Sottotitolo quando nessun portafoglio è disponibile"
   },
-  
+  "invoice_key_security_warning": "Questa chiave permette a terzi di creare fatture. Condividila solo con dispositivi POS affidabili. Non pubblicare mai o condividere pubblicamente.",
+  "@invoice_key_security_warning": {
+    "description": "Avviso di sicurezza per la chiave fattura"
+  },
   "currency_count": "{count, plural, =1{1 valuta} other{{count} valute}}",
   "@currency_count": {
     "description": "Numero di valute selezionate",
@@ -382,7 +406,7 @@
         "type": "int"
       }
     }
-  }
+  },
 
   "clear_invoice_button": "Cancella fattura",
   "invoice_cleared_message": "Fattura cancellata",

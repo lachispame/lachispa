@@ -568,7 +568,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Erreur d\'authentification. Vérifiez vos identifiants.';
 
   @override
-  String get payment_error_server => 'Erreur du serveur Lightning. Réessayez.';
+  String get payment_error_server => 'Erreur serveur Lightning. Réessayez.';
 
   @override
   String payment_error_unknown(Object code) {
@@ -987,6 +987,10 @@ class AppLocalizationsFr extends AppLocalizations {
       'Veuillez d\'abord créer un portefeuille';
 
   @override
+  String get invoice_key_security_warning =>
+      'Cette clé permet à des tiers de créer des factures. Ne la partagez qu\'avec des appareils POS de confiance. Ne publiez jamais ni ne partagez publiquement.';
+
+  @override
   String currency_count(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -996,6 +1000,8 @@ class AppLocalizationsFr extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
   String get clear_invoice_button => 'Effacer la facture';
 
   @override
