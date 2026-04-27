@@ -400,8 +400,8 @@
   },
   "invoice_key_show": "Mostra chiave",
   "invoice_key_hide": "Nascondi chiave",
-  "invoice_key_copy_failed": "La chiave fattura non può essere vuota",
-  "invoice_key_copy_error": "Errore durante la copia della chiave fattura",
+  "invoice_key_copy_failed": "Errore durante la copia della chiave fattura",
+  "invoice_key_empty": "La chiave fattura non può essere vuota",
 
   "currency_count": "{count, plural, =1{1 valuta} other{{count} valute}}",
   "@currency_count": {

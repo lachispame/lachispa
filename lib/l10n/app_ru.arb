@@ -398,8 +398,8 @@
   },
   "invoice_key_show": "Показать ключ",
   "invoice_key_hide": "Скрыть ключ",
-  "invoice_key_copy_failed": "Ключ счета не может быть пустым",
-  "invoice_key_copy_error": "Не удалось скопировать ключ счета",
+  "invoice_key_copy_failed": "Не удалось скопировать ключ счета",
+  "invoice_key_empty": "Ключ счета не может быть пустым",
 
   "currency_count": "{count, plural, =1{1 валюта} few{{count} валюты} other{{count} валют}}",
   "@currency_count": {

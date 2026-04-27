@@ -1881,14 +1881,14 @@ abstract class AppLocalizations {
   /// No description provided for @invoice_key_copy_failed.
   ///
   /// In es, this message translates to:
-  /// **'La clave de facturación no puede estar vacía'**
+  /// **'Error al copiar la clave de facturación'**
   String get invoice_key_copy_failed;
 
-  /// No description provided for @invoice_key_copy_error.
+  /// No description provided for @invoice_key_empty.
   ///
   /// In es, this message translates to:
-  /// **'Error al copiar la clave de facturación'**
-  String get invoice_key_copy_error;
+  /// **'La clave de facturación no puede estar vacía'**
+  String get invoice_key_empty;
 
   /// Cantidad de monedas seleccionadas
   ///

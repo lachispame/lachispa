@@ -998,11 +998,10 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get invoice_key_copy_failed =>
-      'La clé de facturation ne peut pas être vide';
+      'Échec de la copie de la clé de facturation';
 
   @override
-  String get invoice_key_copy_error =>
-      'Échec de la copie de la clé de facturation';
+  String get invoice_key_empty => 'La clé de facturation ne peut pas être vide';
 
   @override
   String currency_count(int count) {

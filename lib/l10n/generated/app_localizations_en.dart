@@ -965,10 +965,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invoice_key_hide => 'Hide key';
 
   @override
-  String get invoice_key_copy_failed => 'Invoice key cannot be empty';
+  String get invoice_key_copy_failed => 'Failed to copy invoice key';
 
   @override
-  String get invoice_key_copy_error => 'Failed to copy invoice key';
+  String get invoice_key_empty => 'Invoice key cannot be empty';
 
   @override
   String currency_count(int count) {

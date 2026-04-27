@@ -991,11 +991,10 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get invoice_key_copy_failed =>
-      'La chiave fattura non può essere vuota';
+      'Errore durante la copia della chiave fattura';
 
   @override
-  String get invoice_key_copy_error =>
-      'Errore durante la copia della chiave fattura';
+  String get invoice_key_empty => 'La chiave fattura non può essere vuota';
 
   @override
   String currency_count(int count) {

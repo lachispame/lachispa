@@ -400,8 +400,8 @@
   },
   "invoice_key_show": "Mostrar clave",
   "invoice_key_hide": "Ocultar clave",
-  "invoice_key_copy_failed": "La clave de facturación no puede estar vacía",
-  "invoice_key_copy_error": "Error al copiar la clave de facturación",
+  "invoice_key_copy_failed": "Error al copiar la clave de facturación",
+  "invoice_key_empty": "La clave de facturación no puede estar vacía",
 
   "currency_count": "{count, plural, =1{1 moneda} other{{count} monedas}}",
   "@currency_count": {

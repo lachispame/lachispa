@@ -364,11 +364,15 @@ class _InvoiceKeyScreenState extends State<InvoiceKeyScreen> {
     );
   }
 
-void _copyToClipboard(BuildContext context, AppTokens t, String text) async {
+Future<void> _copyToClipboard(
+    BuildContext context,
+    AppTokens t,
+    String text,
+  ) async {
     if (text.isEmpty) {
       _showErrorMessage(
         context,
-        AppLocalizations.of(context)?.invoice_key_copy_failed ??
+        AppLocalizations.of(context)?.invoice_key_empty ??
             'Invoice key cannot be empty',
       );
       return;
@@ -380,7 +384,7 @@ void _copyToClipboard(BuildContext context, AppTokens t, String text) async {
       if (!context.mounted) return;
       _showErrorMessage(
         context,
-        AppLocalizations.of(context)?.invoice_key_copy_error ??
+        AppLocalizations.of(context)?.invoice_key_copy_failed ??
             'Failed to copy invoice key',
       );
       return;

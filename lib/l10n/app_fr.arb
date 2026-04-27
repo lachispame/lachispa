@@ -400,8 +400,8 @@
   },
   "invoice_key_show": "Afficher la clé",
   "invoice_key_hide": "Masquer la clé",
-  "invoice_key_copy_failed": "La clé de facturation ne peut pas être vide",
-  "invoice_key_copy_error": "Échec de la copie de la clé de facturation",
+  "invoice_key_copy_failed": "Échec de la copie de la clé de facturation",
+  "invoice_key_empty": "La clé de facturation ne peut pas être vide",
 
   "currency_count": "{count, plural, =1{1 devise} other{{count} devises}}",
   "@currency_count": {

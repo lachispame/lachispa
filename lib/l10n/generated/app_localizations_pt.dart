@@ -979,11 +979,10 @@ class AppLocalizationsPt extends AppLocalizations {
   String get invoice_key_hide => 'Ocultar chave';
 
   @override
-  String get invoice_key_copy_failed =>
-      'A chave de fatura não pode estar vazia';
+  String get invoice_key_copy_failed => 'Falha ao copiar a chave de fatura';
 
   @override
-  String get invoice_key_copy_error => 'Falha ao copiar a chave de fatura';
+  String get invoice_key_empty => 'A chave de fatura não pode estar vazia';
 
   @override
   String currency_count(int count) {

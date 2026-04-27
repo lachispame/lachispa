@@ -992,11 +992,10 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get invoice_key_copy_failed =>
-      'Rechnungsschlüssel darf nicht leer sein';
+      'Rechnungsschlüssel konnte nicht kopiert werden';
 
   @override
-  String get invoice_key_copy_error =>
-      'Rechnungsschlüssel konnte nicht kopiert werden';
+  String get invoice_key_empty => 'Rechnungsschlüssel darf nicht leer sein';
 
   @override
   String currency_count(int count) {

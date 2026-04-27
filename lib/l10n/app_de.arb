@@ -400,8 +400,8 @@
   },
   "invoice_key_show": "Schlüssel anzeigen",
   "invoice_key_hide": "Schlüssel verbergen",
-  "invoice_key_copy_failed": "Rechnungsschlüssel darf nicht leer sein",
-  "invoice_key_copy_error": "Rechnungsschlüssel konnte nicht kopiert werden",
+  "invoice_key_copy_failed": "Rechnungsschlüssel konnte nicht kopiert werden",
+  "invoice_key_empty": "Rechnungsschlüssel darf nicht leer sein",
 
   "currency_count": "{count, plural, =1{1 Währung} other{{count} Währungen}}",
   "@currency_count": {

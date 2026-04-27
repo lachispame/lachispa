@@ -981,11 +981,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get invoice_key_copy_failed =>
-      'La clave de facturación no puede estar vacía';
+      'Error al copiar la clave de facturación';
 
   @override
-  String get invoice_key_copy_error =>
-      'Error al copiar la clave de facturación';
+  String get invoice_key_empty =>
+      'La clave de facturación no puede estar vacía';
 
   @override
   String currency_count(int count) {

@@ -970,10 +970,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get invoice_key_hide => 'Скрыть ключ';
 
   @override
-  String get invoice_key_copy_failed => 'Ключ счета не может быть пустым';
+  String get invoice_key_copy_failed => 'Не удалось скопировать ключ счета';
 
   @override
-  String get invoice_key_copy_error => 'Не удалось скопировать ключ счета';
+  String get invoice_key_empty => 'Ключ счета не может быть пустым';
 
   @override
   String currency_count(int count) {
