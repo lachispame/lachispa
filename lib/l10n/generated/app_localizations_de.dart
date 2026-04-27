@@ -483,9 +483,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get decimal_button => '.';
 
   @override
-  String get calculating_text => 'Berechne...';
-
-  @override
   String get loading_rates_text => 'Lade Kurse...';
 
   @override
@@ -626,7 +623,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Rechnung ohne Betrag wird nicht unterstützt. Bitte fordern Sie eine Rechnung mit einem bestimmten Betrag an.';
 
   @override
-  String payment_sent_status(Object status) {
+  String payment_sent_status(String status) {
     return 'Zahlung gesendet - Status: $status';
   }
 
@@ -917,6 +914,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get tap_to_cycle => 'Tippen, um Währungen zu wechseln';
+
+  @override
+  String get calculating_text => 'Berechne...';
 
   @override
   String get settings_screen_title => 'Einstellungen';

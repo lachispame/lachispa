@@ -474,9 +474,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get decimal_button => '.';
 
   @override
-  String get calculating_text => 'Calculating...';
-
-  @override
   String get loading_rates_text => 'Loading rates...';
 
   @override
@@ -612,7 +609,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Invoice without amount not supported. Please request an invoice with a specific amount.';
 
   @override
-  String payment_sent_status(Object status) {
+  String payment_sent_status(String status) {
     return 'Payment sent - Status: $status';
   }
 
@@ -893,6 +890,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tap_to_cycle => 'Tap to cycle currencies';
+
+  @override
+  String get calculating_text => 'Calculating...';
 
   @override
   String get settings_screen_title => 'Settings';

@@ -475,9 +475,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get decimal_button => '.';
 
   @override
-  String get calculating_text => 'вычисление...';
-
-  @override
   String get loading_rates_text => 'Загрузка курсов...';
 
   @override
@@ -613,7 +610,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Счет без суммы не поддерживается. Запросите счет с указанной суммой.';
 
   @override
-  String payment_sent_status(Object status) {
+  String payment_sent_status(String status) {
     return 'Платеж отправлен - Статус: $status';
   }
 
@@ -897,6 +894,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get tap_to_cycle => 'Нажмите для переключения валют';
+
+  @override
+  String get calculating_text => 'вычисление...';
 
   @override
   String get settings_screen_title => 'Настройки';

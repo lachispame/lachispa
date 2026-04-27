@@ -122,7 +122,6 @@
   "send_to_title": "Senden an",
   "clear_button": "C",
   "decimal_button": ".",
-  "calculating_text": "berechne...",
   "loading_rates_text": "Lade Kurse...",
   "send_button_prefix": "SENDEN ",
   "amount_processing_button": "VERARBEITE...",
@@ -182,7 +181,7 @@
   "@payment_sent_status": {
     "placeholders": {
       "status": {
-        "type": "Object"
+        "type": "String"
       }
     }
   },
@@ -382,15 +381,30 @@
   "deep_link_login_required_message": "Sie müssen sich in Ihr LaChispa-Konto einloggen, um diese Zahlung zu verarbeiten.",
   
   "invoice_key_qr_title": "Rechnungsschlüssel-QR",
+  "@invoice_key_qr_title": {
+    "description": "Titel für die Anzeige des QR-Codes des Rechnungsschlüssels"
+  },
   "invoice_key_qr_description": "Verwenden Sie diesen QR-Code mit LaChispaPOS oder anderen Lightning-Apps, um Zahlungen zu empfangen, ohne Ihren Admin-Schlüssel preiszugeben.",
+  "@invoice_key_qr_description": {
+    "description": "Beschreibung der Funktionalität des QR-Codes des Rechnungsschlüssels"
+  },
   "invoice_key_qr_subtitle": "QR für andere Apps anzeigen",
+  "@invoice_key_qr_subtitle": {
+    "description": "Untertitel für die Aktion, QR anderen Anwendungen anzuzeigen"
+  },
   "copy_invoice_key": "Schlüssel kopieren",
+  "@copy_invoice_key": {
+    "description": "Schaltfläche zum Kopieren des Rechnungsschlüssels in die Zwischenablage"
+  },
   "invoice_key_copied": "Rechnungsschlüssel in die Zwischenablage kopiert",
+  "@invoice_key_copied": {
+    "description": "Bestätigungsmeldung beim Kopieren des Rechnungsschlüssels"
+  },
   "invoice_key_unavailable_title": "Keine Wallet gefunden",
-  "invoice_key_unavailable_subtitle": "Bitte erstellen Sie zuerst eine Wallet",
   "@invoice_key_unavailable_title": {
     "description": "Titel wenn keine Wallet verfügbar ist"
   },
+  "invoice_key_unavailable_subtitle": "Bitte erstellen Sie zuerst eine Wallet",
   "@invoice_key_unavailable_subtitle": {
     "description": "Untertitel wenn keine Wallet verfügbar ist"
   },
@@ -399,9 +413,21 @@
     "description": "Sicherheitswarnung für Rechnungsschlüssel"
   },
   "invoice_key_show": "Schlüssel anzeigen",
+  "@invoice_key_show": {
+    "description": "Schaltfläche zum Anzeigen des verborgenen Rechnungsschlüssels"
+  },
   "invoice_key_hide": "Schlüssel verbergen",
+  "@invoice_key_hide": {
+    "description": "Schaltfläche zum Verbergen des angezeigten Rechnungsschlüssels"
+  },
   "invoice_key_copy_failed": "Rechnungsschlüssel konnte nicht kopiert werden",
+  "@invoice_key_copy_failed": {
+    "description": "Fehlermeldung wenn das Kopieren des Rechnungsschlüssels fehlschlägt"
+  },
   "invoice_key_empty": "Rechnungsschlüssel darf nicht leer sein",
+  "@invoice_key_empty": {
+    "description": "Validierungsmeldung wenn der Rechnungsschlüssel leer ist"
+  },
 
   "currency_count": "{count, plural, =1{1 Währung} other{{count} Währungen}}",
   "@currency_count": {

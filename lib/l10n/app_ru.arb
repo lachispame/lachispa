@@ -182,7 +182,7 @@
   "@payment_sent_status": {
     "placeholders": {
       "status": {
-        "type": "Object"
+        "type": "String"
       }
     }
   },
@@ -380,10 +380,25 @@
   "deep_link_login_required_message": "Вы должны войти в свою учетную запись LaChispa для обработки этого платежа.",
 
   "invoice_key_qr_title": "QR-код ключа счёта",
+  "@invoice_key_qr_title": {
+    "description": "Название для отображения QR-кода ключа счёта"
+  },
   "invoice_key_qr_description": "Используйте этот QR-код с LaChispaPOS или другими Lightning-приложениями для получения платежей без раскрытия ключа администратора.",
+  "@invoice_key_qr_description": {
+    "description": "Описание функциональности QR-кода ключа счёта"
+  },
   "invoice_key_qr_subtitle": "Показать QR для других приложений",
+  "@invoice_key_qr_subtitle": {
+    "description": "Подзаголовок для действия показа QR другим приложениям"
+  },
   "copy_invoice_key": "Скопировать ключ",
+  "@copy_invoice_key": {
+    "description": "Кнопка для копирования ключа счёта в буфер обмена"
+  },
   "invoice_key_copied": "Ключ счёта скопирован в буфер обмена",
+  "@invoice_key_copied": {
+    "description": "Сообщение подтверждения при копировании ключа счёта"
+  },
   "invoice_key_unavailable_title": "Кошелёк не найден",
   "@invoice_key_unavailable_title": {
     "description": "Заголовок когда кошелёк недоступен"
@@ -397,9 +412,21 @@
     "description": "Предупреждение о безопасности для ключа счета"
   },
   "invoice_key_show": "Показать ключ",
+  "@invoice_key_show": {
+    "description": "Кнопка для отображения скрытого ключа счёта"
+  },
   "invoice_key_hide": "Скрыть ключ",
+  "@invoice_key_hide": {
+    "description": "Кнопка для скрытия отображаемого ключа счёта"
+  },
   "invoice_key_copy_failed": "Не удалось скопировать ключ счета",
+  "@invoice_key_copy_failed": {
+    "description": "Сообщение об ошибке когда копирование ключа счёта не удаётся"
+  },
   "invoice_key_empty": "Ключ счета не может быть пустым",
+  "@invoice_key_empty": {
+    "description": "Сообщение валидации когда ключ счёта пуст"
+  },
 
   "currency_count": "{count, plural, =1{1 валюта} few{{count} валюты} other{{count} валют}}",
   "@currency_count": {

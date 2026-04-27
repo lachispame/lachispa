@@ -122,7 +122,6 @@
   "send_to_title": "Invia a",
   "clear_button": "C",
   "decimal_button": ".",
-  "calculating_text": "calcolo...",
   "loading_rates_text": "Caricamento tassi...",
   "send_button_prefix": "INVIA ",
   "amount_processing_button": "ELABORAZIONE...",
@@ -182,7 +181,7 @@
   "@payment_sent_status": {
     "placeholders": {
       "status": {
-        "type": "Object"
+        "type": "String"
       }
     }
   },
@@ -382,15 +381,30 @@
   "deep_link_login_required_message": "Devi accedere al tuo account LaChispa per elaborare questo pagamento.",
   
   "invoice_key_qr_title": "QR Chiave fattura",
+  "@invoice_key_qr_title": {
+    "description": "Titolo per visualizzare il codice QR della chiave fattura"
+  },
   "invoice_key_qr_description": "Usa questo codice QR con LaChispaPOS o altre app Lightning per ricevere pagamenti senza esporre la tua chiave amministratore.",
+  "@invoice_key_qr_description": {
+    "description": "Descrizione della funzionalità del codice QR della chiave fattura"
+  },
   "invoice_key_qr_subtitle": "Mostra QR per altre app",
+  "@invoice_key_qr_subtitle": {
+    "description": "Sottotitolo per l'azione di mostrare QR ad altre applicazioni"
+  },
   "copy_invoice_key": "Copia chiave",
+  "@copy_invoice_key": {
+    "description": "Pulsante per copiare la chiave fattura negli appunti"
+  },
   "invoice_key_copied": "Chiave fattura copiata negli appunti",
+  "@invoice_key_copied": {
+    "description": "Messaggio di conferma quando viene copiata la chiave fattura"
+  },
   "invoice_key_unavailable_title": "Portafoglio non trovato",
-  "invoice_key_unavailable_subtitle": "Crea prima un portafoglio",
   "@invoice_key_unavailable_title": {
     "description": "Titolo quando nessun portafoglio è disponibile"
   },
+  "invoice_key_unavailable_subtitle": "Crea prima un portafoglio",
   "@invoice_key_unavailable_subtitle": {
     "description": "Sottotitolo quando nessun portafoglio è disponibile"
   },
@@ -399,9 +413,21 @@
     "description": "Avviso di sicurezza per la chiave fattura"
   },
   "invoice_key_show": "Mostra chiave",
+  "@invoice_key_show": {
+    "description": "Pulsante per mostrare la chiave fattura nascosta"
+  },
   "invoice_key_hide": "Nascondi chiave",
+  "@invoice_key_hide": {
+    "description": "Pulsante per nascondere la chiave fattura visualizzata"
+  },
   "invoice_key_copy_failed": "Errore durante la copia della chiave fattura",
+  "@invoice_key_copy_failed": {
+    "description": "Messaggio di errore quando la copia della chiave fattura non riesce"
+  },
   "invoice_key_empty": "La chiave fattura non può essere vuota",
+  "@invoice_key_empty": {
+    "description": "Messaggio di convalida quando la chiave fattura è vuota"
+  },
 
   "currency_count": "{count, plural, =1{1 valuta} other{{count} valute}}",
   "@currency_count": {

@@ -182,7 +182,7 @@
   "@payment_sent_status": {
     "placeholders": {
       "status": {
-        "type": "Object"
+        "type": "String"
       }
     }
   },
@@ -380,10 +380,25 @@
   "deep_link_login_required_message": "Você deve fazer login em sua conta LaChispa para processar este pagamento.",
 
   "invoice_key_qr_title": "QR da Chave de Fatura",
+  "@invoice_key_qr_title": {
+    "description": "Título para exibir o código QR da chave de fatura"
+  },
   "invoice_key_qr_description": "Use este código QR com LaChispaPOS ou outras apps Lightning para receber pagamentos sem expor a sua chave de administrador.",
+  "@invoice_key_qr_description": {
+    "description": "Descrição da funcionalidade do código QR da chave de fatura"
+  },
   "invoice_key_qr_subtitle": "Mostrar QR para outras apps",
+  "@invoice_key_qr_subtitle": {
+    "description": "Subtítulo para a ação de mostrar QR para outros aplicativos"
+  },
   "copy_invoice_key": "Copiar Chave",
+  "@copy_invoice_key": {
+    "description": "Botão para copiar a chave de fatura para a área de transferência"
+  },
   "invoice_key_copied": "Chave de fatura copiada para a área de transferência",
+  "@invoice_key_copied": {
+    "description": "Mensagem de confirmação quando a chave de fatura é copiada"
+  },
   "invoice_key_unavailable_title": "Carteira não encontrada",
   "@invoice_key_unavailable_title": {
     "description": "Título quando não há carteira disponível"
@@ -397,9 +412,21 @@
     "description": "Aviso de segurança para a chave de fatura"
   },
   "invoice_key_show": "Mostrar chave",
+  "@invoice_key_show": {
+    "description": "Botão para mostrar a chave de fatura oculta"
+  },
   "invoice_key_hide": "Ocultar chave",
+  "@invoice_key_hide": {
+    "description": "Botão para ocultar a chave de fatura exibida"
+  },
   "invoice_key_copy_failed": "Falha ao copiar a chave de fatura",
+  "@invoice_key_copy_failed": {
+    "description": "Mensagem de erro quando a cópia da chave de fatura falha"
+  },
   "invoice_key_empty": "A chave de fatura não pode estar vazia",
+  "@invoice_key_empty": {
+    "description": "Mensagem de validação quando a chave de fatura está vazia"
+  },
 
   "currency_count": "{count, plural, =1{1 moeda} other{{count} moedas}}",
   "@currency_count": {

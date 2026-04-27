@@ -483,9 +483,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get decimal_button => '.';
 
   @override
-  String get calculating_text => 'Calcolo...';
-
-  @override
   String get loading_rates_text => 'Caricamento tassi...';
 
   @override
@@ -626,7 +623,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Fattura senza importo non supportata. Richiedere una fattura con un importo specifico.';
 
   @override
-  String payment_sent_status(Object status) {
+  String payment_sent_status(String status) {
     return 'Pagamento inviato - Stato: $status';
   }
 
@@ -918,6 +915,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get tap_to_cycle => 'Tocca per scorrere le valute';
+
+  @override
+  String get calculating_text => 'Calcolo...';
 
   @override
   String get settings_screen_title => 'Impostazioni';

@@ -477,9 +477,6 @@ class AppLocalizationsPt extends AppLocalizations {
   String get decimal_button => '.';
 
   @override
-  String get calculating_text => 'calculando...';
-
-  @override
   String get loading_rates_text => 'Carregando taxas...';
 
   @override
@@ -616,7 +613,7 @@ class AppLocalizationsPt extends AppLocalizations {
       'Fatura sem valor não suportada. Solicite uma fatura com um valor específico.';
 
   @override
-  String payment_sent_status(Object status) {
+  String payment_sent_status(String status) {
     return 'Pagamento enviado - Estado: $status';
   }
 
@@ -905,6 +902,9 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get tap_to_cycle => 'Toque para alternar moedas';
+
+  @override
+  String get calculating_text => 'calculando...';
 
   @override
   String get settings_screen_title => 'Configurações';

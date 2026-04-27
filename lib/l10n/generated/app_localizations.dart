@@ -996,12 +996,6 @@ abstract class AppLocalizations {
   /// **'.'**
   String get decimal_button;
 
-  /// No description provided for @calculating_text.
-  ///
-  /// In es, this message translates to:
-  /// **'Calculando...'**
-  String get calculating_text;
-
   /// No description provided for @loading_rates_text.
   ///
   /// In es, this message translates to:
@@ -1246,7 +1240,7 @@ abstract class AppLocalizations {
   ///
   /// In es, this message translates to:
   /// **'Pago enviado - Estado: {status}'**
-  String payment_sent_status(Object status);
+  String payment_sent_status(String status);
 
   /// No description provided for @confirm_no_session_error.
   ///
@@ -1764,6 +1758,12 @@ abstract class AppLocalizations {
   /// **'Toca para cambiar monedas'**
   String get tap_to_cycle;
 
+  /// No description provided for @calculating_text.
+  ///
+  /// In es, this message translates to:
+  /// **'Calculando...'**
+  String get calculating_text;
+
   /// No description provided for @settings_screen_title.
   ///
   /// In es, this message translates to:
@@ -1818,31 +1818,31 @@ abstract class AppLocalizations {
   /// **'Debes iniciar sesión en tu cuenta LaChispa para procesar este pago.'**
   String get deep_link_login_required_message;
 
-  /// No description provided for @invoice_key_qr_title.
+  /// Título para mostrar el código QR de la clave de facturación
   ///
   /// In es, this message translates to:
   /// **'QR de Clave de Facturación'**
   String get invoice_key_qr_title;
 
-  /// No description provided for @invoice_key_qr_description.
+  /// Descripción de la funcionalidad del código QR de clave de facturación
   ///
   /// In es, this message translates to:
   /// **'Usa este código QR con LaChispaPOS u otras apps Lightning para recibir pagos sin exponer tu clave de administrador.'**
   String get invoice_key_qr_description;
 
-  /// No description provided for @invoice_key_qr_subtitle.
+  /// Subtítulo para la acción de mostrar QR a otras aplicaciones
   ///
   /// In es, this message translates to:
   /// **'Mostrar QR para otras apps'**
   String get invoice_key_qr_subtitle;
 
-  /// No description provided for @copy_invoice_key.
+  /// Botón para copiar la clave de facturación al portapapeles
   ///
   /// In es, this message translates to:
   /// **'Copiar Clave'**
   String get copy_invoice_key;
 
-  /// No description provided for @invoice_key_copied.
+  /// Mensaje de confirmación cuando se copia la clave de facturación
   ///
   /// In es, this message translates to:
   /// **'Clave de facturación copiada al portapapeles'**
@@ -1866,25 +1866,25 @@ abstract class AppLocalizations {
   /// **'Esta clave permite a terceros crear facturas. Solo compártela con dispositivos POS confiables. Nunca publiques ni compartas públicamente.'**
   String get invoice_key_security_warning;
 
-  /// No description provided for @invoice_key_show.
+  /// Botón para mostrar la clave de facturación oculta
   ///
   /// In es, this message translates to:
   /// **'Mostrar clave'**
   String get invoice_key_show;
 
-  /// No description provided for @invoice_key_hide.
+  /// Botón para ocultar la clave de facturación mostrada
   ///
   /// In es, this message translates to:
   /// **'Ocultar clave'**
   String get invoice_key_hide;
 
-  /// No description provided for @invoice_key_copy_failed.
+  /// Mensaje de error cuando falla la copia de la clave de facturación
   ///
   /// In es, this message translates to:
   /// **'Error al copiar la clave de facturación'**
   String get invoice_key_copy_failed;
 
-  /// No description provided for @invoice_key_empty.
+  /// Mensaje de validación cuando la clave de facturación está vacía
   ///
   /// In es, this message translates to:
   /// **'La clave de facturación no puede estar vacía'**
