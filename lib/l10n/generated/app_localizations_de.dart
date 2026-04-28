@@ -486,9 +486,6 @@ class AppLocalizationsDe extends AppLocalizations {
   String get decimal_button => '.';
 
   @override
-  String get calculating_text => 'Berechne...';
-
-  @override
   String get loading_rates_text => 'Lade Kurse...';
 
   @override
@@ -629,7 +626,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Rechnung ohne Betrag wird nicht unterstützt. Bitte fordern Sie eine Rechnung mit einem bestimmten Betrag an.';
 
   @override
-  String payment_sent_status(Object status) {
+  String payment_sent_status(String status) {
     return 'Zahlung gesendet - Status: $status';
   }
 
@@ -922,6 +919,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get tap_to_cycle => 'Tippen, um Währungen zu wechseln';
 
   @override
+  String get calculating_text => 'Berechne...';
+
+  @override
   String get settings_screen_title => 'Einstellungen';
 
   @override
@@ -958,6 +958,58 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get deep_link_login_required_message =>
       'Sie müssen sich in Ihr LaChispa-Konto einloggen, um diese Zahlung zu verarbeiten.';
+
+  @override
+  String get invoice_key_qr_title => 'Rechnungsschlüssel-QR';
+
+  @override
+  String get invoice_key_qr_description =>
+      'Verwenden Sie diesen QR-Code mit LaChispaPOS oder anderen Lightning-Apps, um Zahlungen zu empfangen, ohne Ihren Admin-Schlüssel preiszugeben.';
+
+  @override
+  String get invoice_key_qr_subtitle => 'QR für andere Apps anzeigen';
+
+  @override
+  String get copy_invoice_key => 'Schlüssel kopieren';
+
+  @override
+  String get invoice_key_copied =>
+      'Rechnungsschlüssel in die Zwischenablage kopiert';
+
+  @override
+  String get invoice_key_unavailable_title => 'Keine Wallet gefunden';
+
+  @override
+  String get invoice_key_unavailable_subtitle =>
+      'Bitte erstellen Sie zuerst eine Wallet';
+
+  @override
+  String get invoice_key_security_warning =>
+      'Dieser Schlüssel ermöglicht Dritten, Rechnungen zu erstellen. Nur mit vertrauenswürdigen POS-Geräten teilen. Nie öffentlich posten oder teilen.';
+
+  @override
+  String get invoice_key_show => 'Schlüssel anzeigen';
+
+  @override
+  String get invoice_key_hide => 'Schlüssel verbergen';
+
+  @override
+  String get invoice_key_copy_failed =>
+      'Rechnungsschlüssel konnte nicht kopiert werden';
+
+  @override
+  String get invoice_key_empty => 'Rechnungsschlüssel darf nicht leer sein';
+
+  @override
+  String currency_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count Währungen',
+      one: '1 Währung',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get clear_invoice_button => 'Rechnung löschen';

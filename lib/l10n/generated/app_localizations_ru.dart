@@ -478,9 +478,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get decimal_button => '.';
 
   @override
-  String get calculating_text => 'Вычисление...';
-
-  @override
   String get loading_rates_text => 'Загрузка курсов...';
 
   @override
@@ -616,7 +613,7 @@ class AppLocalizationsRu extends AppLocalizations {
       'Счет без суммы не поддерживается. Запросите счет с указанной суммой.';
 
   @override
-  String payment_sent_status(Object status) {
+  String payment_sent_status(String status) {
     return 'Платеж отправлен - Статус: $status';
   }
 
@@ -902,6 +899,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get tap_to_cycle => 'Нажмите для переключения валют';
 
   @override
+  String get calculating_text => 'вычисление...';
+
+  @override
   String get settings_screen_title => 'Настройки';
 
   @override
@@ -938,6 +938,57 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get deep_link_login_required_message =>
       'Вы должны войти в свою учетную запись LaChispa для обработки этого платежа.';
+
+  @override
+  String get invoice_key_qr_title => 'QR-код ключа счёта';
+
+  @override
+  String get invoice_key_qr_description =>
+      'Используйте этот QR-код с LaChispaPOS или другими Lightning-приложениями для получения платежей без раскрытия ключа администратора.';
+
+  @override
+  String get invoice_key_qr_subtitle => 'Показать QR для других приложений';
+
+  @override
+  String get copy_invoice_key => 'Скопировать ключ';
+
+  @override
+  String get invoice_key_copied => 'Ключ счёта скопирован в буфер обмена';
+
+  @override
+  String get invoice_key_unavailable_title => 'Кошелёк не найден';
+
+  @override
+  String get invoice_key_unavailable_subtitle =>
+      'Пожалуйста, сначала создайте кошелёк';
+
+  @override
+  String get invoice_key_security_warning =>
+      'Этот ключ позволяет третьим лицам создавать счета. Предоставляйте только доверенным устройствам POS. Никогда не публикуйте и не распространяйте публично.';
+
+  @override
+  String get invoice_key_show => 'Показать ключ';
+
+  @override
+  String get invoice_key_hide => 'Скрыть ключ';
+
+  @override
+  String get invoice_key_copy_failed => 'Не удалось скопировать ключ счета';
+
+  @override
+  String get invoice_key_empty => 'Ключ счета не может быть пустым';
+
+  @override
+  String currency_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count валют',
+      few: '$count валюты',
+      one: '1 валюта',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get clear_invoice_button => 'Очистить счёт';

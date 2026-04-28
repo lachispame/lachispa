@@ -487,9 +487,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get decimal_button => '.';
 
   @override
-  String get calculating_text => 'Calcul...';
-
-  @override
   String get loading_rates_text => 'Chargement des taux...';
 
   @override
@@ -571,7 +568,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Erreur d\'authentification. Vérifiez vos identifiants.';
 
   @override
-  String get payment_error_server => 'Erreur du serveur Lightning. Réessayez.';
+  String get payment_error_server => 'Erreur serveur Lightning. Réessayez.';
 
   @override
   String payment_error_unknown(Object code) {
@@ -629,7 +626,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Facture sans montant non prise en charge. Veuillez demander une facture avec un montant spécifique.';
 
   @override
-  String payment_sent_status(Object status) {
+  String payment_sent_status(String status) {
     return 'Paiement envoyé - Statut : $status';
   }
 
@@ -928,6 +925,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get tap_to_cycle => 'Appuyez pour parcourir les devises';
 
   @override
+  String get calculating_text => 'Calcul...';
+
+  @override
   String get settings_screen_title => 'Paramètres';
 
   @override
@@ -964,6 +964,58 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get deep_link_login_required_message =>
       'Vous devez vous connecter à votre compte LaChispa pour traiter ce paiement.';
+
+  @override
+  String get invoice_key_qr_title => 'Code QR de la clé de facturation';
+
+  @override
+  String get invoice_key_qr_description =>
+      'Utilisez ce code QR avec LaChispaPOS ou d\'autres applications Lightning pour recevoir des paiements sans exposer votre clé administrateur.';
+
+  @override
+  String get invoice_key_qr_subtitle => 'Afficher le QR pour d\'autres apps';
+
+  @override
+  String get copy_invoice_key => 'Copier la clé';
+
+  @override
+  String get invoice_key_copied =>
+      'Clé de facturation copiée dans le presse-papiers';
+
+  @override
+  String get invoice_key_unavailable_title => 'Portefeuille non trouvé';
+
+  @override
+  String get invoice_key_unavailable_subtitle =>
+      'Veuillez d\'abord créer un portefeuille';
+
+  @override
+  String get invoice_key_security_warning =>
+      'Cette clé permet à des tiers de créer des factures. Ne la partagez qu\'avec des appareils POS de confiance. Ne publiez jamais ni ne partagez publiquement.';
+
+  @override
+  String get invoice_key_show => 'Afficher la clé';
+
+  @override
+  String get invoice_key_hide => 'Masquer la clé';
+
+  @override
+  String get invoice_key_copy_failed =>
+      'Échec de la copie de la clé de facturation';
+
+  @override
+  String get invoice_key_empty => 'La clé de facturation ne peut pas être vide';
+
+  @override
+  String currency_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count devises',
+      one: '1 devise',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get clear_invoice_button => 'Effacer la facture';

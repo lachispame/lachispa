@@ -477,9 +477,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get decimal_button => '.';
 
   @override
-  String get calculating_text => 'Calculating...';
-
-  @override
   String get loading_rates_text => 'Loading rates...';
 
   @override
@@ -615,7 +612,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Invoice without amount not supported. Please request an invoice with a specific amount.';
 
   @override
-  String payment_sent_status(Object status) {
+  String payment_sent_status(String status) {
     return 'Payment sent - Status: $status';
   }
 
@@ -898,6 +895,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tap_to_cycle => 'Tap to cycle currencies';
 
   @override
+  String get calculating_text => 'Calculating...';
+
+  @override
   String get settings_screen_title => 'Settings';
 
   @override
@@ -934,6 +934,55 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get deep_link_login_required_message =>
       'You must log in to your LaChispa account to process this payment.';
+
+  @override
+  String get invoice_key_qr_title => 'Invoice Key QR';
+
+  @override
+  String get invoice_key_qr_description =>
+      'Use this QR code with LaChispaPOS or other Lightning apps to receive payments without exposing your admin key.';
+
+  @override
+  String get invoice_key_qr_subtitle => 'Show QR for other apps';
+
+  @override
+  String get copy_invoice_key => 'Copy Key';
+
+  @override
+  String get invoice_key_copied => 'Invoice key copied to clipboard';
+
+  @override
+  String get invoice_key_unavailable_title => 'No wallet found';
+
+  @override
+  String get invoice_key_unavailable_subtitle => 'Please create a wallet first';
+
+  @override
+  String get invoice_key_security_warning =>
+      'This key allows third parties to create invoices. Only share with trusted POS devices. Never post or share publicly.';
+
+  @override
+  String get invoice_key_show => 'Show key';
+
+  @override
+  String get invoice_key_hide => 'Hide key';
+
+  @override
+  String get invoice_key_copy_failed => 'Failed to copy invoice key';
+
+  @override
+  String get invoice_key_empty => 'Invoice key cannot be empty';
+
+  @override
+  String currency_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count currencies',
+      one: '1 currency',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get clear_invoice_button => 'Clear invoice';

@@ -177,7 +177,6 @@
   "send_to_title": "Enviar a",
   "clear_button": "C",
   "decimal_button": ".",
-  "calculating_text": "calculando...",
   "loading_rates_text": "Loading rates...",
   "send_button_prefix": "SEND ",
   "amount_processing_button": "PROCESANDO...",
@@ -199,10 +198,24 @@
   "payment_error_route_not_found": "No se encontró ruta para este pago",
   "payment_error_payment_not_found": "El pago no existe en esta billetera",
   "payment_error_lnurl_generic": "Error LNURL: {detail}",
+  "@payment_error_lnurl_generic": {
+    "placeholders": {
+      "detail": {
+        "type": "Object"
+      }
+    }
+  },
   "payment_error_auth": "Error de autenticación. Verifica tus credenciales.",
   "payment_error_server": "Error del servidor Lightning. Intenta de nuevo.",
   "payment_error_unknown": "Error desconocido ({code})",
-  
+  "@payment_error_unknown": {
+    "placeholders": {
+      "code": {
+        "type": "Object"
+      }
+    }
+  },
+
   "confirm_payment_title": "Confirmar Pago",
   "invoice_description_label": "Descripción",
   "no_description_text": "Sin descripción",
@@ -220,6 +233,13 @@
   "invoice_expired_error": "La factura ha expirado y no se puede pagar",
   "amountless_invoice_error": "Factura sin monto no soportada. Solicite una factura con un monto específico.",
   "payment_sent_status": "Pago enviado - Estado: {status}",
+  "@payment_sent_status": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
   "confirm_no_session_error": "Sin sesión activa",
   "confirm_no_wallet_error": "No hay wallet principal disponible",
   "payment_pending_hold": "Pago pendiente - Factura Hold detectada",
@@ -360,6 +380,65 @@
   
   "deep_link_login_required_title": "Inicio de sesión requerido",
   "deep_link_login_required_message": "Debes iniciar sesión en tu cuenta LaChispa para procesar este pago.",
+  
+  "invoice_key_qr_title": "QR de Clave de Facturación",
+  "@invoice_key_qr_title": {
+    "description": "Título para mostrar el código QR de la clave de facturación"
+  },
+  "invoice_key_qr_description": "Usa este código QR con LaChispaPOS u otras apps Lightning para recibir pagos sin exponer tu clave de administrador.",
+  "@invoice_key_qr_description": {
+    "description": "Descripción de la funcionalidad del código QR de clave de facturación"
+  },
+  "invoice_key_qr_subtitle": "Mostrar QR para otras apps",
+  "@invoice_key_qr_subtitle": {
+    "description": "Subtítulo para la acción de mostrar QR a otras aplicaciones"
+  },
+  "copy_invoice_key": "Copiar Clave",
+  "@copy_invoice_key": {
+    "description": "Botón para copiar la clave de facturación al portapapeles"
+  },
+  "invoice_key_copied": "Clave de facturación copiada al portapapeles",
+  "@invoice_key_copied": {
+    "description": "Mensaje de confirmación cuando se copia la clave de facturación"
+  },
+  "invoice_key_unavailable_title": "Billetera no encontrada",
+  "@invoice_key_unavailable_title": {
+    "description": "Título cuando no hay billetera disponible"
+  },
+  "invoice_key_unavailable_subtitle": "Por favor crea una billetera primero",
+  "@invoice_key_unavailable_subtitle": {
+    "description": "Subtítulo cuando no hay billetera disponible"
+  },
+  "invoice_key_security_warning": "Esta clave permite a terceros crear facturas. Solo compártela con dispositivos POS confiables. Nunca publiques ni compartas públicamente.",
+  "@invoice_key_security_warning": {
+    "description": "Advertencia de seguridad para clave de facturación"
+  },
+  "invoice_key_show": "Mostrar clave",
+  "@invoice_key_show": {
+    "description": "Botón para mostrar la clave de facturación oculta"
+  },
+  "invoice_key_hide": "Ocultar clave",
+  "@invoice_key_hide": {
+    "description": "Botón para ocultar la clave de facturación mostrada"
+  },
+  "invoice_key_copy_failed": "Error al copiar la clave de facturación",
+  "@invoice_key_copy_failed": {
+    "description": "Mensaje de error cuando falla la copia de la clave de facturación"
+  },
+  "invoice_key_empty": "La clave de facturación no puede estar vacía",
+  "@invoice_key_empty": {
+    "description": "Mensaje de validación cuando la clave de facturación está vacía"
+  },
+
+  "currency_count": "{count, plural, =1{1 moneda} other{{count} monedas}}",
+  "@currency_count": {
+    "description": "Cantidad de monedas seleccionadas",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
 
   "clear_invoice_button": "Limpiar factura",
   "invoice_cleared_message": "Factura limpiada",

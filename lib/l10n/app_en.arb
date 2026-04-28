@@ -177,7 +177,6 @@
   "send_to_title": "Send to",
   "clear_button": "C",
   "decimal_button": ".",
-  "calculating_text": "calculating...",
   "loading_rates_text": "Loading rates...",
   "send_button_prefix": "SEND ",
   "amount_processing_button": "PROCESSING...",
@@ -232,7 +231,7 @@
   "payment_sent_status": "Payment sent - Status: {status}",
   "@payment_sent_status": {
     "placeholders": {
-      "status": { "type": "Object" }
+      "status": { "type": "String" }
     }
   },
   "confirm_no_session_error": "No active session",
@@ -375,6 +374,65 @@
   
   "deep_link_login_required_title": "Login Required",
   "deep_link_login_required_message": "You must log in to your LaChispa account to process this payment.",
+  
+  "invoice_key_qr_title": "Invoice Key QR",
+  "@invoice_key_qr_title": {
+    "description": "Title for displaying the invoice key QR code"
+  },
+  "invoice_key_qr_description": "Use this QR code with LaChispaPOS or other Lightning apps to receive payments without exposing your admin key.",
+  "@invoice_key_qr_description": {
+    "description": "Description of the invoice key QR code functionality"
+  },
+  "invoice_key_qr_subtitle": "Show QR for other apps",
+  "@invoice_key_qr_subtitle": {
+    "description": "Subtitle for the action to show QR to other applications"
+  },
+  "copy_invoice_key": "Copy Key",
+  "@copy_invoice_key": {
+    "description": "Button to copy the invoice key to clipboard"
+  },
+  "invoice_key_copied": "Invoice key copied to clipboard",
+  "@invoice_key_copied": {
+    "description": "Confirmation message when invoice key is copied"
+  },
+  "invoice_key_unavailable_title": "No wallet found",
+  "@invoice_key_unavailable_title": {
+    "description": "Title when no wallet is available"
+  },
+  "invoice_key_unavailable_subtitle": "Please create a wallet first",
+  "@invoice_key_unavailable_subtitle": {
+    "description": "Subtitle when no wallet is available"
+  },
+  "invoice_key_security_warning": "This key allows third parties to create invoices. Only share with trusted POS devices. Never post or share publicly.",
+  "@invoice_key_security_warning": {
+    "description": "Security warning for invoice key"
+  },
+  "invoice_key_show": "Show key",
+  "@invoice_key_show": {
+    "description": "Button to show the hidden invoice key"
+  },
+  "invoice_key_hide": "Hide key",
+  "@invoice_key_hide": {
+    "description": "Button to hide the displayed invoice key"
+  },
+  "invoice_key_copy_failed": "Failed to copy invoice key",
+  "@invoice_key_copy_failed": {
+    "description": "Error message when invoice key copy fails"
+  },
+  "invoice_key_empty": "Invoice key cannot be empty",
+  "@invoice_key_empty": {
+    "description": "Validation message when invoice key is empty"
+  },
+
+  "currency_count": "{count, plural, =1{1 currency} other{{count} currencies}}",
+  "@currency_count": {
+    "description": "Number of selected currencies",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
 
   "clear_invoice_button": "Clear invoice",
   "invoice_cleared_message": "Invoice cleared",

@@ -1002,12 +1002,6 @@ abstract class AppLocalizations {
   /// **'.'**
   String get decimal_button;
 
-  /// No description provided for @calculating_text.
-  ///
-  /// In es, this message translates to:
-  /// **'Calculando...'**
-  String get calculating_text;
-
   /// No description provided for @loading_rates_text.
   ///
   /// In es, this message translates to:
@@ -1252,7 +1246,7 @@ abstract class AppLocalizations {
   ///
   /// In es, this message translates to:
   /// **'Pago enviado - Estado: {status}'**
-  String payment_sent_status(Object status);
+  String payment_sent_status(String status);
 
   /// No description provided for @confirm_no_session_error.
   ///
@@ -1770,6 +1764,12 @@ abstract class AppLocalizations {
   /// **'Toca para cambiar monedas'**
   String get tap_to_cycle;
 
+  /// No description provided for @calculating_text.
+  ///
+  /// In es, this message translates to:
+  /// **'Calculando...'**
+  String get calculating_text;
+
   /// No description provided for @settings_screen_title.
   ///
   /// In es, this message translates to:
@@ -1823,6 +1823,84 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Debes iniciar sesión en tu cuenta LaChispa para procesar este pago.'**
   String get deep_link_login_required_message;
+
+  /// Título para mostrar el código QR de la clave de facturación
+  ///
+  /// In es, this message translates to:
+  /// **'QR de Clave de Facturación'**
+  String get invoice_key_qr_title;
+
+  /// Descripción de la funcionalidad del código QR de clave de facturación
+  ///
+  /// In es, this message translates to:
+  /// **'Usa este código QR con LaChispaPOS u otras apps Lightning para recibir pagos sin exponer tu clave de administrador.'**
+  String get invoice_key_qr_description;
+
+  /// Subtítulo para la acción de mostrar QR a otras aplicaciones
+  ///
+  /// In es, this message translates to:
+  /// **'Mostrar QR para otras apps'**
+  String get invoice_key_qr_subtitle;
+
+  /// Botón para copiar la clave de facturación al portapapeles
+  ///
+  /// In es, this message translates to:
+  /// **'Copiar Clave'**
+  String get copy_invoice_key;
+
+  /// Mensaje de confirmación cuando se copia la clave de facturación
+  ///
+  /// In es, this message translates to:
+  /// **'Clave de facturación copiada al portapapeles'**
+  String get invoice_key_copied;
+
+  /// Título cuando no hay billetera disponible
+  ///
+  /// In es, this message translates to:
+  /// **'Billetera no encontrada'**
+  String get invoice_key_unavailable_title;
+
+  /// Subtítulo cuando no hay billetera disponible
+  ///
+  /// In es, this message translates to:
+  /// **'Por favor crea una billetera primero'**
+  String get invoice_key_unavailable_subtitle;
+
+  /// Advertencia de seguridad para clave de facturación
+  ///
+  /// In es, this message translates to:
+  /// **'Esta clave permite a terceros crear facturas. Solo compártela con dispositivos POS confiables. Nunca publiques ni compartas públicamente.'**
+  String get invoice_key_security_warning;
+
+  /// Botón para mostrar la clave de facturación oculta
+  ///
+  /// In es, this message translates to:
+  /// **'Mostrar clave'**
+  String get invoice_key_show;
+
+  /// Botón para ocultar la clave de facturación mostrada
+  ///
+  /// In es, this message translates to:
+  /// **'Ocultar clave'**
+  String get invoice_key_hide;
+
+  /// Mensaje de error cuando falla la copia de la clave de facturación
+  ///
+  /// In es, this message translates to:
+  /// **'Error al copiar la clave de facturación'**
+  String get invoice_key_copy_failed;
+
+  /// Mensaje de validación cuando la clave de facturación está vacía
+  ///
+  /// In es, this message translates to:
+  /// **'La clave de facturación no puede estar vacía'**
+  String get invoice_key_empty;
+
+  /// Cantidad de monedas seleccionadas
+  ///
+  /// In es, this message translates to:
+  /// **'{count, plural, =1{1 moneda} other{{count} monedas}}'**
+  String currency_count(int count);
 
   /// No description provided for @clear_invoice_button.
   ///

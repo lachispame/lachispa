@@ -8,6 +8,7 @@ import '../theme/app_tokens.dart';
 import '7ln_address_screen.dart';
 import '16currency_settings_screen.dart';
 import '18language_selection_screen.dart';
+import '19invoice_key_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -71,6 +72,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               ),
                             );
                           },
+                        );
+                      },
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // Invoice Key QR
+                    _buildSettingsItem(
+                      t: t,
+                      icon: Icons.qr_code,
+                      iconColor: t.accentSolid,
+                      title: AppLocalizations.of(context)!.invoice_key_qr_title,
+                      subtitle: AppLocalizations.of(context)!.invoice_key_qr_subtitle,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const InvoiceKeyScreen(),
+                          ),
                         );
                       },
                     ),

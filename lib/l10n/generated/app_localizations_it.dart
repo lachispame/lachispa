@@ -486,9 +486,6 @@ class AppLocalizationsIt extends AppLocalizations {
   String get decimal_button => '.';
 
   @override
-  String get calculating_text => 'Calcolo...';
-
-  @override
   String get loading_rates_text => 'Caricamento tassi...';
 
   @override
@@ -629,7 +626,7 @@ class AppLocalizationsIt extends AppLocalizations {
       'Fattura senza importo non supportata. Richiedere una fattura con un importo specifico.';
 
   @override
-  String payment_sent_status(Object status) {
+  String payment_sent_status(String status) {
     return 'Pagamento inviato - Stato: $status';
   }
 
@@ -923,6 +920,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get tap_to_cycle => 'Tocca per scorrere le valute';
 
   @override
+  String get calculating_text => 'Calcolo...';
+
+  @override
   String get settings_screen_title => 'Impostazioni';
 
   @override
@@ -959,6 +959,56 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get deep_link_login_required_message =>
       'Devi accedere al tuo account LaChispa per elaborare questo pagamento.';
+
+  @override
+  String get invoice_key_qr_title => 'QR Chiave fattura';
+
+  @override
+  String get invoice_key_qr_description =>
+      'Usa questo codice QR con LaChispaPOS o altre app Lightning per ricevere pagamenti senza esporre la tua chiave amministratore.';
+
+  @override
+  String get invoice_key_qr_subtitle => 'Mostra QR per altre app';
+
+  @override
+  String get copy_invoice_key => 'Copia chiave';
+
+  @override
+  String get invoice_key_copied => 'Chiave fattura copiata negli appunti';
+
+  @override
+  String get invoice_key_unavailable_title => 'Portafoglio non trovato';
+
+  @override
+  String get invoice_key_unavailable_subtitle => 'Crea prima un portafoglio';
+
+  @override
+  String get invoice_key_security_warning =>
+      'Questa chiave permette a terzi di creare fatture. Condividila solo con dispositivi POS affidabili. Non pubblicare mai o condividere pubblicamente.';
+
+  @override
+  String get invoice_key_show => 'Mostra chiave';
+
+  @override
+  String get invoice_key_hide => 'Nascondi chiave';
+
+  @override
+  String get invoice_key_copy_failed =>
+      'Errore durante la copia della chiave fattura';
+
+  @override
+  String get invoice_key_empty => 'La chiave fattura non può essere vuota';
+
+  @override
+  String currency_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count valute',
+      one: '1 valuta',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get clear_invoice_button => 'Cancella fattura';
