@@ -394,7 +394,9 @@ class _StartScreenState extends State<StartScreen>
 
   Future<void> _openCubaBitcoin() async {
     final uri = Uri.parse('https://cubabitcoin.org');
-    await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch $uri');
+    }
   }
 
   Widget _secondaryCta({
