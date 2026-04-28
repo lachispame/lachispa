@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../providers/server_provider.dart';
 import '../providers/language_provider.dart';
 import '../l10n/generated/app_localizations.dart';
@@ -64,26 +65,33 @@ class _StartScreenState extends State<StartScreen>
         width: double.infinity,
         height: double.infinity,
         decoration: BoxDecoration(gradient: t.backgroundGradient),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 8),
-                _buildTopBar(),
-                const SizedBox(height: 28),
-                _buildHero(l, t),
-                const SizedBox(height: 14),
-                _buildTagline(l, t),
-                const Spacer(),
-                _buildCtas(l, t),
-                const SizedBox(height: 10),
-                _buildServerChangeChip(l, t),
-                const SizedBox(height: 12),
-              ],
+        child: Stack(
+          children: [
+            _buildBoltWatermark(),
+            SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 8),
+                    _buildTopBar(),
+                    const SizedBox(height: 28),
+                    _buildHero(l, t),
+                    const SizedBox(height: 14),
+                    _buildTagline(l, t),
+                    const Spacer(),
+                    _buildCtas(l, t),
+                    const SizedBox(height: 10),
+                    _buildServerChangeChip(l, t),
+                    const SizedBox(height: 16),
+                    _buildPoweredBy(l, t),
+                    const SizedBox(height: 28),
+                  ],
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -341,6 +349,54 @@ class _StartScreenState extends State<StartScreen>
     );
   }
 
+  Widget _buildPoweredBy(AppLocalizations l, AppTokens t) {
+    return FadeTransition(
+      opacity: _ctaAnim,
+      child: Center(
+        child: InkWell(
+          onTap: _openCubaBitcoin,
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  l.welcome_powered_by,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: t.textTertiary,
+                    letterSpacing: 0.2,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Opacity(
+                  opacity: 0.85,
+                  child: ColorFiltered(
+                    colorFilter:
+                        ColorFilter.mode(t.textPrimary, BlendMode.srcIn),
+                    child: Image.asset(
+                      'assets/images/CubaBitcoin-Hztal-BLANCO-transp.png',
+                      height: 18,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _openCubaBitcoin() async {
+    final uri = Uri.parse('https://cubabitcoin.org');
+    await launchUrl(uri, mode: LaunchMode.externalApplication);
+  }
+
   Widget _secondaryCta({
     required AppTokens t,
     required IconData icon,
@@ -376,4 +432,53 @@ class _StartScreenState extends State<StartScreen>
       ),
     );
   }
+
+  Widget _buildBoltWatermark() {
+    return Positioned.fill(
+      child: IgnorePointer(
+        child: FadeTransition(
+          opacity: _heroAnim,
+          child: Center(
+            child: FractionallySizedBox(
+              widthFactor: 0.55,
+              heightFactor: 0.78,
+              child: CustomPaint(
+                painter: _BoltPainter(
+                  color: const Color.fromARGB(20, 0, 0, 0),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _BoltPainter extends CustomPainter {
+  _BoltPainter({required this.color});
+
+  final Color color;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.fill;
+    final w = size.width;
+    final h = size.height;
+    final path = Path()
+      ..moveTo(w * 0.23, h * 1.00)
+      ..lineTo(w * 1.00, h * 0.42)
+      ..lineTo(w * 0.54, h * 0.42)
+      ..lineTo(w * 0.77, h * 0.00)
+      ..lineTo(w * 0.00, h * 0.58)
+      ..lineTo(w * 0.46, h * 0.58)
+      ..close();
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _BoltPainter oldDelegate) =>
+      oldDelegate.color != color;
 }
