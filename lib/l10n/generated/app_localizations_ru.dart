@@ -21,6 +21,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get welcome_hero_tagline => 'Lightning, в твоём кармане.';
 
   @override
+  String get welcome_powered_by => 'При поддержке';
+
+  @override
   String get welcome_server_label => 'СЕРВЕР';
 
   @override

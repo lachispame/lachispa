@@ -21,6 +21,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get welcome_hero_tagline => 'Lightning, in deiner Tasche.';
 
   @override
+  String get welcome_powered_by => 'Unterstützt von';
+
+  @override
   String get welcome_server_label => 'SERVER';
 
   @override

@@ -14,9 +14,11 @@ class AuthService {
   final Dio _dio;
   final FlutterSecureStorage _storage;
   
-  AuthService() 
+  AuthService()
     : _dio = Dio(),
-      _storage = const FlutterSecureStorage() {
+      _storage = const FlutterSecureStorage(
+          aOptions: AndroidOptions(encryptedSharedPreferences: true),
+        ) {
     _configureDio();
   }
 

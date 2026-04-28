@@ -9,7 +9,9 @@ import '../models/saved_user.dart';
 class UserCredentialsService {
   static const String _masterKeyName = 'master_encryption_key';
   static const String _savedUsersKey = 'saved_users_list';
-  static const _secureStorage = FlutterSecureStorage();
+  static const _secureStorage = FlutterSecureStorage(
+    aOptions: AndroidOptions(encryptedSharedPreferences: true),
+  );
   
   // Helper for safe substring
   String _safeSubstring(String? str, int start, int? end, {String suffix = '...'}) {
