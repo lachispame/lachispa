@@ -132,6 +132,12 @@ abstract class AppLocalizations {
   /// **'Lightning, en tu bolsillo.'**
   String get welcome_hero_tagline;
 
+  /// No description provided for @welcome_powered_by.
+  ///
+  /// In es, this message translates to:
+  /// **'Impulsado por'**
+  String get welcome_powered_by;
+
   /// No description provided for @welcome_server_label.
   ///
   /// In es, this message translates to:
