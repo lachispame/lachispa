@@ -948,4 +948,48 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get invoice_monitoring_timeout_message =>
       'Мониторинг остановлен. Создайте новый счёт.';
+
+  @override
+  String get nfc_action_label => 'NFC';
+
+  @override
+  String get nfc_unavailable_message => 'NFC недоступен на этом устройстве';
+
+  @override
+  String get nfc_charging_message => 'Списание...';
+
+  @override
+  String get nfc_invalid_tag_message => 'Неверный тег или это не Boltcard';
+
+  @override
+  String get nfc_charge_error_prefix => 'Ошибка приёма по NFC: ';
+
+  @override
+  String get nfc_charge_unknown_error => 'Неизвестная ошибка при списании';
+
+  @override
+  String get share_ready_message => 'Готово к отправке';
+
+  @override
+  String get lnurl_copied_message => 'LNURL скопирован в буфер обмена';
+
+  @override
+  String get nfc_scanning_title => 'Приём через NFC';
+
+  @override
+  String get nfc_scanning_send => 'Оплата через NFC...';
+
+  @override
+  String get nfc_scanning_message => 'Поднесите Boltcard к телефону';
+
+  @override
+  String get nfc_card_detected => 'Карта обнаружена!';
+
+  @override
+  String nfc_read_error(String error) {
+    return 'Ошибка: $error';
+  }
+
+  @override
+  String get nfc_processing_card => 'Обработка данных карты...';
 }

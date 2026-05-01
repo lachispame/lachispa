@@ -956,4 +956,49 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get invoice_monitoring_timeout_message =>
       'Monitoramento parado. Gera uma nova fatura.';
+
+  @override
+  String get nfc_action_label => 'NFC';
+
+  @override
+  String get nfc_unavailable_message => 'NFC não disponível neste dispositivo';
+
+  @override
+  String get nfc_charging_message => 'Cobrando...';
+
+  @override
+  String get nfc_invalid_tag_message => 'Tag inválido ou não é uma Boltcard';
+
+  @override
+  String get nfc_charge_error_prefix => 'Erro ao cobrar com NFC: ';
+
+  @override
+  String get nfc_charge_unknown_error => 'Erro desconhecido ao cobrar';
+
+  @override
+  String get share_ready_message => 'Pronto para compartilhar';
+
+  @override
+  String get lnurl_copied_message =>
+      'LNURL copiado para a área de transferência';
+
+  @override
+  String get nfc_scanning_title => 'Cobrar com NFC';
+
+  @override
+  String get nfc_scanning_send => 'Pagando com NFC...';
+
+  @override
+  String get nfc_scanning_message => 'Aproxime a Boltcard do telefone';
+
+  @override
+  String get nfc_card_detected => 'Cartão detetado!';
+
+  @override
+  String nfc_read_error(String error) {
+    return 'Erro: $error';
+  }
+
+  @override
+  String get nfc_processing_card => 'Processando dados do cartão...';
 }

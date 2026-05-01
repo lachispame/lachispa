@@ -483,10 +483,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get calculating_text => 'Calculando...';
 
   @override
-  String get loading_rates_text => 'Loading rates...';
+  String get loading_rates_text => 'Cargando tipo de cambio...';
 
   @override
-  String get send_button_prefix => 'SEND ';
+  String get send_button_prefix => 'ENVIAR ';
 
   @override
   String get amount_processing_button => 'PROCESANDO...';
@@ -957,4 +957,48 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get invoice_monitoring_timeout_message =>
       'Monitoreo detenido. Genera una nueva factura.';
+
+  @override
+  String get nfc_action_label => 'NFC';
+
+  @override
+  String get nfc_unavailable_message => 'NFC no disponible en este dispositivo';
+
+  @override
+  String get nfc_charging_message => 'Cobrando...';
+
+  @override
+  String get nfc_invalid_tag_message => 'Tag inválido o no es una Boltcard';
+
+  @override
+  String get nfc_charge_error_prefix => 'Error en cobro NFC: ';
+
+  @override
+  String get nfc_charge_unknown_error => 'Error desconocido al cobrar';
+
+  @override
+  String get share_ready_message => 'Listo para compartir';
+
+  @override
+  String get lnurl_copied_message => 'LNURL copiado al portapapeles';
+
+  @override
+  String get nfc_scanning_title => 'Cobrar con NFC';
+
+  @override
+  String get nfc_scanning_send => 'Pagando con NFC...';
+
+  @override
+  String get nfc_scanning_message => 'Acerca la Boltcard al teléfono';
+
+  @override
+  String get nfc_card_detected => '¡Tarjeta detectada!';
+
+  @override
+  String nfc_read_error(String error) {
+    return 'Error: $error';
+  }
+
+  @override
+  String get nfc_processing_card => 'Procesando datos de la tarjeta...';
 }
