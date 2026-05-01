@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:share_plus/share_plus.dart';
 import 'dart:async';
 import '../providers/auth_provider.dart';
 import '../providers/wallet_provider.dart';
@@ -12,11 +11,11 @@ import '../models/ln_address.dart';
 import '../services/invoice_service.dart';
 import '../services/yadio_service.dart';
 import '../services/transaction_detector.dart';
-import '../services/nfc_charge_service.dart';
 import '../models/lightning_invoice.dart';
 import '../models/wallet_info.dart';
 import '../l10n/generated/app_localizations.dart';
 import '../theme/app_tokens.dart';
+import '../widgets/universal_screen_wrapper.dart';
 import '7ln_address_screen.dart';
 import 'voucher_scan_screen.dart';
 
@@ -28,22 +27,32 @@ class ReceiveScreen extends StatefulWidget {
 }
 
 class _ReceiveScreenState extends State<ReceiveScreen> {
+  // Cache for generated LNURL
+  String? _cachedLightningAddress;
+  String? _cachedLNURL;
+  Future<String?>? _lnurlFuture;
+  
+  // State for information panel
+  bool _isInfoExpanded = false;
+  
+  // State for request amount modal
   final _amountController = TextEditingController();
   final _noteController = TextEditingController();
   String _selectedCurrency = 'sats';
   List<String> _currencies = ['sats'];
-
+  
+  // State for generated invoice
   LightningInvoice? _generatedInvoice;
   final InvoiceService _invoiceService = InvoiceService();
   final YadioService _yadioService = YadioService();
   final TransactionDetector _transactionDetector = TransactionDetector();
   bool _isGeneratingInvoice = false;
-
+  
+  // Timer to verify invoice payment
   Timer? _invoicePaymentTimer;
-  Timer? _invoicePaymentTimeoutTimer;
 
-  bool _nfcAvailable = false;
-  bool _nfcChecked = false;
+  // Timer that stops invoice monitoring after a long idle window
+  Timer? _invoicePaymentTimeoutTimer;
 
   @override
   void initState() {
@@ -51,66 +60,99 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeLightningAddress();
       _initializeCurrencies();
-      _checkNfcAvailability();
     });
   }
-
-  Future<void> _checkNfcAvailability() async {
-    final available = await NfcChargeService.isAvailable();
-    if (!mounted) return;
-    setState(() {
-      _nfcAvailable = available;
-      _nfcChecked = true;
-    });
-  }
-
+  
   void _initializeCurrencies() async {
     final currencyProvider = context.read<CurrencySettingsProvider>();
     final authProvider = context.read<AuthProvider>();
-
+    
+    print('[RECEIVE_SCREEN] Initializing currencies...');
+    print('[RECEIVE_SCREEN] Server URL: ${authProvider.currentServer}');
+    
+    // Ensure provider has server URL configured
     if (authProvider.currentServer != null) {
       await currencyProvider.updateServerUrl(authProvider.currentServer);
+      
+      // Force load exchange rates to ensure they're available
       await currencyProvider.loadExchangeRates(forceRefresh: true);
+      
+      print('[RECEIVE_SCREEN] Available currencies: ${currencyProvider.availableCurrencies}');
+      print('[RECEIVE_SCREEN] Exchange rates loaded: ${currencyProvider.availableCurrencies.isNotEmpty}');
     }
-
+    
     final displaySequence = currencyProvider.displaySequence;
-
+    
     if (mounted) {
       setState(() {
         _currencies = displaySequence.isNotEmpty ? displaySequence : ['sats'];
+        // Ensure selected currency is valid
         if (!_currencies.contains(_selectedCurrency)) {
           _selectedCurrency = _currencies.first;
         }
       });
     }
+    
+    print('[RECEIVE_SCREEN] Final currencies: $_currencies');
+    print('[RECEIVE_SCREEN] Selected currency: $_selectedCurrency');
   }
-
+  
+  /// Convert fiat amount to sats using inverse conversion (same method as amount_screen)
   Future<int> _getAmountInSats(double amount, String currency) async {
+    print('[RECEIVE_SCREEN] Converting $amount $currency to sats');
+    
     if (currency == 'sats') {
       return amount.round();
     }
-
+    
+    // Use INVERSE conversion from the working convertSatsToFiat method
+    // This ensures we use exactly the same rates as home_screen
     try {
       final currencyProvider = context.read<CurrencySettingsProvider>();
-      const oneBtcInSats = 100000000;
+      
+      print('[RECEIVE_SCREEN] Using inverse conversion method for consistency');
+      
+      // Step 1: Get rate by converting 1 BTC (100M sats) to fiat
+      const oneBtcInSats = 100000000; // 1 BTC = 100M sats
       final oneBtcInFiat = await currencyProvider.convertSatsToFiat(oneBtcInSats, currency);
-
-      final fiatString = oneBtcInFiat.replaceAll(RegExp(r'[^\d.]'), '');
+      
+      print('[RECEIVE_SCREEN] Rate check: $oneBtcInSats sats = $oneBtcInFiat $currency');
+      
+      // Step 2: Parse the result to get numeric rate
+      final fiatString = oneBtcInFiat.replaceAll(RegExp(r'[^\d.]'), ''); // Remove non-numeric chars
       final oneBtcRate = double.tryParse(fiatString);
-
+      
       if (oneBtcRate == null || oneBtcRate <= 0) {
         throw Exception('Invalid rate obtained: $oneBtcInFiat');
       }
-
+      
+      print('[RECEIVE_SCREEN] Parsed rate: 1 BTC = $oneBtcRate $currency');
+      
+      // Step 3: Calculate sats using inverse proportion
+      // If 1 BTC = oneBtcRate fiat, then amount fiat = ? sats
+      // sats = (amount / oneBtcRate) * 100000000
       final btcAmount = amount / oneBtcRate;
-      return (btcAmount * 100000000).round();
+      final satsAmount = (btcAmount * 100000000).round();
+      
+      print('[RECEIVE_SCREEN] Conversion successful: $amount $currency = $satsAmount sats');
+      print('[RECEIVE_SCREEN] Math: ($amount / $oneBtcRate) * 100000000 = $satsAmount');
+      
+      return satsAmount;
+      
     } catch (e) {
+      print('[RECEIVE_SCREEN] Error with inverse conversion: $e');
+      
+      // Fallback to YadioService as last resort
       try {
-        return await _yadioService.convertToSats(
+        print('[RECEIVE_SCREEN] Trying YadioService fallback');
+        final sats = await _yadioService.convertToSats(
           amount: amount,
           currency: currency,
         );
+        print('[RECEIVE_SCREEN] YadioService conversion: $amount $currency = $sats sats');
+        return sats;
       } catch (fallbackError) {
+        print('[RECEIVE_SCREEN] All conversion methods failed: $fallbackError');
         throw Exception('Error de conversión: $fallbackError');
       }
     }
@@ -128,15 +170,18 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
   }
 
   void _initializeLightningAddress() {
+    final authProvider = context.read<AuthProvider>();
     final walletProvider = context.read<WalletProvider>();
     final lnAddressProvider = context.read<LNAddressProvider>();
 
+    // Configure authentication
     if (walletProvider.primaryWallet != null) {
       final wallet = walletProvider.primaryWallet!;
       lnAddressProvider.setAuthHeaders(wallet.inKey, wallet.adminKey);
       lnAddressProvider.setCurrentWallet(wallet.id);
     }
 
+    // Only load addresses if they are not already loaded
     if (lnAddressProvider.currentWalletAddresses.isEmpty && !lnAddressProvider.isLoading) {
       lnAddressProvider.loadAllAddresses();
     }
@@ -149,24 +194,36 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       body: Container(
         decoration: BoxDecoration(gradient: context.tokens.backgroundGradient),
         child: SafeArea(
-          child: Consumer3<LNAddressProvider, WalletProvider, AuthProvider>(
-            builder: (context, lnAddressProvider, walletProvider, authProvider, child) {
-              final defaultAddress = lnAddressProvider.defaultAddress;
-              final hasContent = (defaultAddress != null) || (_generatedInvoice != null);
-              final showBottomBar = hasContent &&
-                  !lnAddressProvider.isLoading &&
-                  lnAddressProvider.error == null;
-
-              return Column(
-                children: [
-                  _buildHeader(),
-                  Expanded(
-                    child: _buildContent(lnAddressProvider, walletProvider),
+          child: withBottomPadding(
+            context,
+            Column(
+              children: [
+                // Header with navigation
+                _buildHeader(),
+                
+                // Main content
+                Expanded(
+                  child: Consumer3<LNAddressProvider, WalletProvider, AuthProvider>(
+                    builder: (context, lnAddressProvider, walletProvider, authProvider, child) {
+                      final isMobile = MediaQuery.of(context).size.width < 768;
+                      return SingleChildScrollView(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: isMobile ? 24.0 : 32.0,
+                          vertical: 16.0,
+                        ),
+                        child: Column(
+                          children: [
+                            SizedBox(height: isMobile ? 8 : 12),
+                            _buildMainContent(lnAddressProvider, walletProvider),
+                          ],
+                        ),
+                      );
+                    },
                   ),
-                  if (showBottomBar) _buildBottomActionBar(defaultAddress),
-                ],
-              );
-            },
+                ),
+              ],
+            ),
+            extraPadding: 24.0,
           ),
         ),
       ),
@@ -175,30 +232,88 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
 
   Widget _buildHeader() {
     final isMobile = MediaQuery.of(context).size.width < 768;
-
-    return Padding(
+    
+    return Container(
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
       child: Column(
         children: [
+          // Row with back button and QR button
           Row(
             children: [
-              _buildIconButton(
-                icon: Icons.arrow_back,
-                onPressed: () => Navigator.pop(context),
+              // Back button
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: context.tokens.surface,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: context.tokens.outline,
+                    width: 1,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: context.tokens.textPrimary,
+                    size: 20,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  padding: EdgeInsets.zero,
+                ),
               ),
+              
               const Spacer(),
-              _buildIconButton(
-                icon: Icons.qr_code_scanner,
-                onPressed: _navigateToVoucherScreen,
-                tooltip: 'Escanear voucher',
+              
+              // QR Scan button for vouchers
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: context.tokens.surface,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: context.tokens.outline,
+                    width: 1,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.1),
+                      blurRadius: 8,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.qr_code_scanner,
+                    color: context.tokens.textPrimary,
+                    size: 20,
+                  ),
+                  onPressed: _navigateToVoucherScreen,
+                  padding: EdgeInsets.zero,
+                  tooltip: 'Escanear voucher',
+                ),
               ),
             ],
           ),
+          
           SizedBox(height: isMobile ? 0 : 4),
+          
+          // Centered title
           Text(
             AppLocalizations.of(context)!.receive_title,
             style: TextStyle(
-              fontSize: isMobile ? 36 : 44,
+                            fontSize: isMobile ? 40 : 48,
               fontWeight: FontWeight.w700,
               color: context.tokens.textPrimary,
               height: 1.1,
@@ -210,235 +325,309 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     );
   }
 
-  Widget _buildIconButton({
-    required IconData icon,
-    required VoidCallback onPressed,
-    String? tooltip,
-  }) {
-    return Container(
-      width: 40,
-      height: 40,
-      decoration: BoxDecoration(
-        color: context.tokens.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: context.tokens.outline,
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: IconButton(
-        icon: Icon(icon, color: context.tokens.textPrimary, size: 20),
-        onPressed: onPressed,
-        padding: EdgeInsets.zero,
-        tooltip: tooltip,
-      ),
-    );
-  }
-
-  Widget _buildContent(LNAddressProvider lnAddressProvider, WalletProvider walletProvider) {
+  Widget _buildMainContent(LNAddressProvider lnAddressProvider, WalletProvider walletProvider) {
+    final defaultAddress = lnAddressProvider.defaultAddress;
+    
     if (lnAddressProvider.isLoading) {
       return _buildLoadingState();
     }
-
+    
     if (lnAddressProvider.error != null) {
       return _buildErrorState(lnAddressProvider.error!);
     }
-
-    final defaultAddress = lnAddressProvider.defaultAddress;
-    if (defaultAddress == null && _generatedInvoice == null) {
+    
+    if (defaultAddress == null) {
+      if (_generatedInvoice != null) {
+        return _buildNoAddressInvoiceCard();
+      }
       return _buildNoAddressState();
     }
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
-      child: _buildMainCard(defaultAddress),
+    // Show Lightning Address with QR
+    return _buildLightningAddressCard(defaultAddress, walletProvider);
+  }
+
+  Widget _buildLoadingState() {
+    return Container(
+      height: 400,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(
+              width: 48,
+              height: 48,
+              child: CircularProgressIndicator(
+                color: Color(0xFF4C63F7),
+                strokeWidth: 3,
+              ),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              AppLocalizations.of(context)!.loading_address_text,
+              style: TextStyle(
+                color: context.tokens.textPrimary.withValues(alpha: 0.8),
+                fontSize: 16,
+                              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
-  Widget _buildMainCard(LNAddress? defaultAddress) {
+  Widget _buildErrorState(String error) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: context.tokens.surface,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: context.tokens.outline, width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: context.tokens.outline,
+          width: 1,
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.error_outline,
+            color: context.tokens.statusUnhealthy.withValues(alpha: 0.8),
+            size: 48,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            AppLocalizations.of(context)!.loading_address_error_prefix,
+            style: TextStyle(
+              color: context.tokens.textPrimary,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+                          ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            error,
+            style: TextStyle(
+              color: context.tokens.textPrimary.withValues(alpha: 0.8),
+              fontSize: 14,
+                          ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 24),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => context.read<LNAddressProvider>().refresh(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: context.tokens.accentSolid,
+                foregroundColor: context.tokens.accentForeground,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                elevation: 0,
+              ),
+              child: Text(
+                AppLocalizations.of(context)!.connect_button,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                                  ),
+              ),
+            ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildNoAddressState() {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: context.tokens.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: context.tokens.outline,
+          width: 1,
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.alternate_email,
+            color: context.tokens.textSecondary,
+            size: 64,
+          ),
+          const SizedBox(height: 24),
+          Text(
+            AppLocalizations.of(context)!.not_available_text,
+            style: TextStyle(
+              color: context.tokens.textPrimary,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+                          ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            AppLocalizations.of(context)!.lightning_address_description,
+            style: TextStyle(
+              color: context.tokens.textPrimary.withValues(alpha: 0.8),
+              fontSize: 16,
+                          ),
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 32),
+          SizedBox(
+            width: double.infinity,
+            child: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [context.tokens.accentSolid, context.tokens.accentSolid],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                ),
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: context.tokens.accentSolid.withValues(alpha: 0.3),
+                    blurRadius: 12,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: ElevatedButton.icon(
+                onPressed: _showRequestAmountModal,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  shadowColor: Colors.transparent,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+                icon: Icon(Icons.request_quote, color: context.tokens.textPrimary),
+                label: Text(
+                  AppLocalizations.of(context)!.amount_sats_label,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: context.tokens.textPrimary,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            AppLocalizations.of(context)!.create_lnaddress_label,
+            style: TextStyle(
+              color: context.tokens.textPrimary.withValues(alpha: 0.6),
+              fontSize: 14,
+            ),
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LNAddressScreen(),
+                  ),
+                );
+              },
+              style: OutlinedButton.styleFrom(
+                foregroundColor: context.tokens.accentForeground,
+                side: BorderSide(
+                  color: context.tokens.textTertiary,
+                  width: 1.5,
+                ),
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+              ),
+              icon: const Icon(Icons.add, size: 20),
+              label: Text(
+                AppLocalizations.of(context)!.lightning_address_title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNoAddressInvoiceCard() {
+    final invoice = _generatedInvoice!;
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: context.tokens.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: context.tokens.outline,
+          width: 1,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Center(child: _buildQRCard(defaultAddress)),
+          Center(child: _buildInvoiceQR(invoice)),
           const SizedBox(height: 16),
-          if (defaultAddress != null) _buildAddressDisplay(defaultAddress),
-          if (_generatedInvoice != null) ...[
-            if (defaultAddress != null) const SizedBox(height: 12),
-            _buildAmountChip(_generatedInvoice!),
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+            decoration: BoxDecoration(
+              color: context.tokens.accentSolid.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: context.tokens.accentSolid.withValues(alpha: 0.2),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.bolt, color: context.tokens.accentSolid, size: 22),
+                const SizedBox(width: 8),
+                Text(
+                  invoice.formattedAmount,
+                  style: TextStyle(
+                    color: context.tokens.textPrimary,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (invoice.memo.isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text(
+              invoice.memo,
+              style: TextStyle(
+                color: context.tokens.textPrimary.withValues(alpha: 0.7),
+                fontSize: 14,
+              ),
+              textAlign: TextAlign.center,
+            ),
           ],
-          const SizedBox(height: 20),
-          _buildPrimaryCta(),
+          const SizedBox(height: 16),
+          _buildCopyInvoiceButton(),
+          const SizedBox(height: 12),
+          _buildClearInvoiceButton(),
         ],
       ),
     );
   }
 
-  Widget _buildQRCard(LNAddress? defaultAddress) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        color: context.tokens.textPrimary,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: context.tokens.outlineStrong),
-      ),
-      child: _buildQRImage(defaultAddress),
-    );
-  }
-
-  Widget _buildQRImage(LNAddress? defaultAddress) {
-    if (_generatedInvoice != null) {
-      return _buildQR(_generatedInvoice!.paymentRequest);
-    }
-
-    final lnurl = defaultAddress?.lnurl;
-    if (lnurl != null && lnurl.isNotEmpty) {
-      return _buildQR(lnurl);
-    }
-    return _buildQR(defaultAddress?.fullAddress.toUpperCase() ?? '');
-  }
-
-  Widget _buildQR(String data) {
-    return QrImageView(
-      data: data,
-      version: QrVersions.auto,
-      size: 220.0,
-      backgroundColor: Colors.white,
-      errorCorrectionLevel: QrErrorCorrectLevel.H,
-      eyeStyle: const QrEyeStyle(
-        eyeShape: QrEyeShape.square,
-        color: Colors.black,
-      ),
-      dataModuleStyle: const QrDataModuleStyle(
-        dataModuleShape: QrDataModuleShape.square,
-        color: Colors.black,
-      ),
-      embeddedImage: const AssetImage('Logo/chispalogoredondo.png'),
-      embeddedImageStyle: const QrEmbeddedImageStyle(
-        size: Size(44, 44),
-      ),
-    );
-  }
-
-  Widget _buildAddressDisplay(LNAddress defaultAddress) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      decoration: BoxDecoration(
-        color: context.tokens.inputFill,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: context.tokens.outline),
-      ),
-      child: Text(
-        defaultAddress.fullAddress,
-        style: TextStyle(
-          color: context.tokens.textPrimary,
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-        ),
-        textAlign: TextAlign.center,
-        softWrap: true,
-      ),
-    );
-  }
-
-  Widget _buildAmountChip(LightningInvoice invoice) {
-    final hasMemo = invoice.memo.isNotEmpty;
-    return Center(
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-        decoration: BoxDecoration(
-          color: context.tokens.accentSolid.withValues(alpha: 0.12),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: context.tokens.accentSolid.withValues(alpha: 0.32),
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.bolt, color: context.tokens.accentSolid, size: 16),
-            const SizedBox(width: 6),
-            Text(
-              invoice.formattedAmount,
-              style: TextStyle(
-                color: context.tokens.textPrimary,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            if (hasMemo) ...[
-              const SizedBox(width: 8),
-              Container(
-                width: 1,
-                height: 12,
-                color: context.tokens.textPrimary.withValues(alpha: 0.25),
-              ),
-              const SizedBox(width: 8),
-              Flexible(
-                child: Text(
-                  invoice.memo,
-                  style: TextStyle(
-                    color: context.tokens.textPrimary.withValues(alpha: 0.8),
-                    fontSize: 13,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPrimaryCta() {
-    final hasInvoice = _generatedInvoice != null;
-    if (hasInvoice) {
-      return SizedBox(
-        width: double.infinity,
-        child: OutlinedButton.icon(
-          onPressed: _clearInvoice,
-          style: OutlinedButton.styleFrom(
-            foregroundColor: context.tokens.accentForeground,
-            side: BorderSide(
-              color: context.tokens.textTertiary,
-              width: 1.5,
-            ),
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-          ),
-          icon: const Icon(Icons.close, size: 20),
-          label: Text(
-            AppLocalizations.of(context)!.clear_invoice_button,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-          ),
-        ),
-      );
-    }
-
+  Widget _buildCopyInvoiceButton() {
     return SizedBox(
       width: double.infinity,
       child: Container(
@@ -458,7 +647,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           ],
         ),
         child: ElevatedButton.icon(
-          onPressed: _isGeneratingInvoice ? null : _showRequestAmountModal,
+          onPressed: _copyInvoice,
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.transparent,
             shadowColor: Colors.transparent,
@@ -467,9 +656,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               borderRadius: BorderRadius.circular(16),
             ),
           ),
-          icon: Icon(Icons.request_quote, color: context.tokens.textPrimary),
+          icon: Icon(Icons.copy, color: context.tokens.textPrimary, size: 20),
           label: Text(
-            AppLocalizations.of(context)!.amount_sats_label,
+            AppLocalizations.of(context)!.copy_button,
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -481,108 +670,155 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     );
   }
 
-  Widget _buildBottomActionBar(LNAddress? defaultAddress) {
+  void _copyInvoice() async {
+    final invoice = _generatedInvoice;
+    if (invoice == null) return;
+    await Clipboard.setData(ClipboardData(text: invoice.paymentRequest));
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(Icons.check_circle, color: context.tokens.textPrimary, size: 20),
+            const SizedBox(width: 12),
+            Text(
+              AppLocalizations.of(context)!.invoice_copied_message,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+        backgroundColor: context.tokens.accentSolid,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  Widget _buildLightningAddressCard(LNAddress defaultAddress, WalletProvider walletProvider) {
     return Container(
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: context.tokens.surface,
-        border: Border(
-          top: BorderSide(color: context.tokens.outline, width: 1),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: context.tokens.outline,
+          width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
-            blurRadius: 12,
-            offset: const Offset(0, -4),
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
-      padding: EdgeInsets.fromLTRB(
-        8,
-        10,
-        8,
-        10 + MediaQuery.of(context).viewPadding.bottom,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          _buildBarAction(
-            icon: Icons.content_copy_rounded,
-            label: AppLocalizations.of(context)!.copy_button,
-            onTap: () => _showCopySheet(defaultAddress),
-          ),
-          _buildBarAction(
-            icon: Icons.ios_share_rounded,
-            label: AppLocalizations.of(context)!.share_button,
-            onTap: () => _shareContent(defaultAddress),
-          ),
-          _buildBarAction(
-            icon: Icons.nfc_rounded,
-            label: AppLocalizations.of(context)!.nfc_action_label,
-            enabled: _nfcAvailable,
-            onTap: _nfcAvailable ? _activateNfc : _showNfcUnavailable,
-          ),
+          // QR Code with LNURL
+          _buildQRSection(defaultAddress),
+          
+          const SizedBox(height: 16),
+          
+          // Lightning Address and copy button together
+          _buildAddressWithCopySection(defaultAddress),
+          
+          const SizedBox(height: 16),
+          
+          // Collapsible contextual information
+          _buildCollapsibleInfoSection(),
         ],
       ),
     );
   }
 
-  Widget _buildBarAction({
-    required IconData icon,
-    required String label,
-    required VoidCallback onTap,
-    bool enabled = true,
-  }) {
-    final color = enabled
-        ? context.tokens.textPrimary
-        : context.tokens.textPrimary.withValues(alpha: 0.32);
-    return Expanded(
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(12),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+  Widget _buildWalletInfo(WalletProvider walletProvider) {
+    final wallet = walletProvider.primaryWallet;
+    if (wallet == null) return const SizedBox.shrink();
+    
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: context.tokens.inputFill,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: context.tokens.outline,
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: context.tokens.accentSolid,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              Icons.account_balance_wallet,
+              color: context.tokens.textPrimary,
+              size: 20,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(icon, color: color, size: 24),
-                const SizedBox(height: 4),
                 Text(
-                  label,
+                  wallet.name,
                   style: TextStyle(
-                    color: color,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
+                    color: context.tokens.textPrimary,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                                      ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  'Balance: ${wallet.balanceFormatted}',
+                  style: TextStyle(
+                    color: context.tokens.textPrimary.withValues(alpha: 0.7),
+                    fontSize: 14,
+                                      ),
                 ),
               ],
             ),
           ),
-        ),
+        ],
       ),
     );
   }
 
-  Widget _buildLoadingState() {
-    return Center(
+  Widget _buildAddressDisplay(LNAddress defaultAddress) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: context.tokens.inputFill,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: context.tokens.outline,
+        ),
+      ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: [
+          // Centered address
           SizedBox(
-            width: 48,
-            height: 48,
-            child: CircularProgressIndicator(
-              color: context.tokens.accentSolid,
-              strokeWidth: 3,
-            ),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            AppLocalizations.of(context)!.loading_address_text,
-            style: TextStyle(
-              color: context.tokens.textPrimary.withValues(alpha: 0.8),
-              fontSize: 16,
+            width: double.infinity,
+            child: Text(
+              defaultAddress.fullAddress,
+              style: TextStyle(
+                color: context.tokens.textPrimary,
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                              ),
+              textAlign: TextAlign.center,
+              softWrap: true,
+              overflow: TextOverflow.visible,
             ),
           ),
         ],
@@ -590,447 +826,399 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     );
   }
 
-  Widget _buildErrorState(String error) {
-    return Padding(
-      padding: const EdgeInsets.all(24),
+
+  Widget _buildQRSection(LNAddress defaultAddress) {
+    return Center(
       child: Container(
-        padding: const EdgeInsets.all(24),
+        // No fixed width, adjusts to content
+        padding: const EdgeInsets.all(8), // Reduced to 8 for tighter frame
         decoration: BoxDecoration(
-          color: context.tokens.surface,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: context.tokens.outline, width: 1),
+          color: context.tokens.textPrimary,
+          borderRadius: BorderRadius.circular(6), // More square: from 16 to 6
+          border: Border.all(
+            color: context.tokens.outlineStrong,
+          ),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.error_outline,
-              color: context.tokens.statusUnhealthy.withValues(alpha: 0.8),
-              size: 48,
+        child: _buildQRCodeWithLNURL(defaultAddress),
+      ),
+    );
+  }
+
+  Widget _buildQRCodeWithLNURL(LNAddress defaultAddress) {
+    // If there's a generated invoice, show its QR
+    if (_generatedInvoice != null) {
+      print('[RECEIVE_SCREEN] Mostrando QR de factura: ${_generatedInvoice!.paymentRequest.substring(0, 20)}...');
+      return _buildInvoiceQR(_generatedInvoice!);
+    }
+    
+    // If there's no invoice, show Lightning Address
+    final lnurl = defaultAddress.lnurl;
+    
+    if (lnurl != null && lnurl.isNotEmpty) {
+      print('[RECEIVE_SCREEN] Usando LNURL de LNBits: ${lnurl.substring(0, 20)}...${lnurl.substring(lnurl.length - 10)}');
+      return _buildSuccessQR(lnurl);
+    } else {
+      print('[RECEIVE_SCREEN] No hay LNURL en el modelo, usando fallback');
+      return _buildFallbackQR(defaultAddress.fullAddress, 'LNURL no disponible en LNBits');
+    }
+  }
+
+  Widget _buildLoadingQR() {
+    return SizedBox(
+      height: 220, // Reduced from 280 to 220
+      width: 220,  // Reduced from 280 to 220
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: 32, // Reduced from 40 to 32
+            height: 32, // Reduced from 40 to 32
+            child: CircularProgressIndicator(
+              color: context.tokens.accentSolid,
+              strokeWidth: 3, // Reduced from 4 to 3
             ),
-            const SizedBox(height: 16),
-            Text(
-              AppLocalizations.of(context)!.loading_address_error_prefix,
-              style: TextStyle(
-                color: context.tokens.textPrimary,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              error,
-              style: TextStyle(
-                color: context.tokens.textPrimary.withValues(alpha: 0.8),
-                fontSize: 14,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () => context.read<LNAddressProvider>().refresh(),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: context.tokens.accentSolid,
-                  foregroundColor: context.tokens.accentForeground,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  elevation: 0,
-                ),
-                child: Text(
-                  AppLocalizations.of(context)!.connect_button,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
+          ),
+          SizedBox(height: 16), // Reduced from 20 to 16
+          Text(
+            AppLocalizations.of(context)!.loading_text,
+            style: TextStyle(
+              fontSize: 14, // Reduced from 16 to 14
+              color: Colors.grey,
+                          ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSuccessQR(String lnurl) {
+    return QrImageView(
+      data: lnurl,
+      version: QrVersions.auto,
+      size: 220.0, // Reduced from 280 to 220
+      backgroundColor: Colors.white,
+      errorCorrectionLevel: QrErrorCorrectLevel.H, // High level to support logo
+      eyeStyle: const QrEyeStyle(
+        eyeShape: QrEyeShape.square,
+        color: Colors.black,
+      ),
+      dataModuleStyle: const QrDataModuleStyle(
+        dataModuleShape: QrDataModuleShape.square,
+        color: Colors.black,
+      ),
+      embeddedImage: const AssetImage('Logo/chispalogoredondo.png'),
+      embeddedImageStyle: const QrEmbeddedImageStyle(
+        size: Size(44, 44), // Proportionally reduced from 56x56 to 44x44
+      ),
+    );
+  }
+
+  Widget _buildFallbackQR(String lightningAddress, String error) {
+    return QrImageView(
+      data: lightningAddress.toUpperCase(),
+      version: QrVersions.auto,
+      size: 220.0, // Reduced from 280 to 220
+      backgroundColor: Colors.white,
+      errorCorrectionLevel: QrErrorCorrectLevel.H, // High level to support logo
+      eyeStyle: const QrEyeStyle(
+        eyeShape: QrEyeShape.square,
+        color: Colors.black,
+      ),
+      dataModuleStyle: const QrDataModuleStyle(
+        dataModuleShape: QrDataModuleShape.square,
+        color: Colors.black,
+      ),
+      embeddedImage: const AssetImage('Logo/chispalogoredondo.png'),
+      embeddedImageStyle: const QrEmbeddedImageStyle(
+        size: Size(44, 44), // Proportionally reduced from 56x56 to 44x44
+      ),
+    );
+  }
+
+  Widget _buildInvoiceQR(LightningInvoice invoice) {
+    return QrImageView(
+      data: invoice.paymentRequest,
+      version: QrVersions.auto,
+      size: 220.0, // Reduced from 280 to 220
+      backgroundColor: Colors.white,
+      errorCorrectionLevel: QrErrorCorrectLevel.H,
+      eyeStyle: const QrEyeStyle(
+        eyeShape: QrEyeShape.square,
+        color: Colors.black,
+      ),
+      dataModuleStyle: const QrDataModuleStyle(
+        dataModuleShape: QrDataModuleShape.square,
+        color: Colors.black,
+      ),
+      embeddedImage: const AssetImage('Logo/chispalogoredondo.png'),
+      embeddedImageStyle: const QrEmbeddedImageStyle(
+        size: Size(44, 44), // Proportionally reduced from 56x56 to 44x44
+      ),
+    );
+  }
+
+  Widget _buildCopyButton(LNAddress defaultAddress) {
+    return SizedBox(
+      width: double.infinity,
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [context.tokens.accentSolid, context.tokens.accentSolid],
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+          ),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: context.tokens.accentSolid.withValues(alpha: 0.3),
+              blurRadius: 12,
+              offset: const Offset(0, 6),
             ),
           ],
+        ),
+        child: ElevatedButton.icon(
+          onPressed: () => _copyPaymentInfo(defaultAddress),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
+          icon: Icon(Icons.copy, color: context.tokens.textPrimary, size: 20),
+          label: Text(
+            _generatedInvoice != null ? AppLocalizations.of(context)!.copy_button : AppLocalizations.of(context)!.copy_lightning_address,
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+                            color: context.tokens.textPrimary,
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildNoAddressState() {
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: context.tokens.surface,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: context.tokens.outline, width: 1),
+  Widget _buildAddressWithCopySection(LNAddress defaultAddress) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // Lightning Address display
+        _buildAddressDisplay(defaultAddress),
+        
+        const SizedBox(height: 12),
+        
+        // Copy button right below
+        _buildCopyButton(defaultAddress),
+        
+        const SizedBox(height: 12),
+        
+        // LNURL copy button
+        _buildCopyLNURLButton(defaultAddress),
+        
+        const SizedBox(height: 12),
+        
+        // Request amount button or clear invoice button
+        _generatedInvoice != null 
+          ? _buildClearInvoiceButton()
+          : _buildRequestAmountButton(),
+      ],
+    );
+  }
+
+  Widget _buildCollapsibleInfoSection() {
+    return Container(
+      decoration: BoxDecoration(
+        color: context.tokens.accentSolid.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: context.tokens.accentSolid.withValues(alpha: 0.2),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.alternate_email,
-              color: context.tokens.textSecondary,
-              size: 64,
-            ),
-            const SizedBox(height: 24),
-            Text(
-              AppLocalizations.of(context)!.not_available_text,
-              style: TextStyle(
-                color: context.tokens.textPrimary,
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              AppLocalizations.of(context)!.lightning_address_description,
-              style: TextStyle(
-                color: context.tokens.textPrimary.withValues(alpha: 0.8),
-                fontSize: 16,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 32),
-            SizedBox(
-              width: double.infinity,
+      ),
+      child: Column(
+        children: [
+          // Button to expand/collapse
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () {
+                setState(() {
+                  _isInfoExpanded = !_isInfoExpanded;
+                });
+              },
               child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [context.tokens.accentSolid, context.tokens.accentSolid],
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: context.tokens.accentSolid.withValues(alpha: 0.3),
-                      blurRadius: 12,
-                      offset: const Offset(0, 6),
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      color: context.tokens.accentSolid,
+                      size: 20,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        AppLocalizations.of(context)!.settings_title,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF4C63F7),
+                                                  ),
+                      ),
+                    ),
+                    Icon(
+                      _isInfoExpanded ? Icons.expand_less : Icons.expand_more,
+                      color: context.tokens.accentSolid,
+                      size: 24,
                     ),
                   ],
                 ),
-                child: ElevatedButton.icon(
-                  onPressed: _showRequestAmountModal,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    shadowColor: Colors.transparent,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                  ),
-                  icon: Icon(Icons.request_quote, color: context.tokens.textPrimary),
-                  label: Text(
-                    AppLocalizations.of(context)!.amount_sats_label,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: context.tokens.textPrimary,
-                    ),
-                  ),
-                ),
               ),
             ),
-            const SizedBox(height: 16),
-            Text(
-              AppLocalizations.of(context)!.create_lnaddress_label,
-              style: TextStyle(
-                color: context.tokens.textPrimary.withValues(alpha: 0.6),
-                fontSize: 14,
-              ),
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const LNAddressScreen(),
-                    ),
-                  );
-                },
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: context.tokens.accentForeground,
-                  side: BorderSide(
-                    color: context.tokens.textTertiary,
-                    width: 1.5,
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ),
-                icon: const Icon(Icons.add, size: 20),
-                label: Text(
-                  AppLocalizations.of(context)!.lightning_address_title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _clearInvoice() {
-    _invoicePaymentTimer?.cancel();
-    _invoicePaymentTimeoutTimer?.cancel();
-    setState(() {
-      _generatedInvoice = null;
-    });
-    _showAccentSnackBar(
-      icon: Icons.check_circle,
-      message: AppLocalizations.of(context)!.invoice_cleared_message,
-    );
-  }
-
-  void _showCopySheet(LNAddress? defaultAddress) {
-    final hasInvoice = _generatedInvoice != null;
-    final lnurl = defaultAddress?.lnurl;
-
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (sheetContext) => Container(
-        decoration: BoxDecoration(
-          color: context.tokens.dialogBackground,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-        ),
-        padding: EdgeInsets.fromLTRB(
-          0,
-          12,
-          0,
-          16 + MediaQuery.of(sheetContext).viewPadding.bottom,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
+          ),
+          
+          // Expandable content
+          if (_isInfoExpanded)
             Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: context.tokens.textTertiary,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Row(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.content_copy_rounded,
-                      color: context.tokens.accentSolid, size: 22),
-                  const SizedBox(width: 12),
+                  Divider(
+                    color: context.tokens.accentSolid,
+                    thickness: 1,
+                    height: 1,
+                  ),
+                  const SizedBox(height: 12),
                   Text(
-                    AppLocalizations.of(context)!.copy_button,
+                    AppLocalizations.of(context)!.receive_info_text,
                     style: TextStyle(
-                      color: context.tokens.textPrimary,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                      color: context.tokens.textPrimary.withValues(alpha: 0.8),
+                                            height: 1.4,
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 12),
-            if (defaultAddress != null)
-              _buildSheetItem(
-                icon: Icons.alternate_email,
-                title: AppLocalizations.of(context)!.lightning_address_title,
-                subtitle: defaultAddress.fullAddress,
-                onTap: () {
-                  Navigator.pop(sheetContext);
-                  _copyToClipboard(
-                    defaultAddress.fullAddress,
-                    AppLocalizations.of(context)!.address_copied_message,
-                  );
-                },
-              ),
-            if (lnurl != null && lnurl.isNotEmpty)
-              _buildSheetItem(
-                icon: Icons.link_rounded,
-                title: 'LNURL',
-                subtitle: _truncate(lnurl),
-                onTap: () {
-                  Navigator.pop(sheetContext);
-                  _copyToClipboard(
-                    lnurl,
-                    AppLocalizations.of(context)!.lnurl_copied_message,
-                  );
-                },
-              ),
-            if (hasInvoice)
-              _buildSheetItem(
-                icon: Icons.receipt_long_rounded,
-                title: AppLocalizations.of(context)!.copy_invoice_button,
-                subtitle: _truncate(_generatedInvoice!.paymentRequest),
-                onTap: () {
-                  Navigator.pop(sheetContext);
-                  _copyToClipboard(
-                    _generatedInvoice!.paymentRequest,
-                    AppLocalizations.of(context)!.invoice_copied_message,
-                  );
-                },
-              ),
-          ],
-        ),
+        ],
       ),
     );
   }
 
-  Widget _buildSheetItem({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-  }) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-          child: Row(
-            children: [
-              Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: context.tokens.accentSolid.withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(icon, color: context.tokens.accentSolid, size: 20),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                        color: context.tokens.textPrimary,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        color: context.tokens.textPrimary.withValues(alpha: 0.7),
-                        fontSize: 12,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              ),
-              Icon(
-                Icons.chevron_right_rounded,
-                color: context.tokens.textTertiary,
-                size: 20,
-              ),
-            ],
+  Widget _buildRequestAmountButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        onPressed: _showRequestAmountModal,
+        style: OutlinedButton.styleFrom(
+          foregroundColor: context.tokens.accentForeground,
+          side: BorderSide(
+            color: context.tokens.textTertiary,
+            width: 1.5,
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
           ),
         ),
+        icon: const Icon(Icons.request_quote, size: 20),
+        label: Text(
+          AppLocalizations.of(context)!.amount_sats_label,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+                      ),
+        ),
       ),
     );
   }
 
-  String _truncate(String value) {
-    if (value.length <= 32) return value;
-    return '${value.substring(0, 16)}…${value.substring(value.length - 12)}';
-  }
+  Widget _buildClearInvoiceButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        onPressed: () {
+          // Cancel monitoring of current invoice
+          _invoicePaymentTimer?.cancel();
+          _invoicePaymentTimeoutTimer?.cancel();
 
-  void _shareContent(LNAddress? defaultAddress) async {
-    String? text;
-    if (_generatedInvoice != null) {
-      text = 'lightning:${_generatedInvoice!.paymentRequest}';
-    } else if (defaultAddress != null) {
-      text = defaultAddress.fullAddress;
-    }
-    if (text == null) return;
-
-    final box = context.findRenderObject() as RenderBox?;
-    await Share.share(
-      text,
-      subject: AppLocalizations.of(context)!.receive_title,
-      sharePositionOrigin:
-          box != null ? box.localToGlobal(Offset.zero) & box.size : null,
+          setState(() {
+            _generatedInvoice = null;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Row(
+                children: [
+                  Icon(Icons.check_circle, color: context.tokens.textPrimary, size: 20),
+                  SizedBox(width: 12),
+                  Text(
+                    AppLocalizations.of(context)!.invoice_cleared_message,
+                    style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+              backgroundColor: context.tokens.accentSolid,
+              behavior: SnackBarBehavior.floating,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        },
+        style: OutlinedButton.styleFrom(
+          foregroundColor: context.tokens.accentForeground,
+          side: BorderSide(
+            color: context.tokens.textTertiary,
+            width: 1.5,
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+        icon: const Icon(Icons.close, size: 20),
+        label: Text(
+          AppLocalizations.of(context)!.clear_invoice_button,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+                      ),
+        ),
+      ),
     );
   }
 
-  void _showNfcUnavailable() {
-    _showInfoSnackBar(AppLocalizations.of(context)!.nfc_unavailable_message);
-  }
-
-  Future<void> _activateNfc() async {
-    if (!_nfcAvailable) {
-      _showNfcUnavailable();
-      return;
-    }
-
-    if (_generatedInvoice != null) {
-      _openNfcChargeSheet(_generatedInvoice!.paymentRequest);
-      return;
-    }
-
-    _showRequestAmountModal(autoStartNfcAfterGenerate: true);
-  }
-
-  void _openNfcChargeSheet(String invoice) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      isDismissible: false,
-      enableDrag: false,
-      builder: (sheetContext) => _NfcChargeSheet(invoice: invoice),
-    );
-  }
-
-  void _copyToClipboard(String text, String successMessage) async {
-    await Clipboard.setData(ClipboardData(text: text));
-    if (!mounted) return;
-    _showAccentSnackBar(
-      icon: Icons.check_circle,
-      message: successMessage,
-    );
-  }
-
-  void _showRequestAmountModal({bool autoStartNfcAfterGenerate = false}) {
+  void _showRequestAmountModal() {
+    // Clear fields when opening modal
     _amountController.clear();
     _noteController.clear();
     setState(() {
-      _selectedCurrency = _currencies.contains('sats') ? 'sats' : _currencies.first;
+      _selectedCurrency = 'sats';
     });
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (modalContext) => StatefulBuilder(
-        builder: (modalContext, setModalState) => Container(
+      builder: (context) => StatefulBuilder(
+        builder: (context, setModalState) => Container(
           padding: EdgeInsets.only(
-            bottom: MediaQuery.of(modalContext).viewInsets.bottom,
+            bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
           child: Container(
             constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(modalContext).size.height * 0.9,
-              minHeight: MediaQuery.of(modalContext).size.height * 0.5,
+              maxHeight: MediaQuery.of(context).size.height * 0.9,
+              minHeight: MediaQuery.of(context).size.height * 0.5,
             ),
-            decoration: BoxDecoration(
-              color: context.tokens.dialogBackground,
-              borderRadius: const BorderRadius.only(
+            decoration: const BoxDecoration(
+              color: Color(0xFF1A1D47),
+              borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(24),
                 topRight: Radius.circular(24),
               ),
@@ -1039,6 +1227,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  // Handle bar
                   Container(
                     margin: const EdgeInsets.only(top: 12),
                     width: 40,
@@ -1048,13 +1237,15 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
-                  Padding(
+                  
+                  // Header
+                  Container(
                     padding: const EdgeInsets.all(24),
                     child: Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.request_quote,
-                          color: context.tokens.accentSolid,
+                          color: Color(0xFF4C63F7),
                           size: 24,
                         ),
                         const SizedBox(width: 12),
@@ -1065,11 +1256,11 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                               color: context.tokens.textPrimary,
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
-                            ),
+                                                          ),
                           ),
                         ),
                         IconButton(
-                          onPressed: () => Navigator.pop(modalContext),
+                          onPressed: () => Navigator.pop(context),
                           icon: Icon(
                             Icons.close,
                             color: context.tokens.textPrimary.withValues(alpha: 0.7),
@@ -1078,15 +1269,19 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                       ],
                     ),
                   ),
+                  
+                  // Modal content
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        // Row for amount and currency selector
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            // Amount input
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -1097,7 +1292,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                       color: context.tokens.textPrimary.withValues(alpha: 0.8),
                                       fontSize: 14,
                                       fontWeight: FontWeight.w500,
-                                    ),
+                                                                          ),
                                   ),
                                   const SizedBox(height: 8),
                                   TextFormField(
@@ -1106,7 +1301,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                     style: TextStyle(
                                       color: context.tokens.textPrimary,
                                       fontSize: 16,
-                                    ),
+                                                                          ),
                                     decoration: InputDecoration(
                                       hintText: '0',
                                       hintStyle: TextStyle(
@@ -1116,15 +1311,21 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                       fillColor: context.tokens.inputFill,
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide(color: context.tokens.outline),
+                                        borderSide: BorderSide(
+                                          color: context.tokens.outline,
+                                        ),
                                       ),
                                       enabledBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide(color: context.tokens.outline),
+                                        borderSide: BorderSide(
+                                          color: context.tokens.outline,
+                                        ),
                                       ),
                                       focusedBorder: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(12),
-                                        borderSide: BorderSide(color: context.tokens.accentSolid),
+                                        borderSide: const BorderSide(
+                                          color: Color(0xFF4C63F7),
+                                        ),
                                       ),
                                       contentPadding: const EdgeInsets.symmetric(
                                         horizontal: 16,
@@ -1135,7 +1336,10 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                 ],
                               ),
                             ),
+                            
                             const SizedBox(width: 12),
+                            
+                            // Currency selector
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -1145,7 +1349,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                     color: context.tokens.textPrimary.withValues(alpha: 0.8),
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
-                                  ),
+                                                                      ),
                                 ),
                                 const SizedBox(height: 8),
                                 SizedBox(
@@ -1166,7 +1370,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                       child: Container(
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(12),
-                                          border: Border.all(color: context.tokens.outline),
+                                          border: Border.all(
+                                            color: context.tokens.outline,
+                                          ),
                                         ),
                                         child: Center(
                                           child: Text(
@@ -1175,7 +1381,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                               color: context.tokens.textPrimary,
                                               fontSize: 14,
                                               fontWeight: FontWeight.w600,
-                                            ),
+                                                                                          ),
                                           ),
                                         ),
                                       ),
@@ -1186,59 +1392,78 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                             ),
                           ],
                         ),
+                        
                         const SizedBox(height: 16),
-                        Text(
-                          AppLocalizations.of(context)!.optional_description_label,
-                          style: TextStyle(
-                            color: context.tokens.textPrimary.withValues(alpha: 0.8),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        
+                        // Note input
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!.optional_description_label,
+                              style: TextStyle(
+                                color: context.tokens.textPrimary.withValues(alpha: 0.8),
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            TextFormField(
+                              controller: _noteController,
+                              style: TextStyle(
+                                color: context.tokens.textPrimary,
+                                fontSize: 16,
+                                                              ),
+                              decoration: InputDecoration(
+                                hintText: AppLocalizations.of(context)!.payment_description_example,
+                                hintStyle: TextStyle(
+                                  color: context.tokens.textSecondary,
+                                ),
+                                filled: true,
+                                fillColor: context.tokens.inputFill,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: context.tokens.outline,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide(
+                                    color: context.tokens.outline,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: const BorderSide(
+                                    color: Color(0xFF4C63F7),
+                                  ),
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 16,
+                                ),
+                              ),
+                              maxLines: 2,
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 8),
-                        TextFormField(
-                          controller: _noteController,
-                          style: TextStyle(
-                            color: context.tokens.textPrimary,
-                            fontSize: 16,
-                          ),
-                          decoration: InputDecoration(
-                            hintText: AppLocalizations.of(context)!.payment_description_example,
-                            hintStyle: TextStyle(
-                              color: context.tokens.textSecondary,
-                            ),
-                            filled: true,
-                            fillColor: context.tokens.inputFill,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: context.tokens.outline),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: context.tokens.outline),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(color: context.tokens.accentSolid),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 16,
-                            ),
-                          ),
-                          maxLines: 2,
-                        ),
+                        
                         const SizedBox(height: 24),
+                        
+                        // Buttons
                         Padding(
                           padding: const EdgeInsets.only(bottom: 24),
                           child: Row(
                             children: [
                               Expanded(
                                 child: OutlinedButton(
-                                  onPressed: () => Navigator.pop(modalContext),
+                                  onPressed: () => Navigator.pop(context),
                                   style: OutlinedButton.styleFrom(
                                     foregroundColor: context.tokens.accentForeground,
-                                    side: BorderSide(color: context.tokens.textTertiary),
+                                    side: BorderSide(
+                                      color: context.tokens.textTertiary,
+                                    ),
                                     padding: const EdgeInsets.symmetric(vertical: 16),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(12),
@@ -1246,20 +1471,17 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                   ),
                                   child: Text(
                                     AppLocalizations.of(context)!.cancel_button,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
-                                    ),
+                                                                          ),
                                   ),
                                 ),
                               ),
                               const SizedBox(width: 12),
                               Expanded(
                                 child: ElevatedButton(
-                                  onPressed: () => _confirmRequestAmount(
-                                    modalContext,
-                                    autoStartNfcAfterGenerate: autoStartNfcAfterGenerate,
-                                  ),
+                                  onPressed: () => _confirmRequestAmount(),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: context.tokens.accentSolid,
                                     foregroundColor: context.tokens.accentForeground,
@@ -1271,10 +1493,10 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
                                   ),
                                   child: Text(
                                     AppLocalizations.of(context)!.confirm_button,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
-                                    ),
+                                                                          ),
                                   ),
                                 ),
                               ),
@@ -1293,55 +1515,84 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     );
   }
 
-  void _confirmRequestAmount(
-    BuildContext modalContext, {
-    bool autoStartNfcAfterGenerate = false,
-  }) async {
+  void _confirmRequestAmount() async {
+    // Validate that an amount has been entered
     if (_amountController.text.trim().isEmpty) {
       _showErrorSnackBar(AppLocalizations.of(context)!.invalid_amount_error);
       return;
     }
 
+    // Validate that the amount is valid
     final amount = double.tryParse(_amountController.text.trim());
     if (amount == null || amount <= 0) {
       _showErrorSnackBar(AppLocalizations.of(context)!.invalid_amount_error);
       return;
     }
 
-    Navigator.pop(modalContext);
+    // Close modal
+    Navigator.pop(context);
 
+    // Show loading
     setState(() {
       _isGeneratingInvoice = true;
     });
 
     try {
+      // Get necessary data
       final walletProvider = context.read<WalletProvider>();
       final authProvider = context.read<AuthProvider>();
-
+      
       final wallet = walletProvider.primaryWallet;
       final serverUrl = authProvider.sessionData?.serverUrl;
-
+      
       if (wallet == null || serverUrl == null) {
         throw Exception(AppLocalizations.of(context)!.no_wallet_error);
       }
 
+      // CURRENCY CONVERSION TO SATOSHIS
+      print('[RECEIVE_SCREEN] === STARTING CURRENCY CONVERSION ===');
+      print('[RECEIVE_SCREEN] Amount: $amount $_selectedCurrency');
+      
+      // ALWAYS use fresh conversion with consistent rates
       final amountInSats = await _getAmountInSats(amount, _selectedCurrency);
-
+      final conversionMessage = _selectedCurrency == 'sats' 
+          ? 'Factura: $amountInSats sats'
+          : '$amount $_selectedCurrency / $amountInSats sats';
+      
+      print('[RECEIVE_SCREEN] Final conversion result: $conversionMessage');
+      
+      // Basic validations
       if (amountInSats < 1) {
         throw Exception('Monto convertido muy pequeño (mínimo 1 sat)');
       }
-
-      if (amountInSats > 2100000000000000) {
+        
+      // Validate extremely large amounts that can cause server problems
+      if (amountInSats > 2100000000000000) { // 21M BTC en sats
         throw Exception('Monto muy grande. Máximo: 21M BTC');
       }
+      
+      if (amountInSats > 100000000000) { // 1000 BTC as practical limit
+        print('[RECEIVE_SCREEN] ⚠️ WARNING: Very large amount ($amountInSats sats = ${(amountInSats/100000000).toStringAsFixed(2)} BTC)');
+      }
 
+      print('[RECEIVE_SCREEN] Generando factura: $amountInSats sats');
+      print('[RECEIVE_SCREEN] Server: $serverUrl');
+      print('[RECEIVE_SCREEN] Wallet: ${wallet.name}');
+      print('[RECEIVE_SCREEN] Original currency: $_selectedCurrency');
+      print('[RECEIVE_SCREEN] Original amount: $amount');
+      print('[RECEIVE_SCREEN] Original rate: ${_selectedCurrency != 'sats' ? (amountInSats / amount) : 'N/A'}');
+
+      // Prepare memo with fiat info as fallback for LNBits limitations
       String? finalMemo;
       if (_noteController.text.trim().isNotEmpty) {
         finalMemo = _noteController.text.trim();
       } else if (_selectedCurrency != 'sats') {
+        // Use fiat amount as memo when no custom note (fallback for LNBits)
         finalMemo = '${amount.toStringAsFixed(amount.truncateToDouble() == amount ? 0 : 2)} $_selectedCurrency';
       }
 
+      // Generate invoice with amount in satoshis and original fiat information.
+      // Receiving only needs LNbits invoice key (read+create), not admin.
       final invoice = await _invoiceService.createInvoice(
         serverUrl: serverUrl,
         adminKey: wallet.inKey,
@@ -1353,127 +1604,59 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
         originalFiatRate: _selectedCurrency != 'sats' ? (amountInSats / amount) : null,
       );
 
-      if (!mounted) return;
+      // Update state
       setState(() {
         _generatedInvoice = invoice;
         _isGeneratingInvoice = false;
       });
 
-      _showAccentSnackBar(
-        icon: Icons.check_circle,
-        message: AppLocalizations.of(context)!.invoice_generated_message,
-        backgroundColor: context.tokens.statusHealthy,
+      // Show confirmation
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.check_circle, color: context.tokens.textPrimary, size: 20),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      conversionMessage.isNotEmpty ? conversionMessage : 'Factura: ${invoice.formattedAmount}',
+                      style: const TextStyle(
+                                                fontWeight: FontWeight.w500,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: context.tokens.statusHealthy,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          duration: const Duration(seconds: 3),
+        ),
       );
 
+      print('[RECEIVE_SCREEN] Factura generada exitosamente: ${invoice.paymentHash}');
+      
+      // Start automatic verification of invoice payment
       _startInvoicePaymentMonitoring(invoice, wallet, serverUrl);
 
-      if (autoStartNfcAfterGenerate && _nfcAvailable) {
-        _openNfcChargeSheet(invoice.paymentRequest);
-      }
     } catch (e) {
+      print('[RECEIVE_SCREEN] Error generando factura: $e');
+      
       setState(() {
         _isGeneratingInvoice = false;
       });
+      
       _showErrorSnackBar('Error generando factura: ${e.toString()}');
     }
-  }
-
-  void _startInvoicePaymentMonitoring(LightningInvoice invoice, WalletInfo wallet, String serverUrl) {
-    _invoicePaymentTimer?.cancel();
-    _invoicePaymentTimeoutTimer?.cancel();
-
-    _invoicePaymentTimer = Timer.periodic(const Duration(seconds: 5), (timer) async {
-      if (!mounted) {
-        timer.cancel();
-        return;
-      }
-
-      try {
-        final isPaid = await _invoiceService.checkInvoiceStatus(
-          serverUrl: serverUrl,
-          adminKey: wallet.inKey,
-          paymentHash: invoice.paymentHash,
-        );
-
-        if (isPaid) {
-          timer.cancel();
-
-          if (mounted) {
-            _transactionDetector.triggerEventSpark('invoice_paid');
-            Navigator.of(context).popUntil((route) => route.isFirst);
-
-            Future.delayed(const Duration(milliseconds: 800), () {
-              if (mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Row(
-                      children: [
-                        Icon(Icons.check_circle, color: context.tokens.textPrimary, size: 20),
-                        const SizedBox(width: 12),
-                        Text(
-                          '${AppLocalizations.of(context)!.received_label}! ${invoice.formattedAmount}',
-                          style: const TextStyle(fontWeight: FontWeight.w500),
-                        ),
-                      ],
-                    ),
-                    backgroundColor: context.tokens.statusHealthy,
-                    behavior: SnackBarBehavior.floating,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    duration: const Duration(seconds: 3),
-                  ),
-                );
-              }
-            });
-          }
-        }
-      } catch (_) {
-        // Continue checking on temporary errors
-      }
-    });
-
-    _invoicePaymentTimeoutTimer = Timer(const Duration(minutes: 10), () {
-      _invoicePaymentTimer?.cancel();
-      if (!mounted) return;
-      setState(() {
-        _generatedInvoice = null;
-      });
-      _showInfoSnackBar(
-        AppLocalizations.of(context)!.invoice_monitoring_timeout_message,
-      );
-    });
-  }
-
-  void _showAccentSnackBar({
-    required IconData icon,
-    required String message,
-    Color? backgroundColor,
-  }) {
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(icon, color: context.tokens.textPrimary, size: 20),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                message,
-                style: const TextStyle(fontWeight: FontWeight.w500),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        ),
-        backgroundColor: backgroundColor ?? context.tokens.accentSolid,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        duration: const Duration(seconds: 2),
-      ),
-    );
   }
 
   void _showErrorSnackBar(String message) {
@@ -1486,7 +1669,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
             Expanded(
               child: Text(
                 message,
-                style: const TextStyle(fontWeight: FontWeight.w500),
+                style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                ),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
               ),
@@ -1510,11 +1695,10 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
           children: [
             Icon(Icons.info, color: context.tokens.textPrimary, size: 20),
             const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                message,
-                style: const TextStyle(fontWeight: FontWeight.w500),
-                overflow: TextOverflow.ellipsis,
+            Text(
+              message,
+              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
               ),
             ),
           ],
@@ -1529,206 +1713,249 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     );
   }
 
+  void _copyPaymentInfo(LNAddress defaultAddress) async {
+    String textToCopy;
+    String successMessage;
+    
+    if (_generatedInvoice != null) {
+      // If there's a generated invoice, copy the invoice
+      textToCopy = _generatedInvoice!.paymentRequest;
+      successMessage = AppLocalizations.of(context)!.copy_button;
+    } else {
+      // If there's no invoice, copy the Lightning Address
+      textToCopy = defaultAddress.fullAddress;
+      successMessage = AppLocalizations.of(context)!.address_copied_message;
+    }
+    
+    await Clipboard.setData(ClipboardData(text: textToCopy));
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.check_circle, color: context.tokens.textPrimary, size: 20),
+              const SizedBox(width: 12),
+              Text(
+                successMessage,
+                style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: context.tokens.accentSolid,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
+  void _startInvoicePaymentMonitoring(LightningInvoice invoice, WalletInfo wallet, String serverUrl) {
+    print('[RECEIVE_SCREEN] Iniciando monitoreo de pago para factura: ${invoice.paymentHash}');
+
+    // Cancel previous timers if they exist
+    _invoicePaymentTimer?.cancel();
+    _invoicePaymentTimeoutTimer?.cancel();
+
+    // Check every 5 seconds if the invoice was paid (gentle on rate-limited servers)
+    _invoicePaymentTimer = Timer.periodic(const Duration(seconds: 5), (timer) async {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+
+      try {
+        // Check invoice status — read-only operation, invoice key is enough
+        final isPaid = await _invoiceService.checkInvoiceStatus(
+          serverUrl: serverUrl,
+          adminKey: wallet.inKey,
+          paymentHash: invoice.paymentHash,
+        );
+        
+        if (isPaid) {
+          print('[RECEIVE_SCREEN] Invoice paid! Starting celebration sequence');
+          timer.cancel();
+          
+          if (mounted) {
+            // 1. FIRST: Activate spark effect
+            print('[RECEIVE_SCREEN] 🎆 Activando efecto chispa por pago recibido');
+            _transactionDetector.triggerEventSpark('invoice_paid');
+            
+            // 2. AFTER: Navigate to HomeScreen to show spark effect
+            Navigator.of(context).popUntil((route) => route.isFirst);
+            
+            // 3. FINALLY: Wait a moment and show green notification
+            Future.delayed(const Duration(milliseconds: 800), () {
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Row(
+                      children: [
+                        Icon(Icons.check_circle, color: context.tokens.textPrimary, size: 20),
+                        const SizedBox(width: 12),
+                        Text(
+                          '${AppLocalizations.of(context)!.received_label}! ${invoice.formattedAmount}',
+                          style: const TextStyle(
+                                                        fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                    backgroundColor: context.tokens.statusHealthy,
+                    behavior: SnackBarBehavior.floating,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    duration: const Duration(seconds: 3),
+                  ),
+                );
+              }
+            });
+          }
+        }
+      } catch (e) {
+        print('[RECEIVE_SCREEN] Error verificando estado de factura: $e');
+        // Continue checking in case of temporary error
+      }
+    });
+    
+    // Auto-cancel after 10 minutes to avoid infinite monitoring.
+    // Notify the user and clear the QR so they can regenerate a fresh invoice.
+    _invoicePaymentTimeoutTimer = Timer(const Duration(minutes: 10), () {
+      _invoicePaymentTimer?.cancel();
+      print('[RECEIVE_SCREEN] Timeout: Deteniendo monitoreo de factura');
+      if (!mounted) return;
+      setState(() {
+        _generatedInvoice = null;
+      });
+      _showInfoSnackBar(
+        AppLocalizations.of(context)!.invoice_monitoring_timeout_message,
+      );
+    });
+  }
+
+  Widget _buildCopyLNURLButton(LNAddress defaultAddress) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        onPressed: () => _copyLNURL(defaultAddress),
+        style: OutlinedButton.styleFrom(
+          foregroundColor: context.tokens.accentForeground,
+          side: BorderSide(
+            color: context.tokens.textTertiary,
+            width: 1.5,
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+        icon: const Icon(Icons.copy, size: 20),
+        label: Text(
+          AppLocalizations.of(context)!.copy_lnurl,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+                      ),
+        ),
+      ),
+    );
+  }
+
+  void _copyLNURL(LNAddress defaultAddress) async {
+    final lnurl = defaultAddress.lnurl;
+    
+    if (lnurl != null && lnurl.isNotEmpty) {
+      await Clipboard.setData(ClipboardData(text: lnurl));
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.check_circle, color: context.tokens.textPrimary, size: 20),
+                const SizedBox(width: 12),
+                const Text(
+                  'LNURL copiado',
+                  style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            backgroundColor: context.tokens.accentSolid,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.error, color: context.tokens.textPrimary, size: 20),
+                const SizedBox(width: 12),
+                const Text(
+                  'LNURL no disponible',
+                  style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+            backgroundColor: context.tokens.statusUnhealthy,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
+  void _copyLightningAddress(String address) async {
+    await Clipboard.setData(ClipboardData(text: address));
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.check_circle, color: context.tokens.textPrimary, size: 20),
+              const SizedBox(width: 12),
+              Text(
+                AppLocalizations.of(context)!.address_copied_message,
+                style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: context.tokens.accentSolid,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
   void _navigateToVoucherScreen() {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => const VoucherScanScreen(),
-      ),
-    );
-  }
-}
-
-class _NfcChargeSheet extends StatefulWidget {
-  final String invoice;
-  const _NfcChargeSheet({required this.invoice});
-
-  @override
-  State<_NfcChargeSheet> createState() => _NfcChargeSheetState();
-}
-
-class _NfcChargeSheetState extends State<_NfcChargeSheet> {
-  late final NfcChargeService _service;
-  NfcChargeStatus _status = NfcChargeStatus.scanning;
-  String? _errorMessage;
-  bool _autoCloseScheduled = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _service = NfcChargeService();
-    _start();
-  }
-
-  Future<void> _start() async {
-    await _service.startChargeSession(
-      invoice: widget.invoice,
-      onStatus: (result) {
-        if (!mounted) return;
-        setState(() {
-          _status = result.status;
-          _errorMessage = result.message;
-        });
-        if (result.status == NfcChargeStatus.success && !_autoCloseScheduled) {
-          _autoCloseScheduled = true;
-          Future.delayed(const Duration(milliseconds: 1400), () {
-            if (mounted) Navigator.of(context).pop();
-          });
-        }
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    _service.stopSession();
-    _service.dispose();
-    super.dispose();
-  }
-
-  Color _statusColor(BuildContext context) {
-    switch (_status) {
-      case NfcChargeStatus.success:
-        return context.tokens.statusHealthy;
-      case NfcChargeStatus.invalidTag:
-      case NfcChargeStatus.networkError:
-      case NfcChargeStatus.callbackError:
-        return context.tokens.statusUnhealthy;
-      default:
-        return context.tokens.accentSolid;
-    }
-  }
-
-  IconData _statusIcon() {
-    switch (_status) {
-      case NfcChargeStatus.success:
-        return Icons.check_circle_rounded;
-      case NfcChargeStatus.invalidTag:
-      case NfcChargeStatus.networkError:
-      case NfcChargeStatus.callbackError:
-        return Icons.error_rounded;
-      case NfcChargeStatus.charging:
-        return Icons.bolt_rounded;
-      case NfcChargeStatus.reading:
-        return Icons.contactless_rounded;
-      case NfcChargeStatus.scanning:
-        return Icons.nfc_rounded;
-    }
-  }
-
-  String _statusText(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    switch (_status) {
-      case NfcChargeStatus.scanning:
-      case NfcChargeStatus.reading:
-        return l10n.nfc_scanning_message;
-      case NfcChargeStatus.charging:
-        return l10n.nfc_charging_message;
-      case NfcChargeStatus.success:
-        return l10n.invoice_generated_message;
-      case NfcChargeStatus.invalidTag:
-        return l10n.nfc_invalid_tag_message;
-      case NfcChargeStatus.networkError:
-      case NfcChargeStatus.callbackError:
-        final detail = _errorMessage?.trim() ?? '';
-        return detail.isNotEmpty
-            ? '${l10n.nfc_charge_error_prefix}$detail'
-            : l10n.nfc_charge_unknown_error;
-    }
-  }
-
-  bool get _isFinal =>
-      _status == NfcChargeStatus.success ||
-      _status == NfcChargeStatus.invalidTag ||
-      _status == NfcChargeStatus.networkError ||
-      _status == NfcChargeStatus.callbackError;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final accent = _statusColor(context);
-
-    return Container(
-      decoration: BoxDecoration(
-        color: context.tokens.dialogBackground,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      padding: EdgeInsets.fromLTRB(
-        24,
-        12,
-        24,
-        24 + MediaQuery.of(context).viewPadding.bottom,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: context.tokens.textTertiary,
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          const SizedBox(height: 20),
-          Text(
-            l10n.nfc_scanning_title,
-            style: TextStyle(
-              color: context.tokens.textPrimary,
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: 32),
-          Container(
-            width: 96,
-            height: 96,
-            decoration: BoxDecoration(
-              color: accent.withValues(alpha: 0.12),
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: accent.withValues(alpha: 0.4),
-                width: 2,
-              ),
-            ),
-            child: Icon(_statusIcon(), color: accent, size: 48),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            _statusText(context),
-            style: TextStyle(
-              color: context.tokens.textPrimary,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 32),
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton(
-              onPressed: () => Navigator.of(context).pop(),
-              style: OutlinedButton.styleFrom(
-                foregroundColor: context.tokens.accentForeground,
-                side: BorderSide(
-                  color: context.tokens.textTertiary,
-                  width: 1.5,
-                ),
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-              child: Text(
-                _isFinal ? l10n.close_dialog : l10n.cancel_button,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
