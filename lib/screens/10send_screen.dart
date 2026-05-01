@@ -5,6 +5,7 @@ import '11amount_screen.dart';
 import '12invoice_confirm_screen.dart';
 import '../services/invoice_service.dart';
 import '../services/payment_error.dart';
+import '../services/nfc_read_service.dart';
 import '../providers/auth_provider.dart';
 import '../providers/wallet_provider.dart';
 import '../widgets/qr_scanner_widget.dart';
@@ -23,13 +24,18 @@ class SendScreen extends StatefulWidget {
 class _SendScreenState extends State<SendScreen> {
   final TextEditingController _inputController = TextEditingController();
   final InvoiceService _invoiceService = InvoiceService();
+  final NfcReadService _nfcReadService = NfcReadService();
   bool _isProcessing = false;
+  bool _nfcAvailable = false;
 
   @override
   void initState() {
     super.initState();
     // Listen to text changes for automatic validation
     _inputController.addListener(_onTextChanged);
+
+    // Check NFC availability
+    _checkNfcAvailability();
 
     // Set initial payment data if provided from deep link
     if (widget.initialPaymentData != null) {
@@ -47,6 +53,15 @@ class _SendScreenState extends State<SendScreen> {
       });
     } else {
       print('[SendScreen] No initial payment data provided');
+    }
+  }
+
+  Future<void> _checkNfcAvailability() async {
+    final available = await NfcReadService.isAvailable();
+    if (mounted) {
+      setState(() {
+        _nfcAvailable = available;
+      });
     }
   }
 
@@ -268,6 +283,43 @@ class _SendScreenState extends State<SendScreen> {
         ),
       ),
     );
+  }
+
+  void _activateNfcRead() {
+    if (!_nfcAvailable) {
+      _showErrorSnackBar(AppLocalizations.of(context)!.nfc_unavailable_message);
+      return;
+    }
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isDismissible: false,
+      enableDrag: false,
+      builder: (sheetContext) => _NfcReadSheet(
+        nfcService: _nfcReadService,
+        onRead: (result) {
+          Navigator.pop(sheetContext);
+          _handleNfcReadResult(result);
+        },
+        onError: (error) {
+          Navigator.pop(sheetContext);
+          _showErrorSnackBar(error);
+        },
+      ),
+    );
+  }
+
+  void _handleNfcReadResult(NfcReadResult result) {
+    setState(() {
+      _inputController.text = result.value;
+    });
+
+    if (result.type == NfcReadResultType.lightningAddress) {
+      _processLightningAddressPayment(result.value);
+    } else if (result.type == NfcReadResultType.lnurl) {
+      _processLNURLPayment(result.value);
+    }
   }
 
   // ignore: unused_element
@@ -597,6 +649,58 @@ class _SendScreenState extends State<SendScreen> {
                                       ),
                                     ),
                                   ),
+
+                                  if (_nfcAvailable) ...[
+                                    const SizedBox(width: 16),
+                                    Expanded(
+                                      child: SizedBox(
+                                        height: isMobile ? 48 : 56,
+                                        child: ElevatedButton(
+                                          onPressed: _activateNfcRead,
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: t.surface,
+                                            foregroundColor: t.textPrimary,
+                                            elevation: 0,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(16),
+                                              side: BorderSide(
+                                                color: t.outline,
+                                                width: 1,
+                                              ),
+                                            ),
+                                            shadowColor: Colors.transparent,
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                width: 20,
+                                                height: 20,
+                                                decoration: BoxDecoration(
+                                                  color: t.accentSolid.withValues(alpha: 0.2),
+                                                  borderRadius: BorderRadius.circular(4),
+                                                ),
+                                                child: Icon(
+                                                  Icons.nfc_rounded,
+                                                  size: 14,
+                                                  color: t.accentSolid,
+                                                ),
+                                              ),
+                                              const SizedBox(width: 8),
+                                              Text(
+                                                'NFC',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: t.textPrimary,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ],
                               ),
 
@@ -696,6 +800,143 @@ class _SendScreenState extends State<SendScreen> {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _NfcReadSheet extends StatefulWidget {
+  final NfcReadService nfcService;
+  final Function(NfcReadResult) onRead;
+  final Function(String) onError;
+
+  const _NfcReadSheet({
+    required this.nfcService,
+    required this.onRead,
+    required this.onError,
+  });
+
+  @override
+  State<_NfcReadSheet> createState() => _NfcReadSheetState();
+}
+
+class _NfcReadSheetState extends State<_NfcReadSheet> {
+  String _status = 'Escaneando...';
+  bool _reading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _startNfcRead();
+  }
+
+  Future<void> _startNfcRead() async {
+    try {
+      await widget.nfcService.startReadSession(
+        onResult: (result) {
+          if (mounted) {
+            setState(() {
+              _reading = false;
+              _status = '¡Tarjeta detectada!';
+            });
+            widget.onRead(result);
+          }
+        },
+        onError: (error) {
+          if (mounted) {
+            setState(() {
+              _reading = false;
+              _status = 'Error: $error';
+            });
+            Future.delayed(const Duration(seconds: 2), () {
+              widget.onError(error);
+            });
+          }
+        },
+      );
+    } catch (e) {
+      if (mounted) {
+        widget.onError(e.toString());
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.nfcService.stopSession();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.tokens;
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: t.dialogBackground,
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(24),
+          topRight: Radius.circular(24),
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: t.textTertiary,
+              borderRadius: BorderRadius.circular(2),
+            ),
+          ),
+          const SizedBox(height: 24),
+          Icon(
+            _reading ? Icons.nfc_rounded : Icons.check_circle,
+            size: 64,
+            color: _reading ? t.accentSolid : Colors.green,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            _status,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: t.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            _reading
+                ? 'Acerca la tarjeta al teléfono'
+                : 'Procesando datos de la tarjeta...',
+            style: TextStyle(
+              fontSize: 14,
+              color: t.textSecondary,
+            ),
+          ),
+          const SizedBox(height: 24),
+          if (_reading)
+            SizedBox(
+              width: double.infinity,
+              height: 52,
+              child: ElevatedButton(
+                onPressed: () {
+                  widget.nfcService.stopSession();
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: t.surface,
+                  foregroundColor: t.textPrimary,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    side: BorderSide(color: t.outline),
+                  ),
+                ),
+                child: Text(AppLocalizations.of(context)!.cancel_button),
+              ),
+            ),
+        ],
       ),
     );
   }
