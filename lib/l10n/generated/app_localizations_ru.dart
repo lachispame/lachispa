@@ -956,12 +956,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String get nfc_unavailable_message => 'NFC недоступен на этом устройстве';
 
   @override
-  String get nfc_scanning_title => 'Приём через NFC';
-
-  @override
-  String get nfc_scanning_message => 'Поднесите Boltcard к телефону';
-
-  @override
   String get nfc_charging_message => 'Списание...';
 
   @override
@@ -978,4 +972,24 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get lnurl_copied_message => 'LNURL скопирован в буфер обмена';
+
+  @override
+  String get nfc_scanning_title => 'Приём через NFC';
+
+  @override
+  String get nfc_scanning_send => 'Оплата через NFC...';
+
+  @override
+  String get nfc_scanning_message => 'Поднесите Boltcard к телефону';
+
+  @override
+  String get nfc_card_detected => 'Карта обнаружена!';
+
+  @override
+  String nfc_read_error(String error) {
+    return 'Ошибка: $error';
+  }
+
+  @override
+  String get nfc_processing_card => 'Обработка данных карты...';
 }

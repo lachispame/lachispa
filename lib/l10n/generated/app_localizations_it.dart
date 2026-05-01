@@ -978,12 +978,6 @@ class AppLocalizationsIt extends AppLocalizations {
       'NFC non disponibile su questo dispositivo';
 
   @override
-  String get nfc_scanning_title => 'Incassa con NFC';
-
-  @override
-  String get nfc_scanning_message => 'Avvicina la Boltcard al telefono';
-
-  @override
   String get nfc_charging_message => 'Incasso in corso...';
 
   @override
@@ -1001,4 +995,24 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get lnurl_copied_message => 'LNURL copiato negli appunti';
+
+  @override
+  String get nfc_scanning_title => 'Incassa con NFC';
+
+  @override
+  String get nfc_scanning_send => 'Pagamento con NFC...';
+
+  @override
+  String get nfc_scanning_message => 'Avvicina la Boltcard al telefono';
+
+  @override
+  String get nfc_card_detected => 'Carta rilevata!';
+
+  @override
+  String nfc_read_error(String error) {
+    return 'Errore: $error';
+  }
+
+  @override
+  String get nfc_processing_card => 'Elaborazione dati della carta...';
 }

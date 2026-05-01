@@ -366,12 +366,21 @@
   "invoice_monitoring_timeout_message": "Monitoraggio interrotto. Genera una nuova fattura.",
   "nfc_action_label": "NFC",
   "nfc_unavailable_message": "NFC non disponibile su questo dispositivo",
-  "nfc_scanning_title": "Incassa con NFC",
-  "nfc_scanning_message": "Avvicina la Boltcard al telefono",
   "nfc_charging_message": "Incasso in corso...",
   "nfc_invalid_tag_message": "Tag non valido o non è una Boltcard",
   "nfc_charge_error_prefix": "Errore incasso NFC: ",
   "nfc_charge_unknown_error": "Errore sconosciuto durante l'incasso",
   "share_ready_message": "Pronto da condividere",
-  "lnurl_copied_message": "LNURL copiato negli appunti"
+  "lnurl_copied_message": "LNURL copiato negli appunti",
+  "nfc_scanning_title": "Incassa con NFC",
+  "nfc_scanning_send": "Pagamento con NFC...",
+  "nfc_scanning_message": "Avvicina la Boltcard al telefono",
+  "nfc_card_detected": "Carta rilevata!",
+  "nfc_read_error": "Errore: {error}",
+  "@nfc_read_error": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "nfc_processing_card": "Elaborazione dati della carta..."
 }

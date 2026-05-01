@@ -366,12 +366,21 @@
   "invoice_monitoring_timeout_message": "Мониторинг остановлен. Создайте новый счёт.",
   "nfc_action_label": "NFC",
   "nfc_unavailable_message": "NFC недоступен на этом устройстве",
-  "nfc_scanning_title": "Приём через NFC",
-  "nfc_scanning_message": "Поднесите Boltcard к телефону",
   "nfc_charging_message": "Списание...",
   "nfc_invalid_tag_message": "Неверный тег или это не Boltcard",
   "nfc_charge_error_prefix": "Ошибка приёма по NFC: ",
   "nfc_charge_unknown_error": "Неизвестная ошибка при списании",
   "share_ready_message": "Готово к отправке",
-  "lnurl_copied_message": "LNURL скопирован в буфер обмена"
+  "lnurl_copied_message": "LNURL скопирован в буфер обмена",
+  "nfc_scanning_title": "Приём через NFC",
+  "nfc_scanning_send": "Оплата через NFC...",
+  "nfc_scanning_message": "Поднесите Boltcard к телефону",
+  "nfc_card_detected": "Карта обнаружена!",
+  "nfc_read_error": "Ошибка: {error}",
+  "@nfc_read_error": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "nfc_processing_card": "Обработка данных карты..."
 }

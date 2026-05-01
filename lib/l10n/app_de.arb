@@ -366,12 +366,21 @@
   "invoice_monitoring_timeout_message": "Überwachung gestoppt. Erstellen Sie eine neue Rechnung.",
   "nfc_action_label": "NFC",
   "nfc_unavailable_message": "NFC auf diesem Gerät nicht verfügbar",
-  "nfc_scanning_title": "Mit NFC einziehen",
-  "nfc_scanning_message": "Halten Sie die Boltcard an das Telefon",
   "nfc_charging_message": "Wird belastet...",
   "nfc_invalid_tag_message": "Ungültiges Tag oder keine Boltcard",
   "nfc_charge_error_prefix": "NFC-Fehler beim Einziehen: ",
   "nfc_charge_unknown_error": "Unbekannter Fehler beim Einziehen",
   "share_ready_message": "Bereit zum Teilen",
-  "lnurl_copied_message": "LNURL in die Zwischenablage kopiert"
+  "lnurl_copied_message": "LNURL in die Zwischenablage kopiert",
+  "nfc_scanning_title": "Mit NFC einziehen",
+  "nfc_scanning_send": "Mit NFC bezahlen...",
+  "nfc_scanning_message": "Halten Sie die Boltcard an das Telefon",
+  "nfc_card_detected": "Karte erkannt!",
+  "nfc_read_error": "Fehler: {error}",
+  "@nfc_read_error": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "nfc_processing_card": "Kartendaten werden verarbeitet..."
 }

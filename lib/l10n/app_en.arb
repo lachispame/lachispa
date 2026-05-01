@@ -381,12 +381,21 @@
   "invoice_monitoring_timeout_message": "Monitoring stopped. Generate a new invoice.",
   "nfc_action_label": "NFC",
   "nfc_unavailable_message": "NFC not available on this device",
-  "nfc_scanning_title": "Charge with NFC",
-  "nfc_scanning_message": "Tap the Boltcard against the phone",
   "nfc_charging_message": "Charging...",
   "nfc_invalid_tag_message": "Invalid tag or not a Boltcard",
   "nfc_charge_error_prefix": "NFC charge error: ",
   "nfc_charge_unknown_error": "Unknown error during charge",
   "share_ready_message": "Ready to share",
-  "lnurl_copied_message": "LNURL copied to clipboard"
+  "lnurl_copied_message": "LNURL copied to clipboard",
+  "nfc_scanning_title": "Charge with NFC",
+  "nfc_scanning_send": "Paying with NFC...",
+  "nfc_scanning_message": "Tap the Boltcard against the phone",
+  "nfc_card_detected": "Card detected!",
+  "nfc_read_error": "Error: {error}",
+  "@nfc_read_error": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "nfc_processing_card": "Processing card data..."
 }
