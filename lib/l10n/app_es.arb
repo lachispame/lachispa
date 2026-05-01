@@ -178,8 +178,8 @@
   "clear_button": "C",
   "decimal_button": ".",
   "calculating_text": "calculando...",
-  "loading_rates_text": "Loading rates...",
-  "send_button_prefix": "SEND ",
+  "loading_rates_text": "Cargando tipo de cambio...",
+  "send_button_prefix": "ENVIAR ",
   "amount_processing_button": "PROCESANDO...",
   "exchange_rates_error": "Error cargando tipos de cambio",
   "invalid_amount_error": "Por favor ingresa un monto válido",
@@ -366,12 +366,21 @@
   "invoice_monitoring_timeout_message": "Monitoreo detenido. Genera una nueva factura.",
   "nfc_action_label": "NFC",
   "nfc_unavailable_message": "NFC no disponible en este dispositivo",
-  "nfc_scanning_title": "Cobrar con NFC",
-  "nfc_scanning_message": "Acerca la Boltcard al teléfono",
   "nfc_charging_message": "Cobrando...",
   "nfc_invalid_tag_message": "Tag inválido o no es una Boltcard",
   "nfc_charge_error_prefix": "Error en cobro NFC: ",
   "nfc_charge_unknown_error": "Error desconocido al cobrar",
   "share_ready_message": "Listo para compartir",
-  "lnurl_copied_message": "LNURL copiado al portapapeles"
+  "lnurl_copied_message": "LNURL copiado al portapapeles",
+  "nfc_scanning_title": "Cobrar con NFC",
+  "nfc_scanning_send": "Pagando con NFC...",
+  "nfc_scanning_message": "Acerca la Boltcard al teléfono",
+  "nfc_card_detected": "¡Tarjeta detectada!",
+  "nfc_read_error": "Error: {error}",
+  "@nfc_read_error": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "nfc_processing_card": "Procesando datos de la tarjeta..."
 }

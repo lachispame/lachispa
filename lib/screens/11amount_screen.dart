@@ -1000,8 +1000,8 @@ class _AmountScreenState extends State<AmountScreen> {
                                     )
                                   : Text(
                                       _selectedCurrency != 'sats'
-                                          ? 'SEND ${_formatDisplayAmount()}${_getConversionText()}'
-                                          : 'SEND ${_formatDisplayAmount()}',
+                                          ? '${AppLocalizations.of(context)!.send_button_prefix}${_formatDisplayAmount()}${_getConversionText()}'
+                                          : '${AppLocalizations.of(context)!.send_button_prefix}${_formatDisplayAmount()}',
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w700,

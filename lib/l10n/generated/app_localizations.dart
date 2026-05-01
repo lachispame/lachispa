@@ -1011,13 +1011,13 @@ abstract class AppLocalizations {
   /// No description provided for @loading_rates_text.
   ///
   /// In es, this message translates to:
-  /// **'Loading rates...'**
+  /// **'Cargando tipo de cambio...'**
   String get loading_rates_text;
 
   /// No description provided for @send_button_prefix.
   ///
   /// In es, this message translates to:
-  /// **'SEND '**
+  /// **'ENVIAR '**
   String get send_button_prefix;
 
   /// No description provided for @amount_processing_button.
@@ -1854,18 +1854,6 @@ abstract class AppLocalizations {
   /// **'NFC no disponible en este dispositivo'**
   String get nfc_unavailable_message;
 
-  /// No description provided for @nfc_scanning_title.
-  ///
-  /// In es, this message translates to:
-  /// **'Cobrar con NFC'**
-  String get nfc_scanning_title;
-
-  /// No description provided for @nfc_scanning_message.
-  ///
-  /// In es, this message translates to:
-  /// **'Acerca la Boltcard al teléfono'**
-  String get nfc_scanning_message;
-
   /// No description provided for @nfc_charging_message.
   ///
   /// In es, this message translates to:
@@ -1901,6 +1889,42 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'LNURL copiado al portapapeles'**
   String get lnurl_copied_message;
+
+  /// No description provided for @nfc_scanning_title.
+  ///
+  /// In es, this message translates to:
+  /// **'Cobrar con NFC'**
+  String get nfc_scanning_title;
+
+  /// No description provided for @nfc_scanning_send.
+  ///
+  /// In es, this message translates to:
+  /// **'Pagando con NFC...'**
+  String get nfc_scanning_send;
+
+  /// No description provided for @nfc_scanning_message.
+  ///
+  /// In es, this message translates to:
+  /// **'Acerca la Boltcard al teléfono'**
+  String get nfc_scanning_message;
+
+  /// No description provided for @nfc_card_detected.
+  ///
+  /// In es, this message translates to:
+  /// **'¡Tarjeta detectada!'**
+  String get nfc_card_detected;
+
+  /// No description provided for @nfc_read_error.
+  ///
+  /// In es, this message translates to:
+  /// **'Error: {error}'**
+  String nfc_read_error(String error);
+
+  /// No description provided for @nfc_processing_card.
+  ///
+  /// In es, this message translates to:
+  /// **'Procesando datos de la tarjeta...'**
+  String get nfc_processing_card;
 }
 
 class _AppLocalizationsDelegate
