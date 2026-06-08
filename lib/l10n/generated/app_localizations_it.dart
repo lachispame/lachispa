@@ -936,6 +936,17 @@ class AppLocalizationsIt extends AppLocalizations {
   String get about_title => 'Informazioni';
 
   @override
+  String currency_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count valute',
+      one: '1 valuta',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get currency_validation_info =>
       'Quando si seleziona una valuta, verrà verificato se è disponibile su questo server';
 
@@ -951,9 +962,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String currency_not_available_on_server(
-    Object currency,
-    Object currencyName,
-  ) {
+      Object currency, Object currencyName) {
     return '$currencyName ($currency) non è disponibile su questo server';
   }
 
@@ -1010,6 +1019,44 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get lnurl_copied_message => 'LNURL copiato negli appunti';
+
+  @override
+  String get invoice_key_qr_title => 'QR Chiave fattura';
+
+  @override
+  String get invoice_key_qr_description =>
+      'Usa questo codice QR con LaChispaPOS o altre app Lightning per ricevere pagamenti senza esporre la tua chiave amministratore.';
+
+  @override
+  String get invoice_key_qr_subtitle => 'Mostra QR per altre app';
+
+  @override
+  String get copy_invoice_key => 'Copia chiave';
+
+  @override
+  String get invoice_key_copied => 'Chiave fattura copiata negli appunti';
+
+  @override
+  String get invoice_key_unavailable_title => 'Nessun portafoglio trovato';
+
+  @override
+  String get invoice_key_unavailable_subtitle => 'Crea prima un portafoglio';
+
+  @override
+  String get invoice_key_security_warning =>
+      'Questa chiave permette a terzi di creare fatture. Condividi solo con dispositivi POS fidati. Non pubblicare mai pubblicamente.';
+
+  @override
+  String get invoice_key_show => 'Mostra chiave';
+
+  @override
+  String get invoice_key_hide => 'Nascondi chiave';
+
+  @override
+  String get invoice_key_copy_failed => 'Impossibile copiare la chiave fattura';
+
+  @override
+  String get invoice_key_empty => 'La chiave fattura non può essere vuota';
 
   @override
   String get qr_scanner_title => 'Scansiona QR';

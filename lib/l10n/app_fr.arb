@@ -354,6 +354,15 @@
   "voucher_generic_error": "Impossible de traiter le voucher",
   "voucher_generic_error_desc": "Il y a eu une erreur inattendue lors du traitement de ce voucher. Veuillez réessayer ou contacter le support.",
   
+  "currency_count": "{count, plural, =1{1 monnaie} other{{count} monnaies}}",
+  "@currency_count": {
+    "description": "Number of currencies available",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "currency_validation_info": "Lors de la sélection d'une devise, il sera vérifié si elle est disponible sur ce serveur",
   "checking_currency_availability": "Vérification de la disponibilité de {currency}...",
   "currency_added_successfully": "{currency} ajouté avec succès",
@@ -376,6 +385,18 @@
   "nfc_charge_unknown_error": "Erreur inconnue lors de l'encaissement",
   "share_ready_message": "Prêt à partager",
   "lnurl_copied_message": "LNURL copié dans le presse-papiers",
+  "invoice_key_qr_title": "QR de clé de facturation",
+  "invoice_key_qr_description": "Utilisez ce code QR avec LaChispaPOS ou d'autres applications Lightning pour recevoir des paiements sans exposer votre clé administrateur.",
+  "invoice_key_qr_subtitle": "Afficher le QR pour d'autres applications",
+  "copy_invoice_key": "Copier la clé",
+  "invoice_key_copied": "Clé de facturation copiée dans le presse-papiers",
+  "invoice_key_unavailable_title": "Aucun portefeuille trouvé",
+  "invoice_key_unavailable_subtitle": "Créez d'abord un portefeuille",
+  "invoice_key_security_warning": "Cette clé permet à des tiers de créer des factures. Ne la partagez qu'avec des appareils POS de confiance. Ne la publiez jamais publiquement.",
+  "invoice_key_show": "Afficher la clé",
+  "invoice_key_hide": "Masquer la clé",
+  "invoice_key_copy_failed": "Impossible de copier la clé de facturation",
+  "invoice_key_empty": "La clé de facturation ne peut pas être vide",
   "qr_scanner_title": "Scanner QR",
   "qr_scanner_instructions": "Pointez la caméra vers le code QR\npour scanner la facture ou l'adresse"
 }

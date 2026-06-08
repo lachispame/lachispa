@@ -354,6 +354,15 @@
   "settings_screen_title": "Configurações",
   "about_title": "Sobre",
   
+  "currency_count": "{count, plural, =1{1 moeda} other{{count} moedas}}",
+  "@currency_count": {
+    "description": "Number of currencies available",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "currency_validation_info": "Ao selecionar uma moeda, será verificado se está disponível neste servidor",
   "checking_currency_availability": "Verificando disponibilidade de {currency}...",
   "currency_added_successfully": "{currency} adicionado com sucesso",
@@ -376,6 +385,18 @@
   "nfc_charge_unknown_error": "Erro desconhecido ao cobrar",
   "share_ready_message": "Pronto para compartilhar",
   "lnurl_copied_message": "LNURL copiado para a área de transferência",
+  "invoice_key_qr_title": "QR Chave da Fatura",
+  "invoice_key_qr_description": "Use este código QR com LaChispaPOS ou outros aplicativos Lightning para receber pagamentos sem expor sua chave de administrador.",
+  "invoice_key_qr_subtitle": "Mostrar QR para outros aplicativos",
+  "copy_invoice_key": "Copiar Chave",
+  "invoice_key_copied": "Chave da fatura copiada para a área de transferência",
+  "invoice_key_unavailable_title": "Nenhuma carteira encontrada",
+  "invoice_key_unavailable_subtitle": "Crie uma carteira primeiro",
+  "invoice_key_security_warning": "Esta chave permite que terceiros criem faturas. Compartilhe apenas com dispositivos POS confiáveis. Nunca publique publicamente.",
+  "invoice_key_show": "Mostrar chave",
+  "invoice_key_hide": "Ocultar chave",
+  "invoice_key_copy_failed": "Falha ao copiar a chave da fatura",
+  "invoice_key_empty": "A chave da fatura não pode estar vazia",
   "qr_scanner_title": "Escanear QR",
   "qr_scanner_instructions": "Aponte a câmera para o código QR\npara escanear a fatura ou endereço"
 }

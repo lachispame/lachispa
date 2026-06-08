@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/language_provider.dart';
 import '../providers/currency_settings_provider.dart';
-import '../providers/theme_provider.dart';
 import '../l10n/generated/app_localizations.dart';
-import '../theme/app_tokens.dart';
 import '7ln_address_screen.dart';
 import '16currency_settings_screen.dart';
 import '18language_selection_screen.dart';
+import '19invoice_key_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -19,29 +18,40 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
-    final t = context.tokens;
     return Scaffold(
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: BoxDecoration(gradient: t.backgroundGradient),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xFF0F1419),
+              Color(0xFF1A1D47),
+              Color(0xFF2D3FE7),
+            ],
+            stops: [0.0, 0.5, 1.0],
+          ),
+        ),
         child: SafeArea(
           child: Column(
             children: [
               // Header with back button
-              _buildHeader(t),
+              _buildHeader(),
 
               // Settings list
               Expanded(
                 child: ListView(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                   children: [
                     // Lightning Address
                     _buildSettingsItem(
-                      t: t,
                       icon: Icons.alternate_email,
-                      iconColor: t.accentSolid,
-                      title: AppLocalizations.of(context)!.lightning_address_title,
+                      iconColor: const Color(0xFF4C63F7),
+                      title:
+                          AppLocalizations.of(context)!.lightning_address_title,
                       onTap: () {
                         Navigator.push(
                           context,
@@ -54,20 +64,42 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
                     const SizedBox(height: 12),
 
+                    // Invoice Key QR
+                    _buildSettingsItem(
+                      icon: Icons.qr_code,
+                      iconColor: const Color(0xFF4C63F7),
+                      title: AppLocalizations.of(context)!.invoice_key_qr_title,
+                      subtitle:
+                          AppLocalizations.of(context)!.invoice_key_qr_subtitle,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const InvoiceKeyScreen(),
+                          ),
+                        );
+                      },
+                    ),
+
+                    const SizedBox(height: 12),
+
                     // Currency Settings
                     Consumer<CurrencySettingsProvider>(
                       builder: (context, currencyProvider, child) {
                         return _buildSettingsItem(
-                          t: t,
                           icon: Icons.attach_money,
-                          iconColor: t.accentSolid,
-                          title: AppLocalizations.of(context)!.currency_settings_title,
-                          subtitle: '${currencyProvider.availableCurrencies.length} currencies',
+                          iconColor: const Color(0xFF4C63F7),
+                          title: AppLocalizations.of(context)!
+                              .currency_settings_title,
+                          subtitle: AppLocalizations.of(context)!
+                              .currency_count(
+                                  currencyProvider.availableCurrencies.length),
                           onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const CurrencySettingsScreen(),
+                                builder: (context) =>
+                                    const CurrencySettingsScreen(),
                               ),
                             );
                           },
@@ -81,33 +113,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     Consumer<LanguageProvider>(
                       builder: (context, languageProvider, child) {
                         return _buildSettingsItem(
-                          t: t,
                           icon: Icons.language,
-                          iconColor: t.accentSolid,
-                          title: AppLocalizations.of(context)!.language_selector_title,
+                          iconColor: const Color(0xFF4C63F7),
+                          title: AppLocalizations.of(context)!
+                              .language_selector_title,
                           subtitle: languageProvider.getCurrentLanguageName(),
                           onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const LanguageSelectionScreen(),
+                              builder: (context) =>
+                                  const LanguageSelectionScreen(),
                             ),
                           ),
-                        );
-                      },
-                    ),
-
-                    const SizedBox(height: 12),
-
-                    // Theme Settings
-                    Consumer<ThemeProvider>(
-                      builder: (context, themeProvider, child) {
-                        return _buildSettingsItem(
-                          t: t,
-                          icon: _themeIcon(themeProvider.current),
-                          iconColor: t.accentSolid,
-                          title: AppLocalizations.of(context)!.theme_selector_title,
-                          subtitle: _themeLabel(context, themeProvider.current),
-                          onTap: () => _showThemeSelector(themeProvider),
                         );
                       },
                     ),
@@ -121,7 +138,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildHeader(AppTokens t) {
+  Widget _buildHeader() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: Row(
@@ -131,13 +148,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: t.surface,
+                color: Colors.white.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: t.outline, width: 1),
               ),
-              child: Icon(
+              child: const Icon(
                 Icons.arrow_back,
-                color: t.textPrimary,
+                color: Colors.white,
                 size: 24,
               ),
             ),
@@ -147,9 +163,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: Text(
               AppLocalizations.of(context)!.settings_screen_title,
               style: TextStyle(
+                fontFamily: 'Inter',
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
-                color: t.textPrimary,
+                color: Colors.white,
               ),
             ),
           ),
@@ -159,7 +176,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget _buildSettingsItem({
-    required AppTokens t,
     required IconData icon,
     required Color iconColor,
     required String title,
@@ -171,10 +187,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: t.surface,
+          color: Colors.white.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: t.outline,
+            color: Colors.white.withValues(alpha: 0.1),
             width: 1,
           ),
         ),
@@ -199,10 +215,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   Text(
                     title,
-                    style: TextStyle(
+                    style: const TextStyle(
+                      fontFamily: 'Inter',
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: t.textPrimary,
+                      color: Colors.white,
                     ),
                   ),
                   if (subtitle != null) ...[
@@ -210,9 +227,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     Text(
                       subtitle,
                       style: TextStyle(
+                        fontFamily: 'Inter',
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
-                        color: t.textSecondary,
+                        color: Colors.white.withValues(alpha: 0.6),
                       ),
                     ),
                   ],
@@ -222,14 +240,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Icon(
               Icons.arrow_forward_ios,
               size: 16,
-              color: t.textSecondary,
+              color: Colors.white.withValues(alpha: 0.5),
             ),
           ],
         ),
       ),
     );
   }
-
   IconData _themeIcon(AppTheme theme) {
     switch (theme) {
       case AppTheme.lachispa:

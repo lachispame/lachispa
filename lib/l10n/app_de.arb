@@ -354,6 +354,15 @@
   "voucher_generic_error": "Voucher kann nicht verarbeitet werden",
   "voucher_generic_error_desc": "Es gab einen unerwarteten Fehler beim Verarbeiten dieses Vouchers. Bitte versuchen Sie es erneut oder kontaktieren Sie den Support.",
   
+  "currency_count": "{count, plural, =1{1 Währung} other{{count} Währungen}}",
+  "@currency_count": {
+    "description": "Number of currencies available",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "currency_validation_info": "Bei der Auswahl einer Währung wird überprüft, ob sie auf diesem Server verfügbar ist",
   "checking_currency_availability": "Überprüfung der Verfügbarkeit von {currency}...",
   "currency_added_successfully": "{currency} erfolgreich hinzugefügt",
@@ -376,6 +385,18 @@
   "nfc_charge_unknown_error": "Unbekannter Fehler beim Einziehen",
   "share_ready_message": "Bereit zum Teilen",
   "lnurl_copied_message": "LNURL in die Zwischenablage kopiert",
+  "invoice_key_qr_title": "Rechnungsschlüssel QR",
+  "invoice_key_qr_description": "Verwenden Sie diesen QR-Code mit LaChispaPOS oder anderen Lightning-Apps, um Zahlungen zu empfangen, ohne Ihren Admin-Schlüssel preiszugeben.",
+  "invoice_key_qr_subtitle": "QR für andere Apps anzeigen",
+  "copy_invoice_key": "Schlüssel kopieren",
+  "invoice_key_copied": "Rechnungsschlüssel in die Zwischenablage kopiert",
+  "invoice_key_unavailable_title": "Keine Wallet gefunden",
+  "invoice_key_unavailable_subtitle": "Bitte erstellen Sie zuerst eine Wallet",
+  "invoice_key_security_warning": "Dieser Schlüssel ermöglicht Dritten, Rechnungen zu erstellen. Nur mit vertrauenswürdigen POS-Geräten teilen. Nie öffentlich posten oder teilen.",
+  "invoice_key_show": "Schlüssel anzeigen",
+  "invoice_key_hide": "Schlüssel verbergen",
+  "invoice_key_copy_failed": "Rechnungsschlüssel konnte nicht kopiert werden",
+  "invoice_key_empty": "Rechnungsschlüssel darf nicht leer sein",
   "qr_scanner_title": "QR scannen",
   "qr_scanner_instructions": "Kamera auf den QR-Code richten\num Rechnung oder Adresse zu scannen"
 }

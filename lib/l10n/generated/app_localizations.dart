@@ -68,7 +68,7 @@ import 'app_localizations_ru.dart';
 /// property.
 abstract class AppLocalizations {
   AppLocalizations(String locale)
-    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -91,11 +91,11 @@ abstract class AppLocalizations {
   /// of delegates is preferred or required.
   static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
       <LocalizationsDelegate<dynamic>>[
-        delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ];
+    delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
@@ -105,7 +105,7 @@ abstract class AppLocalizations {
     Locale('fr'),
     Locale('it'),
     Locale('pt'),
-    Locale('ru'),
+    Locale('ru')
   ];
 
   /// No description provided for @welcome_title.
@@ -1794,6 +1794,12 @@ abstract class AppLocalizations {
   /// **'Acerca de'**
   String get about_title;
 
+  /// Number of currencies available
+  ///
+  /// In es, this message translates to:
+  /// **'{count, plural, =1{1 moneda} other{{count} monedas}}'**
+  String currency_count(int count);
+
   /// No description provided for @currency_validation_info.
   ///
   /// In es, this message translates to:
@@ -1914,6 +1920,78 @@ abstract class AppLocalizations {
   /// **'LNURL copiado al portapapeles'**
   String get lnurl_copied_message;
 
+  /// No description provided for @invoice_key_qr_title.
+  ///
+  /// In es, this message translates to:
+  /// **'QR de Clave de Facturación'**
+  String get invoice_key_qr_title;
+
+  /// No description provided for @invoice_key_qr_description.
+  ///
+  /// In es, this message translates to:
+  /// **'Usa este código QR con LaChispaPOS u otras apps Lightning para recibir pagos sin exponer tu clave de administrador.'**
+  String get invoice_key_qr_description;
+
+  /// No description provided for @invoice_key_qr_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Mostrar QR para otras apps'**
+  String get invoice_key_qr_subtitle;
+
+  /// No description provided for @copy_invoice_key.
+  ///
+  /// In es, this message translates to:
+  /// **'Copiar Clave'**
+  String get copy_invoice_key;
+
+  /// No description provided for @invoice_key_copied.
+  ///
+  /// In es, this message translates to:
+  /// **'Clave de facturación copiada al portapapeles'**
+  String get invoice_key_copied;
+
+  /// No description provided for @invoice_key_unavailable_title.
+  ///
+  /// In es, this message translates to:
+  /// **'No se encontró billetera'**
+  String get invoice_key_unavailable_title;
+
+  /// No description provided for @invoice_key_unavailable_subtitle.
+  ///
+  /// In es, this message translates to:
+  /// **'Crea una billetera primero'**
+  String get invoice_key_unavailable_subtitle;
+
+  /// No description provided for @invoice_key_security_warning.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta clave permite a terceros crear facturas. Compártela solo con dispositivos POS de confianza. Nunca la publiques ni compartas públicamente.'**
+  String get invoice_key_security_warning;
+
+  /// No description provided for @invoice_key_show.
+  ///
+  /// In es, this message translates to:
+  /// **'Mostrar clave'**
+  String get invoice_key_show;
+
+  /// No description provided for @invoice_key_hide.
+  ///
+  /// In es, this message translates to:
+  /// **'Ocultar clave'**
+  String get invoice_key_hide;
+
+  /// No description provided for @invoice_key_copy_failed.
+  ///
+  /// In es, this message translates to:
+  /// **'No se pudo copiar la clave de facturación'**
+  String get invoice_key_copy_failed;
+
+  /// No description provided for @invoice_key_empty.
+  ///
+  /// In es, this message translates to:
+  /// **'La clave de facturación no puede estar vacía'**
+  String get invoice_key_empty;
+
   /// No description provided for @qr_scanner_title.
   ///
   /// In es, this message translates to:
@@ -1938,14 +2016,14 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) => <String>[
-    'de',
-    'en',
-    'es',
-    'fr',
-    'it',
-    'pt',
-    'ru',
-  ].contains(locale.languageCode);
+        'de',
+        'en',
+        'es',
+        'fr',
+        'it',
+        'pt',
+        'ru'
+      ].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -1971,9 +2049,8 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   }
 
   throw FlutterError(
-    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-    'an issue with the localizations generation tool. Please file an issue '
-    'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.',
-  );
+      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+      'an issue with the localizations generation tool. Please file an issue '
+      'on GitHub with a reproducible sample app and the gen-l10n configuration '
+      'that was used.');
 }

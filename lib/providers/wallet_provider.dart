@@ -5,18 +5,18 @@ import '../models/wallet_info.dart';
 
 class WalletProvider extends ChangeNotifier {
   final WalletService _walletService;
-  
+
   List<WalletInfo> _wallets = [];
   WalletInfo? _primaryWallet;
   bool _isLoading = false;
   bool _isInitialized = false;
   String? _error;
-  
+
   /// Callback to notify wallet changes to other providers
   Function(String walletId)? _onWalletChanged;
 
   WalletProvider(this._walletService);
-  
+
   void setOnWalletChangedCallback(Function(String walletId) callback) {
     _onWalletChanged = callback;
   }
@@ -27,12 +27,14 @@ class WalletProvider extends ChangeNotifier {
   }
 
   /// Save preferred wallet for user+server combination
-  Future<void> _savePreferredWallet(String serverUrl, String username, String walletId) async {
+  Future<void> _savePreferredWallet(
+      String serverUrl, String username, String walletId) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       final key = _getPreferredWalletKey(serverUrl, username);
       await prefs.setString(key, walletId);
-      print('[WALLET_PROVIDER] Preferred wallet saved: $walletId for $username@$serverUrl');
+      print(
+          '[WALLET_PROVIDER] Preferred wallet saved: $walletId for $username@$serverUrl');
     } catch (e) {
       print('[WALLET_PROVIDER] Error saving preferred wallet: $e');
     }
@@ -44,7 +46,8 @@ class WalletProvider extends ChangeNotifier {
       final prefs = await SharedPreferences.getInstance();
       final key = _getPreferredWalletKey(serverUrl, username);
       final walletId = prefs.getString(key);
-      print('[WALLET_PROVIDER] Preferred wallet retrieved: $walletId for $username@$serverUrl');
+      print(
+          '[WALLET_PROVIDER] Preferred wallet retrieved: $walletId for $username@$serverUrl');
       return walletId;
     } catch (e) {
       print('[WALLET_PROVIDER] Error getting preferred wallet: $e');
@@ -60,7 +63,8 @@ class WalletProvider extends ChangeNotifier {
   bool get hasWallets => _wallets.isNotEmpty;
 
   int get primaryBalance => _primaryWallet?.balanceSats ?? 0;
-  String get primaryBalanceFormatted => _primaryWallet?.balanceFormatted ?? '0 sats';
+  String get primaryBalanceFormatted =>
+      _primaryWallet?.balanceFormatted ?? '0 sats';
   String? get primaryWalletId => _primaryWallet?.id;
 
   /// Initialize user wallets with saved preference restoration
@@ -76,19 +80,22 @@ class WalletProvider extends ChangeNotifier {
 
     try {
       print('[WALLET_PROVIDER] Initializing wallets...');
-      
-      final wallets = await _walletService.getUserWallets(
+
+      final wallets = await _walletService
+          .getUserWallets(
         serverUrl: serverUrl,
         authToken: authToken,
-      ).timeout(
+      )
+          .timeout(
         const Duration(seconds: 15),
         onTimeout: () {
-          throw WalletException('Timeout getting wallets - check your connection');
+          throw WalletException(
+              'Timeout getting wallets - check your connection');
         },
       );
 
       _wallets = wallets;
-      
+
       if (wallets.isNotEmpty) {
         await _establishPrimaryWallet(serverUrl, username, wallets);
       } else {
@@ -97,7 +104,6 @@ class WalletProvider extends ChangeNotifier {
 
       _isInitialized = true;
       print('[WALLET_PROVIDER] ${wallets.length} wallets initialized');
-      
     } catch (e) {
       _error = e.toString().replaceFirst('WalletException: ', '');
       print('[WALLET_PROVIDER] Error initializing wallets: $_error');
@@ -108,25 +114,29 @@ class WalletProvider extends ChangeNotifier {
   }
 
   /// Establish primary wallet based on saved preferences or fallback to first
-  Future<void> _establishPrimaryWallet(String serverUrl, String? username, List<WalletInfo> wallets) async {
+  Future<void> _establishPrimaryWallet(
+      String serverUrl, String? username, List<WalletInfo> wallets) async {
     WalletInfo? selectedWallet;
-    
+
     if (username != null) {
       final preferredWalletId = await _getPreferredWallet(serverUrl, username);
       if (preferredWalletId != null) {
-        selectedWallet = wallets.where((w) => w.id == preferredWalletId).firstOrNull;
+        selectedWallet =
+            wallets.where((w) => w.id == preferredWalletId).firstOrNull;
         if (selectedWallet != null) {
-          print('[WALLET_PROVIDER] Using preferred wallet: ${selectedWallet.name}');
+          print(
+              '[WALLET_PROVIDER] Using preferred wallet: ${selectedWallet.name}');
         } else {
           print('[WALLET_PROVIDER] Preferred wallet not found, using first');
         }
       }
     }
-    
+
     selectedWallet ??= wallets.first;
-    
+
     _primaryWallet = selectedWallet;
-    print('[WALLET_PROVIDER] Primary wallet established: ${_primaryWallet!.name}');
+    print(
+        '[WALLET_PROVIDER] Primary wallet established: ${_primaryWallet!.name}');
     print('[WALLET_PROVIDER] Balance: ${_primaryWallet!.balanceFormatted}');
   }
 
@@ -141,7 +151,7 @@ class WalletProvider extends ChangeNotifier {
 
     try {
       print('[WALLET_PROVIDER] Refreshing balance...');
-      
+
       final balance = await _walletService.getWalletBalance(
         serverUrl: serverUrl,
         walletId: _primaryWallet!.id,
@@ -153,6 +163,7 @@ class WalletProvider extends ChangeNotifier {
         name: _primaryWallet!.name,
         adminKey: _primaryWallet!.adminKey,
         inKey: _primaryWallet!.inKey,
+        readKey: _primaryWallet!.readKey,
         balanceMsat: balance.balanceMsat,
       );
 
@@ -165,29 +176,30 @@ class WalletProvider extends ChangeNotifier {
 
       notifyListeners();
       print('[WALLET_PROVIDER] Balance updated: ${balance.balanceFormatted}');
-      
     } catch (e) {
-      _error = 'Error refreshing balance: ${e.toString().replaceFirst('WalletException: ', '')}';
+      _error =
+          'Error refreshing balance: ${e.toString().replaceFirst('WalletException: ', '')}';
       print('[WALLET_PROVIDER] Error refreshing balance: $_error');
       notifyListeners();
     }
   }
 
   /// Change primary wallet and notify LNAddressProvider of wallet change
-  Future<void> setPrimaryWallet(WalletInfo wallet, {String? serverUrl, String? username}) async {
+  Future<void> setPrimaryWallet(WalletInfo wallet,
+      {String? serverUrl, String? username}) async {
     if (_wallets.contains(wallet)) {
       final previousWalletId = _primaryWallet?.id;
       _primaryWallet = wallet;
       print('[WALLET_PROVIDER] Primary wallet changed to: ${wallet.name}');
-      
+
       if (serverUrl != null && username != null) {
         await _savePreferredWallet(serverUrl, username, wallet.id);
       }
-      
+
       if (previousWalletId != wallet.id) {
         _onWalletChanged?.call(wallet.id);
       }
-      
+
       notifyListeners();
     }
   }
@@ -203,7 +215,7 @@ class WalletProvider extends ChangeNotifier {
 
     try {
       print('[WALLET_PROVIDER] Creating new wallet: $walletName');
-      
+
       final newWallet = await _walletService.createWallet(
         serverUrl: serverUrl,
         authToken: authToken,
@@ -211,7 +223,7 @@ class WalletProvider extends ChangeNotifier {
       );
 
       _wallets.add(newWallet);
-      
+
       if (_wallets.length == 1) {
         _primaryWallet = newWallet;
       }
@@ -219,7 +231,6 @@ class WalletProvider extends ChangeNotifier {
       notifyListeners();
       print('[WALLET_PROVIDER] Wallet created successfully: ${newWallet.name}');
       return true;
-      
     } catch (e) {
       _error = e.toString().replaceFirst('WalletException: ', '');
       print('[WALLET_PROVIDER] Error creating wallet: $_error');
@@ -246,7 +257,7 @@ class WalletProvider extends ChangeNotifier {
 
     try {
       print('[WALLET_PROVIDER] Deleting wallet: ${wallet.name}');
-      
+
       await _walletService.deleteWallet(
         serverUrl: serverUrl,
         walletId: wallet.id,
@@ -254,7 +265,7 @@ class WalletProvider extends ChangeNotifier {
       );
 
       _wallets.removeWhere((w) => w.id == wallet.id);
-      
+
       if (_primaryWallet?.id == wallet.id && _wallets.isNotEmpty) {
         _primaryWallet = _wallets.first;
         print('[WALLET_PROVIDER] New primary wallet: ${_primaryWallet!.name}');
@@ -263,7 +274,6 @@ class WalletProvider extends ChangeNotifier {
       notifyListeners();
       print('[WALLET_PROVIDER] Wallet deleted successfully');
       return true;
-      
     } catch (e) {
       _error = e.toString().replaceFirst('WalletException: ', '');
       print('[WALLET_PROVIDER] Error deleting wallet: $_error');
@@ -300,10 +310,10 @@ class WalletProvider extends ChangeNotifier {
   @override
   String toString() {
     return 'WalletProvider('
-           'wallets: ${_wallets.length}, '
-           'primary: ${_primaryWallet?.name}, '
-           'isLoading: $_isLoading, '
-           'isInitialized: $_isInitialized'
-           ')';
+        'wallets: ${_wallets.length}, '
+        'primary: ${_primaryWallet?.name}, '
+        'isLoading: $_isLoading, '
+        'isInitialized: $_isInitialized'
+        ')';
   }
 }

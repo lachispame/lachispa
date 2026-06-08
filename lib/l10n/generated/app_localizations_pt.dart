@@ -923,6 +923,17 @@ class AppLocalizationsPt extends AppLocalizations {
   String get about_title => 'Sobre';
 
   @override
+  String currency_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count moedas',
+      one: '1 moeda',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get currency_validation_info =>
       'Ao selecionar uma moeda, será verificado se está disponível neste servidor';
 
@@ -938,9 +949,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String currency_not_available_on_server(
-    Object currency,
-    Object currencyName,
-  ) {
+      Object currency, Object currencyName) {
     return '$currencyName ($currency) não está disponível neste servidor';
   }
 
@@ -996,6 +1005,45 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get lnurl_copied_message =>
       'LNURL copiado para a área de transferência';
+
+  @override
+  String get invoice_key_qr_title => 'QR Chave da Fatura';
+
+  @override
+  String get invoice_key_qr_description =>
+      'Use este código QR com LaChispaPOS ou outros aplicativos Lightning para receber pagamentos sem expor sua chave de administrador.';
+
+  @override
+  String get invoice_key_qr_subtitle => 'Mostrar QR para outros aplicativos';
+
+  @override
+  String get copy_invoice_key => 'Copiar Chave';
+
+  @override
+  String get invoice_key_copied =>
+      'Chave da fatura copiada para a área de transferência';
+
+  @override
+  String get invoice_key_unavailable_title => 'Nenhuma carteira encontrada';
+
+  @override
+  String get invoice_key_unavailable_subtitle => 'Crie uma carteira primeiro';
+
+  @override
+  String get invoice_key_security_warning =>
+      'Esta chave permite que terceiros criem faturas. Compartilhe apenas com dispositivos POS confiáveis. Nunca publique publicamente.';
+
+  @override
+  String get invoice_key_show => 'Mostrar chave';
+
+  @override
+  String get invoice_key_hide => 'Ocultar chave';
+
+  @override
+  String get invoice_key_copy_failed => 'Falha ao copiar a chave da fatura';
+
+  @override
+  String get invoice_key_empty => 'A chave da fatura não pode estar vazia';
 
   @override
   String get qr_scanner_title => 'Escanear QR';

@@ -354,6 +354,15 @@
   "settings_screen_title": "Configuración",
   "about_title": "Acerca de",
   
+  "currency_count": "{count, plural, =1{1 moneda} other{{count} monedas}}",
+  "@currency_count": {
+    "description": "Number of currencies available",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "currency_validation_info": "Al seleccionar una moneda, se verificará si está disponible en este servidor",
   "checking_currency_availability": "Verificando disponibilidad de {currency}...",
   "currency_added_successfully": "{currency} agregado correctamente",
@@ -376,6 +385,18 @@
   "nfc_charge_unknown_error": "Error desconocido al cobrar",
   "share_ready_message": "Listo para compartir",
   "lnurl_copied_message": "LNURL copiado al portapapeles",
+  "invoice_key_qr_title": "QR de Clave de Facturación",
+  "invoice_key_qr_description": "Usa este código QR con LaChispaPOS u otras apps Lightning para recibir pagos sin exponer tu clave de administrador.",
+  "invoice_key_qr_subtitle": "Mostrar QR para otras apps",
+  "copy_invoice_key": "Copiar Clave",
+  "invoice_key_copied": "Clave de facturación copiada al portapapeles",
+  "invoice_key_unavailable_title": "No se encontró billetera",
+  "invoice_key_unavailable_subtitle": "Crea una billetera primero",
+  "invoice_key_security_warning": "Esta clave permite a terceros crear facturas. Compártela solo con dispositivos POS de confianza. Nunca la publiques ni compartas públicamente.",
+  "invoice_key_show": "Mostrar clave",
+  "invoice_key_hide": "Ocultar clave",
+  "invoice_key_copy_failed": "No se pudo copiar la clave de facturación",
+  "invoice_key_empty": "La clave de facturación no puede estar vacía",
   "qr_scanner_title": "Escanear QR",
   "qr_scanner_instructions": "Apunta la cámara al código QR\npara escanear la factura o dirección"
 }

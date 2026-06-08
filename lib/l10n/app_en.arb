@@ -369,6 +369,15 @@
   "settings_screen_title": "Settings",
   "about_title": "About",
   
+  "currency_count": "{count, plural, =1{1 currency} other{{count} currencies}}",
+  "@currency_count": {
+    "description": "Number of currencies available",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "currency_validation_info": "When selecting a currency, it will be verified if it's available on this server",
   "checking_currency_availability": "Checking {currency} availability...",
   "currency_added_successfully": "{currency} added successfully",
@@ -391,6 +400,18 @@
   "nfc_charge_unknown_error": "Unknown error during charge",
   "share_ready_message": "Ready to share",
   "lnurl_copied_message": "LNURL copied to clipboard",
+  "invoice_key_qr_title": "Invoice Key QR",
+  "invoice_key_qr_description": "Use this QR code with LaChispaPOS or other Lightning apps to receive payments without exposing your admin key.",
+  "invoice_key_qr_subtitle": "Show QR for other apps",
+  "copy_invoice_key": "Copy Key",
+  "invoice_key_copied": "Invoice key copied to clipboard",
+  "invoice_key_unavailable_title": "No wallet found",
+  "invoice_key_unavailable_subtitle": "Create a wallet first",
+  "invoice_key_security_warning": "This key allows third parties to create invoices. Only share with trusted POS devices. Never post publicly or share widely.",
+  "invoice_key_show": "Show key",
+  "invoice_key_hide": "Hide key",
+  "invoice_key_copy_failed": "Failed to copy invoice key",
+  "invoice_key_empty": "Invoice key cannot be empty",
   "qr_scanner_title": "Scan QR",
   "qr_scanner_instructions": "Point the camera at the QR code\nto scan the invoice or address"
 }

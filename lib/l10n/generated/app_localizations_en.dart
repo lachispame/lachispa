@@ -910,6 +910,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get about_title => 'About';
 
   @override
+  String currency_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count currencies',
+      one: '1 currency',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get currency_validation_info =>
       'When selecting a currency, it will be verified if it\'s available on this server';
 
@@ -925,9 +936,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String currency_not_available_on_server(
-    Object currency,
-    Object currencyName,
-  ) {
+      Object currency, Object currencyName) {
     return '$currencyName ($currency) is not available on this server';
   }
 
@@ -982,6 +991,44 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get lnurl_copied_message => 'LNURL copied to clipboard';
+
+  @override
+  String get invoice_key_qr_title => 'Invoice Key QR';
+
+  @override
+  String get invoice_key_qr_description =>
+      'Use this QR code with LaChispaPOS or other Lightning apps to receive payments without exposing your admin key.';
+
+  @override
+  String get invoice_key_qr_subtitle => 'Show QR for other apps';
+
+  @override
+  String get copy_invoice_key => 'Copy Key';
+
+  @override
+  String get invoice_key_copied => 'Invoice key copied to clipboard';
+
+  @override
+  String get invoice_key_unavailable_title => 'No wallet found';
+
+  @override
+  String get invoice_key_unavailable_subtitle => 'Create a wallet first';
+
+  @override
+  String get invoice_key_security_warning =>
+      'This key allows third parties to create invoices. Only share with trusted POS devices. Never post publicly or share widely.';
+
+  @override
+  String get invoice_key_show => 'Show key';
+
+  @override
+  String get invoice_key_hide => 'Hide key';
+
+  @override
+  String get invoice_key_copy_failed => 'Failed to copy invoice key';
+
+  @override
+  String get invoice_key_empty => 'Invoice key cannot be empty';
 
   @override
   String get qr_scanner_title => 'Scan QR';

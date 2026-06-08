@@ -940,6 +940,17 @@ class AppLocalizationsFr extends AppLocalizations {
   String get about_title => 'À propos';
 
   @override
+  String currency_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count monnaies',
+      one: '1 monnaie',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get currency_validation_info =>
       'Lors de la sélection d\'une devise, il sera vérifié si elle est disponible sur ce serveur';
 
@@ -955,9 +966,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String currency_not_available_on_server(
-    Object currency,
-    Object currencyName,
-  ) {
+      Object currency, Object currencyName) {
     return '$currencyName ($currency) n\'est pas disponible sur ce serveur';
   }
 
@@ -1013,6 +1022,48 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get lnurl_copied_message => 'LNURL copié dans le presse-papiers';
+
+  @override
+  String get invoice_key_qr_title => 'QR de clé de facturation';
+
+  @override
+  String get invoice_key_qr_description =>
+      'Utilisez ce code QR avec LaChispaPOS ou d\'autres applications Lightning pour recevoir des paiements sans exposer votre clé administrateur.';
+
+  @override
+  String get invoice_key_qr_subtitle =>
+      'Afficher le QR pour d\'autres applications';
+
+  @override
+  String get copy_invoice_key => 'Copier la clé';
+
+  @override
+  String get invoice_key_copied =>
+      'Clé de facturation copiée dans le presse-papiers';
+
+  @override
+  String get invoice_key_unavailable_title => 'Aucun portefeuille trouvé';
+
+  @override
+  String get invoice_key_unavailable_subtitle =>
+      'Créez d\'abord un portefeuille';
+
+  @override
+  String get invoice_key_security_warning =>
+      'Cette clé permet à des tiers de créer des factures. Ne la partagez qu\'avec des appareils POS de confiance. Ne la publiez jamais publiquement.';
+
+  @override
+  String get invoice_key_show => 'Afficher la clé';
+
+  @override
+  String get invoice_key_hide => 'Masquer la clé';
+
+  @override
+  String get invoice_key_copy_failed =>
+      'Impossible de copier la clé de facturation';
+
+  @override
+  String get invoice_key_empty => 'La clé de facturation ne peut pas être vide';
 
   @override
   String get qr_scanner_title => 'Scanner QR';

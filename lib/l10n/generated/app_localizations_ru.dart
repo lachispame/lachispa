@@ -914,6 +914,17 @@ class AppLocalizationsRu extends AppLocalizations {
   String get about_title => 'Информация';
 
   @override
+  String currency_count(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count валют',
+      one: '1 валюта',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get currency_validation_info =>
       'При выборе валюты будет проверено, доступна ли она на этом сервере';
 
@@ -929,9 +940,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String currency_not_available_on_server(
-    Object currency,
-    Object currencyName,
-  ) {
+      Object currency, Object currencyName) {
     return '$currencyName ($currency) недоступна на этом сервере';
   }
 
@@ -986,6 +995,44 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get lnurl_copied_message => 'LNURL скопирован в буфер обмена';
+
+  @override
+  String get invoice_key_qr_title => 'QR Ключ счета';
+
+  @override
+  String get invoice_key_qr_description =>
+      'Используйте этот QR-код с LaChispaPOS или другими приложениями Lightning для получения платежей без раскрытия ключа администратора.';
+
+  @override
+  String get invoice_key_qr_subtitle => 'Показать QR для других приложений';
+
+  @override
+  String get copy_invoice_key => 'Копировать ключ';
+
+  @override
+  String get invoice_key_copied => 'Ключ счета скопирован в буфер обмена';
+
+  @override
+  String get invoice_key_unavailable_title => 'Кошелек не найден';
+
+  @override
+  String get invoice_key_unavailable_subtitle => 'Сначала создайте кошелек';
+
+  @override
+  String get invoice_key_security_warning =>
+      'Этот ключ позволяет третьим лицам создавать счета. Делитесь только с доверенными POS-устройствами. Никогда не публикуйте публично.';
+
+  @override
+  String get invoice_key_show => 'Показать ключ';
+
+  @override
+  String get invoice_key_hide => 'Скрыть ключ';
+
+  @override
+  String get invoice_key_copy_failed => 'Не удалось скопировать ключ счета';
+
+  @override
+  String get invoice_key_empty => 'Ключ счета не может быть пустым';
 
   @override
   String get qr_scanner_title => 'Сканировать QR';
