@@ -412,6 +412,7 @@ class _AmountScreenState extends State<AmountScreen> {
         amountSats: satsAmount,
         comment: _commentController.text.trim().isEmpty ? null : _commentController.text.trim(),
       );
+      if (!mounted) return;
       
       print('[AMOUNT_SCREEN] LNURL payment sent successfully: $paymentResult');
       
@@ -490,6 +491,7 @@ class _AmountScreenState extends State<AmountScreen> {
         amountSats: satsAmount,
         comment: _commentController.text.trim().isEmpty ? null : _commentController.text.trim(),
       );
+      if (!mounted) return;
       
       print('[AMOUNT_SCREEN] Payment sent successfully: $paymentResult');
       
