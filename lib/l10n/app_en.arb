@@ -392,5 +392,9 @@
   "share_ready_message": "Ready to share",
   "lnurl_copied_message": "LNURL copied to clipboard",
   "qr_scanner_title": "Scan QR",
-  "qr_scanner_instructions": "Point the camera at the QR code\nto scan the invoice or address"
+  "qr_scanner_instructions": "Point the camera at the QR code\nto scan the invoice or address",
+  "qr_from_gallery_button": "Gallery",
+  "qr_decoding": "Decoding QR\u2026",
+  "qr_not_found_in_image": "No QR code found in the selected image",
+  "error_loading_image": "Error loading image"
 }

@@ -377,5 +377,9 @@
   "share_ready_message": "Pronto da condividere",
   "lnurl_copied_message": "LNURL copiato negli appunti",
   "qr_scanner_title": "Scansiona QR",
-  "qr_scanner_instructions": "Punta la fotocamera sul codice QR\nper scansionare la fattura o l'indirizzo"
+  "qr_scanner_instructions": "Punta la fotocamera sul codice QR\nper scansionare la fattura o l'indirizzo",
+  "qr_from_gallery_button": "Galleria",
+  "qr_decoding": "Decodifica QR in corso\u2026",
+  "qr_not_found_in_image": "Nessun codice QR trovato nell'immagine selezionata",
+  "error_loading_image": "Errore durante il caricamento dell'immagine"
 }

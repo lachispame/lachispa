@@ -377,5 +377,9 @@
   "share_ready_message": "Готово к отправке",
   "lnurl_copied_message": "LNURL скопирован в буфер обмена",
   "qr_scanner_title": "Сканировать QR",
-  "qr_scanner_instructions": "Наведите камеру на QR-код\nчтобы сканировать счёт или адрес"
+  "qr_scanner_instructions": "Наведите камеру на QR-код\nчтобы сканировать счёт или адрес",
+  "qr_from_gallery_button": "Галерея",
+  "qr_decoding": "Декодирование QR\u2026",
+  "qr_not_found_in_image": "QR-код не найден в выбранном изображении",
+  "error_loading_image": "Ошибка загрузки изображения"
 }

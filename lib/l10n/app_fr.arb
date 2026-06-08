@@ -377,5 +377,9 @@
   "share_ready_message": "Prêt à partager",
   "lnurl_copied_message": "LNURL copié dans le presse-papiers",
   "qr_scanner_title": "Scanner QR",
-  "qr_scanner_instructions": "Pointez la caméra vers le code QR\npour scanner la facture ou l'adresse"
+  "qr_scanner_instructions": "Pointez la caméra vers le code QR\npour scanner la facture ou l'adresse",
+  "qr_from_gallery_button": "Galerie",
+  "qr_decoding": "Décodage du QR\u2026",
+  "qr_not_found_in_image": "Aucun code QR trouvé dans l'image sélectionnée",
+  "error_loading_image": "Erreur lors du chargement de l'image"
 }

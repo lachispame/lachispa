@@ -1925,6 +1925,30 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Apunta la cámara al código QR\npara escanear la factura o dirección'**
   String get qr_scanner_instructions;
+
+  /// No description provided for @qr_from_gallery_button.
+  ///
+  /// In es, this message translates to:
+  /// **'Galería'**
+  String get qr_from_gallery_button;
+
+  /// No description provided for @qr_decoding.
+  ///
+  /// In es, this message translates to:
+  /// **'Decodificando QR…'**
+  String get qr_decoding;
+
+  /// No description provided for @qr_not_found_in_image.
+  ///
+  /// In es, this message translates to:
+  /// **'No se encontró ningún código QR en la imagen seleccionada'**
+  String get qr_not_found_in_image;
+
+  /// No description provided for @error_loading_image.
+  ///
+  /// In es, this message translates to:
+  /// **'Error al cargar la imagen'**
+  String get error_loading_image;
 }
 
 class _AppLocalizationsDelegate

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import '../l10n/generated/app_localizations.dart';
 import '../theme/app_tokens.dart';
@@ -178,6 +179,62 @@ class _QRScannerWidgetState extends State<QRScannerWidget> {
     }
   }
 
+  Future<void> _pickFromGallery() async {
+    try {
+      final picker = ImagePicker();
+      final XFile? image = await picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 1024,
+        maxHeight: 1024,
+      );
+
+      if (image == null) return;
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context)!.qr_decoding,
+          ),
+          duration: const Duration(seconds: 1),
+        ),
+      );
+
+      final BarcodeCapture? result = await controller.analyzeImage(
+        image.path,
+      );
+
+      if (result != null &&
+          result.barcodes.isNotEmpty &&
+          result.barcodes.first.rawValue != null) {
+        hasScanned = true;
+        controller.stop();
+        if (!mounted) return;
+        widget.onScanned(result.barcodes.first.rawValue!);
+      } else {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(context)!.qr_not_found_in_image,
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      debugPrint('Error loading image from gallery: $e');
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context)!.error_loading_image,
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = context.tokens;
@@ -338,6 +395,29 @@ class _QRScannerWidgetState extends State<QRScannerWidget> {
                           onPressed: () async {
                             await controller.toggleTorch();
                           },
+                        ),
+                      ),
+
+                      // Pick from gallery button
+                      Container(
+                        width: 56,
+                        height: 56,
+                        decoration: BoxDecoration(
+                          color: t.textPrimary.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: t.textPrimary.withValues(alpha: 0.2),
+                            width: 1,
+                          ),
+                        ),
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.photo_library_outlined,
+                            color: t.textPrimary,
+                            size: 24,
+                          ),
+                          onPressed: _pickFromGallery,
+                          tooltip: AppLocalizations.of(context)!.qr_from_gallery_button,
                         ),
                       ),
 

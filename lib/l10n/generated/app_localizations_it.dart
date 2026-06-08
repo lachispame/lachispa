@@ -1017,4 +1017,18 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get qr_scanner_instructions =>
       'Punta la fotocamera sul codice QR\nper scansionare la fattura o l\'indirizzo';
+
+  @override
+  String get qr_from_gallery_button => 'Galleria';
+
+  @override
+  String get qr_decoding => 'Decodifica QR in corso…';
+
+  @override
+  String get qr_not_found_in_image =>
+      'Nessun codice QR trovato nell\'immagine selezionata';
+
+  @override
+  String get error_loading_image =>
+      'Errore durante il caricamento dell\'immagine';
 }

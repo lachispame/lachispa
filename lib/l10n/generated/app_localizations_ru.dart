@@ -993,4 +993,17 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get qr_scanner_instructions =>
       'Наведите камеру на QR-код\nчтобы сканировать счёт или адрес';
+
+  @override
+  String get qr_from_gallery_button => 'Галерея';
+
+  @override
+  String get qr_decoding => 'Декодирование QR…';
+
+  @override
+  String get qr_not_found_in_image =>
+      'QR-код не найден в выбранном изображении';
+
+  @override
+  String get error_loading_image => 'Ошибка загрузки изображения';
 }
