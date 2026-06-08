@@ -66,19 +66,45 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="lnurlc" />
             </intent-filter>
-            <!-- LaChispa specific scheme -->
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="lachispa" />
-            </intent-filter>
-        </activity>
+             <!-- LaChispa specific scheme -->
+             <intent-filter android:autoVerify="true">
+                 <action android:name="android.intent.action.VIEW" />
+                 <category android:name="android.intent.category.DEFAULT" />
+                 <category android:name="android.intent.category.BROWSABLE" />
+                 <data android:scheme="lachispa" />
+             </intent-filter>
+             <!-- NFC: capturar tags cuando la app está en foreground -->
+             <intent-filter>
+                 <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+                 <category android:name="android.intent.category.DEFAULT"/>
+                 <data android:mimeType="text/plain"/>
+             </intent-filter>
+             <intent-filter>
+                 <action android:name="android.nfc.action.TECH_DISCOVERED"/>
+                 <category android:name="android.intent.category.DEFAULT"/>
+             </intent-filter>
+         </activity>
+         <!-- Meta-data para TECH_DISCOVERED -->
+         <meta-data
+             android:name="android.nfc.action.TECH_DISCOVERED"
+             android:resource="@xml/nfc_tech_filter"/>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <!-- HCE Service for flutter_nfc_hce -->
+        <service
+            android:name="com.novice.flutter_nfc_hce.KHostApduService"
+            android:exported="true"
+            android:permission="android.permission.BIND_NFC_SERVICE">
+            <intent-filter>
+                <action android:name="android.nfc.cardemulation.action.HOST_APDU_SERVICE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.nfc.cardemulation.host_apdu_service"
+                android:resource="@xml/apduservice" />
+        </service>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

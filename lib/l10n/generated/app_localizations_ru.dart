@@ -970,6 +970,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get nfc_scanning_message => 'Поднесите Boltcard к телефону';
 
   @override
+  String get nfc_hce_message => 'Поднесите устройство плательщика';
+
+  @override
   String get nfc_charging_message => 'Списание...';
 
   @override
@@ -986,6 +989,36 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get lnurl_copied_message => 'LNURL скопирован в буфер обмена';
+
+  @override
+  String get nfc_mode_title => 'Режим NFC';
+
+  @override
+  String get nfc_mode_boltcard => 'Списать с BoltCard';
+
+  @override
+  String get nfc_mode_boltcard_subtitle => 'Считать карту и списать средства';
+
+  @override
+  String get nfc_mode_hce => 'Эмуляция HCE';
+
+  @override
+  String get nfc_mode_hce_subtitle => 'Телефон как карта';
+
+  @override
+  String get nfc_tag_not_compatible => 'Тег не совместим';
+
+  @override
+  String get nfc_not_boltcard => 'Не Boltcard';
+
+  @override
+  String get nfc_incomplete_data => 'Неполные данные';
+
+  @override
+  String get nfc_invalid_response => 'Неверный ответ';
+
+  @override
+  String get nfc_network_error => 'Ошибка сети';
 
   @override
   String get qr_scanner_title => 'Сканировать QR';

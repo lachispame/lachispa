@@ -203,6 +203,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_nfc_hce:
+    dependency: "direct main"
+    description:
+      name: flutter_nfc_hce
+      sha256: "4a8b12f87db6581e81653d5b6bbb8afa980c6171ab378e315a3f39fcde0d696c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.8"
   flutter_secure_storage:
     dependency: "direct main"
     description:

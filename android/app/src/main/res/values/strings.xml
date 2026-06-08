@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">LaChispa</string>
+    <string name="hce_service_description">LaChispa HCE Service</string>
+    <string name="hce_aid_group">LaChispa AID Group</string>
+</resources>

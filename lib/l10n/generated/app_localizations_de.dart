@@ -991,6 +991,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get nfc_scanning_message => 'Halten Sie die Boltcard an das Telefon';
 
   @override
+  String get nfc_hce_message => 'Halten Sie das Gerät des Zahlers an';
+
+  @override
   String get nfc_charging_message => 'Wird belastet...';
 
   @override
@@ -1007,6 +1010,36 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get lnurl_copied_message => 'LNURL in die Zwischenablage kopiert';
+
+  @override
+  String get nfc_mode_title => 'NFC-Modus';
+
+  @override
+  String get nfc_mode_boltcard => 'BoltCard abbuchen';
+
+  @override
+  String get nfc_mode_boltcard_subtitle => 'Karte lesen und Rechnung einziehen';
+
+  @override
+  String get nfc_mode_hce => 'HCE emulieren';
+
+  @override
+  String get nfc_mode_hce_subtitle => 'Telefon als Karte';
+
+  @override
+  String get nfc_tag_not_compatible => 'Tag nicht kompatibel';
+
+  @override
+  String get nfc_not_boltcard => 'Keine Boltcard';
+
+  @override
+  String get nfc_incomplete_data => 'Unvollständige Daten';
+
+  @override
+  String get nfc_invalid_response => 'Ungültige Antwort';
+
+  @override
+  String get nfc_network_error => 'Netzwerkfehler';
 
   @override
   String get qr_scanner_title => 'QR scannen';
