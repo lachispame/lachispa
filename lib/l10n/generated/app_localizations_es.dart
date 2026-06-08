@@ -1003,4 +1003,31 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get qr_scanner_instructions =>
       'Apunta la cámara al código QR\npara escanear la factura o dirección';
+
+  @override
+  String get history_then_label => 'Entonces';
+
+  @override
+  String get history_now_label => 'Ahora';
+
+  @override
+  String get history_date_label => 'Fecha';
+
+  @override
+  String get history_description_label => 'Descripción';
+
+  @override
+  String get history_hash_label => 'Hash';
+
+  @override
+  String get history_fee_label => 'Comisión';
+
+  @override
+  String get history_original_rate_label => 'Tasa Original';
+
+  @override
+  String get history_wallet_amount_label => 'Monto en Wallet';
+
+  @override
+  String get history_wallet_rate_label => 'Tasa en Wallet';
 }

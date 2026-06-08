@@ -11,11 +11,17 @@ import '../theme/app_tokens.dart';
 class InvoiceConfirmScreen extends StatefulWidget {
   final DecodedInvoice decodedInvoice;
   final int? overrideAmountSats;
+  final String? originalFiatCurrency;
+  final double? originalFiatAmount;
+  final double? originalFiatRate;
 
   const InvoiceConfirmScreen({
     super.key,
     required this.decodedInvoice,
     this.overrideAmountSats,
+    this.originalFiatCurrency,
+    this.originalFiatAmount,
+    this.originalFiatRate,
   });
 
   @override
@@ -72,9 +78,12 @@ class _InvoiceConfirmScreenState extends State<InvoiceConfirmScreen> {
       // Make payment using wallet's admin key
       final paymentResult = await _invoiceService.sendPayment(
         serverUrl: session.serverUrl,
-        adminKey: wallet.adminKey, // Use wallet's admin key
+        adminKey: wallet.adminKey,
         bolt11: widget.decodedInvoice.originalInvoice,
         amount: widget.overrideAmountSats,
+        originalFiatCurrency: widget.originalFiatCurrency,
+        originalFiatAmount: widget.originalFiatAmount,
+        originalFiatRate: widget.originalFiatRate,
       );
 
       print('[INVOICE_CONFIRM] Payment made: $paymentResult');

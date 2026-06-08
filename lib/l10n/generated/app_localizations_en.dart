@@ -989,4 +989,31 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get qr_scanner_instructions =>
       'Point the camera at the QR code\nto scan the invoice or address';
+
+  @override
+  String get history_then_label => 'Then';
+
+  @override
+  String get history_now_label => 'Now';
+
+  @override
+  String get history_date_label => 'Date';
+
+  @override
+  String get history_description_label => 'Description';
+
+  @override
+  String get history_hash_label => 'Hash';
+
+  @override
+  String get history_fee_label => 'Fee';
+
+  @override
+  String get history_original_rate_label => 'Original Rate';
+
+  @override
+  String get history_wallet_amount_label => 'Wallet Amount';
+
+  @override
+  String get history_wallet_rate_label => 'Wallet Rate';
 }

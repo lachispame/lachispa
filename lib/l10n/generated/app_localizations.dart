@@ -1925,6 +1925,60 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Apunta la cámara al código QR\npara escanear la factura o dirección'**
   String get qr_scanner_instructions;
+
+  /// No description provided for @history_then_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Entonces'**
+  String get history_then_label;
+
+  /// No description provided for @history_now_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Ahora'**
+  String get history_now_label;
+
+  /// No description provided for @history_date_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Fecha'**
+  String get history_date_label;
+
+  /// No description provided for @history_description_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Descripción'**
+  String get history_description_label;
+
+  /// No description provided for @history_hash_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Hash'**
+  String get history_hash_label;
+
+  /// No description provided for @history_fee_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Comisión'**
+  String get history_fee_label;
+
+  /// No description provided for @history_original_rate_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Tasa Original'**
+  String get history_original_rate_label;
+
+  /// No description provided for @history_wallet_amount_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Monto en Wallet'**
+  String get history_wallet_amount_label;
+
+  /// No description provided for @history_wallet_rate_label.
+  ///
+  /// In es, this message translates to:
+  /// **'Tasa en Wallet'**
+  String get history_wallet_rate_label;
 }
 
 class _AppLocalizationsDelegate

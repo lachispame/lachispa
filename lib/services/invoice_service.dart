@@ -116,6 +116,20 @@ class InvoiceService {
         _debugLog('[INVOICE_SERVICE] Original fiat: $originalFiatAmount $originalFiatCurrency (rate: $originalFiatRate)');
       }
 
+      // Embed fiat info in memo since LNBits does not preserve custom extra keys
+      // This guarantees the memo fallback parser in TransactionInfo finds the data
+      final String effectiveMemo;
+      if (originalFiatCurrency != null && originalFiatAmount != null) {
+        final fiatSuffix = '${originalFiatAmount.toStringAsFixed(2)} $originalFiatCurrency';
+        if (memo != null && memo.trim().isNotEmpty) {
+          effectiveMemo = '$memo | $fiatSuffix';
+        } else {
+          effectiveMemo = fiatSuffix;
+        }
+      } else {
+        effectiveMemo = memo ?? '';
+      }
+
       final headers = {
         'X-API-KEY': adminKey,
         'Content-Type': 'application/json',
@@ -146,13 +160,24 @@ class InvoiceService {
       
       if (_isAndroid) {
         // Android-optimized endpoints tested manually
+        // Standard /api/v1/payments goes FIRST — same endpoint used by sendPayment(),
+        // proven to preserve memo+fiat data on LNBits.
         endpoints = [
-          // Try LNBits LNURLP endpoint with fiat info (common pattern)
+          {
+            'url': '$baseUrl/api/v1/payments',
+            'data': {
+              'out': false,
+              'amount': amount,
+              'memo': effectiveMemo,
+              'extra': extras,
+            }
+          },
+          // Try LNBits LNURLP endpoint with fiat info (fallback)
           if (originalFiatCurrency != null && originalFiatAmount != null) {
             'url': '$baseUrl/lnurlp/api/v1/invoice',
             'data': {
               'amount': (amount * 1000).toString(), // LNURLP expects msat as string
-              'description': memo ?? '',
+              'description': effectiveMemo,
               'currency': originalFiatCurrency.toUpperCase(),
               'fiat_amount': originalFiatAmount.toString(),
               'comment': comment ?? '',
@@ -164,19 +189,10 @@ class InvoiceService {
             'data': {
               'out': false,
               'amount': amount,
-              'memo': memo ?? '',
+              'memo': effectiveMemo,
               'fiat_currency': originalFiatCurrency.toUpperCase(),
               'fiat_amount': originalFiatAmount,
-              'extras': comment != null && comment.isNotEmpty ? {'comment': comment} : null,
-            }
-          },
-          {
-            'url': '$baseUrl/api/v1/payments',
-            'data': {
-              'out': false,
-              'amount': amount,
-              'memo': memo ?? '',
-              'extras': extras,
+              'extra': comment != null && comment.isNotEmpty ? {'comment': comment} : null,
             }
           },
           // Try approach 2: fiat fields at root level
@@ -185,11 +201,11 @@ class InvoiceService {
             'data': {
               'out': false,
               'amount': amount,
-              'memo': memo ?? '',
+              'memo': effectiveMemo,
               'fiat_currency': originalFiatCurrency,
               'fiat_amount': originalFiatAmount,
               'fiat_rate': originalFiatRate,
-              'extras': comment != null && comment.isNotEmpty ? {'comment': comment} : null,
+              'extra': comment != null && comment.isNotEmpty ? {'comment': comment} : null,
             }
           },
           // Try approach 3: using 'currency' parameter (common in some LNBits extensions)
@@ -198,18 +214,18 @@ class InvoiceService {
             'data': {
               'out': false,
               'amount': amount,
-              'memo': memo ?? '',
+              'memo': effectiveMemo,
               'currency': originalFiatCurrency,
               'currency_amount': originalFiatAmount,
-              'extras': extras,
+              'extra': extras,
             }
           },
           {
             'url': '$baseUrl/api/v1/payments',
             'data': {
               'amount': amount,
-              'memo': memo ?? '',
-              'extras': extras,
+              'memo': effectiveMemo,
+              'extra': extras,
             }
           },
           {
@@ -217,8 +233,8 @@ class InvoiceService {
             'data': {
               'out': false,
               'amount': amount,
-              'description': memo ?? '',
-              'extras': extras,
+              'description': effectiveMemo,
+              'extra': extras,
             }
           },
           {
@@ -226,17 +242,17 @@ class InvoiceService {
             'data': {
               'out': false,
               'amount': amount,
-              'memo': memo ?? '',
-              'extras': extras,
+              'memo': effectiveMemo,
+              'extra': extras,
             }
           },
           {
             'url': '$baseUrl/api/v1/payments',
             'data': {
               'amount': amount,
-              'description': memo ?? '',
+              'description': effectiveMemo,
               'unit': 'sat',
-              'extras': extras,
+              'extra': extras,
             }
           },
           {
@@ -244,36 +260,47 @@ class InvoiceService {
             'data': {
               'out': false,
               'amount': amount,
-              'memo': memo ?? '',
-              'extras': extras,
+              'memo': effectiveMemo,
+              'extra': extras,
             }
           },
           {
             'url': '$baseUrl/api/v1/invoices',
             'data': {
               'amount': amount,
-              'memo': memo ?? '',
-              'extras': extras,
+              'memo': effectiveMemo,
+              'extra': extras,
             }
           },
           {
             'url': '$baseUrl/invoice',
             'data': {
               'amount': amount,
-              'memo': memo ?? '',
-              'extras': extras,
+              'memo': effectiveMemo,
+              'extra': extras,
             }
           },
         ];
       } else {
         // Web/Desktop-optimized endpoints
+        // Standard /api/v1/payments goes FIRST for consistent memo preservation
         endpoints = [
-          // Try LNURLP endpoint for web with fiat info
+          {
+            'url': '$baseUrl/api/v1/payments',
+            'data': {
+              'out': false,
+              'amount': amount,
+              'memo': effectiveMemo,
+              'unit': 'sat',
+              'extra': extras,
+            }
+          },
+          // Try LNURLP endpoint for web with fiat info (fallback)
           if (originalFiatCurrency != null && originalFiatAmount != null) {
             'url': '$baseUrl/lnurlp/api/v1/invoice',
             'data': {
               'amount': (amount * 1000).toString(), // LNURLP expects msat as string
-              'description': memo ?? '',
+              'description': effectiveMemo,
               'currency': originalFiatCurrency.toUpperCase(),
               'fiat_amount': originalFiatAmount.toString(),
               'comment': comment ?? '',
@@ -285,21 +312,11 @@ class InvoiceService {
             'data': {
               'out': false,
               'amount': amount,
-              'memo': memo ?? '',
+              'memo': effectiveMemo,
               'unit': 'sat',
               'fiat_currency': originalFiatCurrency.toUpperCase(),
               'fiat_amount': originalFiatAmount,
-              'extras': comment != null && comment.isNotEmpty ? {'comment': comment} : null,
-            }
-          },
-          {
-            'url': '$baseUrl/api/v1/payments',
-            'data': {
-              'out': false,
-              'amount': amount,
-              'memo': memo ?? '',
-              'unit': 'sat',
-              'extras': extras,
+              'extra': comment != null && comment.isNotEmpty ? {'comment': comment} : null,
             }
           },
           {
@@ -307,27 +324,27 @@ class InvoiceService {
             'data': {
               'out': false,
               'amount': amount,
-              'memo': memo ?? '',
+              'memo': effectiveMemo,
               'unit': 'sat',
-              'extras': extras,
+              'extra': extras,
             }
           },
           {
             'url': '$baseUrl/api/v1/invoice',
             'data': {
               'amount': amount,
-              'memo': memo ?? '',
+              'memo': effectiveMemo,
               'unit': 'sat',
-              'extras': extras,
+              'extra': extras,
             }
           },
           {
             'url': '$baseUrl/api/v1/payments',
             'data': {
               'amount': amount,
-              'memo': memo ?? '',
-              'description': memo ?? '',
-              'extras': extras,
+              'memo': effectiveMemo,
+              'description': effectiveMemo,
+              'extra': extras,
             }
           },
         ];
@@ -348,11 +365,11 @@ class InvoiceService {
           _debugLog('[INVOICE_SERVICE] Headers: $headers');
           
           // Special logging for fiat endpoints
-          if (data.containsKey('fiat_currency') || data.containsKey('currency') || (data.containsKey('extras') && data['extras'] != null)) {
+          if (data.containsKey('fiat_currency') || data.containsKey('currency') || (data.containsKey('extra') && data['extra'] != null)) {
             _debugLog('[INVOICE_SERVICE] 💰 FIAT ENDPOINT ATTEMPT: Contains fiat data');
             _debugLog('[INVOICE_SERVICE] 💰 Fiat currency: ${data['fiat_currency'] ?? data['currency']}');
             _debugLog('[INVOICE_SERVICE] 💰 Fiat amount: ${data['fiat_amount'] ?? data['currency_amount']}');
-            _debugLog('[INVOICE_SERVICE] 💰 Extras: ${data['extras']}');
+            _debugLog('[INVOICE_SERVICE] 💰 Extras: ${data['extra']}');
           }
 
           final response = await _dio.post(
@@ -651,6 +668,9 @@ class InvoiceService {
     required String adminKey,
     required String bolt11,
     int? amount,
+    String? originalFiatCurrency,
+    double? originalFiatAmount,
+    double? originalFiatRate,
   }) async {
     try {
       // Asegurar que la URL tenga HTTPS
@@ -788,6 +808,19 @@ class InvoiceService {
         ];
       }
 
+      // Build extras with original fiat data if provided
+      final Map<String, dynamic>? extras;
+      if (originalFiatCurrency != null && originalFiatAmount != null && amount != null) {
+        extras = {
+          'fiat_currency': originalFiatCurrency,
+          'fiat_amount': originalFiatAmount,
+          'fiat_rate': amount / originalFiatAmount,
+          'btc_rate': (originalFiatAmount / amount) * 100000000,
+        };
+      } else {
+        extras = null;
+      }
+
       Exception? lastException;
       
       // Try each endpoint until one works
@@ -795,6 +828,7 @@ class InvoiceService {
         final endpoint = endpoints[i];
         final url = endpoint['url'] as String;
         final data = endpoint['data'] as Map<String, dynamic>;
+        if (extras != null) data['extra'] = extras;
         
         try {
           _debugLog('[INVOICE_SERVICE] Trying endpoint $url (${i + 1}/${endpoints.length})');
@@ -873,6 +907,9 @@ class InvoiceService {
     required String lightningAddress,
     required int amountSats,
     String? comment,
+    String? originalFiatCurrency,
+    double? originalFiatAmount,
+    double? originalFiatRate,
   }) async {
     try {
       _debugLog('[INVOICE_SERVICE] 🚀 Sending payment to Lightning Address using native LNBits API');
@@ -935,6 +972,21 @@ class InvoiceService {
       _debugLog('[INVOICE_SERVICE] - Description hash: ${hash.toString()}');
       
       // Step 2: Use native LNBits endpoint /api/v1/payments/lnurl
+      final extras = <String, dynamic>{};
+      if (originalFiatCurrency != null && originalFiatAmount != null) {
+        extras['fiat_currency'] = originalFiatCurrency;
+        extras['fiat_amount'] = originalFiatAmount;
+        extras['fiat_rate'] = originalFiatRate;
+      }
+
+      // Embed fiat in description so the memo fallback parser in TransactionInfo can recover it
+      final String effectiveDescription;
+      if (originalFiatCurrency != null && originalFiatAmount != null) {
+        effectiveDescription = 'Payment to $lightningAddress | ${originalFiatAmount!.toStringAsFixed(2)} $originalFiatCurrency';
+      } else {
+        effectiveDescription = 'Payment to $lightningAddress';
+      }
+
       final response = await _dio.post(
         '$baseUrl/api/v1/payments/lnurl',
         data: {
@@ -942,7 +994,8 @@ class InvoiceService {
           'callback': metadata['callback'],
           'amount': amountMsat,
           'comment': comment ?? '',
-          'description': 'Payment to $lightningAddress',
+          'description': effectiveDescription,
+          if (extras.isNotEmpty) 'extra': extras,
         },
         options: Options(
           headers: {
@@ -971,6 +1024,9 @@ class InvoiceService {
           lightningAddress: lightningAddress,
           amountSats: amountSats,
           comment: comment,
+          originalFiatCurrency: originalFiatCurrency,
+          originalFiatAmount: originalFiatAmount,
+          originalFiatRate: originalFiatRate,
         );
       }
       
@@ -986,6 +1042,9 @@ class InvoiceService {
     required String lightningAddress,
     required int amountSats,
     String? comment,
+    String? originalFiatCurrency,
+    double? originalFiatAmount,
+    double? originalFiatRate,
   }) async {
     try {
       _debugLog('[INVOICE_SERVICE] 🔧 Using manual method for Lightning Address');
@@ -1005,6 +1064,10 @@ class InvoiceService {
         serverUrl: serverUrl,
         adminKey: adminKey,
         bolt11: bolt11,
+        amount: amountSats,
+        originalFiatCurrency: originalFiatCurrency,
+        originalFiatAmount: originalFiatAmount,
+        originalFiatRate: originalFiatRate,
       );
     } catch (e) {
       if (e.toString().contains('CORS') || e.toString().contains('XMLHttpRequest')) {
@@ -1030,6 +1093,9 @@ class InvoiceService {
     required String lnurl,
     required int amountSats,
     String? comment,
+    String? originalFiatCurrency,
+    double? originalFiatAmount,
+    double? originalFiatRate,
   }) async {
     try {
       _debugLog('[INVOICE_SERVICE] Resolving LNURL: ${lnurl.substring(0, 20)}...');
@@ -1049,6 +1115,10 @@ class InvoiceService {
         serverUrl: serverUrl,
         adminKey: adminKey,
         bolt11: bolt11,
+        amount: amountSats,
+        originalFiatCurrency: originalFiatCurrency,
+        originalFiatAmount: originalFiatAmount,
+        originalFiatRate: originalFiatRate,
       );
     } catch (e) {
       _debugLog('[INVOICE_SERVICE] Error sending payment to LNURL: $e');

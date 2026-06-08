@@ -10,6 +10,7 @@ import '../services/wallet_service.dart';
 import '../models/transaction_info.dart';
 import '../l10n/generated/app_localizations.dart';
 import '../theme/app_tokens.dart';
+import '../services/yadio_service.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -25,10 +26,12 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
   late Animation<double> _headerAnimation;
   late Animation<double> _listAnimation;
   
+  final YadioService _yadioService = YadioService();
   List<TransactionInfo> _transactions = [];
   bool _isLoading = true;
   bool _hasError = false;
   String _errorMessage = '';
+  Map<String, double> _currentRates = {};
   
   TransactionFilter _currentFilter = TransactionFilter.all;
   final ScrollController _scrollController = ScrollController();
@@ -148,6 +151,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
           _transactions = transactions;
           _isLoading = false;
         });
+        _fetchCurrentRates();
       }
     } catch (e) {
       print('=== ERROR LOADING TRANSACTIONS ===');
@@ -615,6 +619,36 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
     );
   }
 
+  Future<void> _fetchCurrentRates() async {
+    final currencies = <String>{};
+    for (final tx in _transactions) {
+      if (tx.originalFiatCurrency != null) {
+        currencies.add(tx.originalFiatCurrency!);
+      } else if (tx.fiatCurrency != null) {
+        currencies.add(tx.fiatCurrency!);
+      }
+    }
+    if (currencies.isEmpty) return;
+
+    try {
+      final rates = await _yadioService.getExchangeRates(currencies: currencies);
+      if (mounted) setState(() => _currentRates = rates);
+    } catch (e) {
+      print('[HISTORY] Error fetching rates: $e');
+    }
+  }
+
+  double? _getCurrentFiatValue(TransactionInfo tx, String currency) {
+    final btcUsd = _currentRates['BTC'];
+    final currencyPerUsd = _currentRates[currency];
+    if (btcUsd == null || currencyPerUsd == null) return null;
+
+    final sats = tx.amountSats.abs();
+    final btcValue = sats / 100000000.0;
+    final usdValue = btcValue * btcUsd;
+    return usdValue * currencyPerUsd;
+  }
+
   Widget _buildTransactionCard(TransactionInfo transaction, int index, AppTokens t) {
     final iconColor = _getTransactionIconColor(transaction, t);
     return Container(
@@ -712,24 +746,41 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  if (transaction.fiatAmount != null && transaction.fiatCurrency != null)
+                  if (transaction.originalFiatAmount != null && transaction.originalFiatCurrency != null) ...[
                     Text(
-                      '${transaction.type == TransactionType.incoming ? '+' : '-'}${transaction.fiatAmount!.toStringAsFixed(2)} ${transaction.fiatCurrency}',
-                      style: TextStyle(
-                        color: iconColor.withValues(alpha: 0.8),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  if (transaction.originalFiatAmount != null && transaction.originalFiatCurrency != null)
-                    Text(
-                      '${transaction.originalFiatAmount!.toStringAsFixed(2)} ${transaction.originalFiatCurrency}',
+                      '${AppLocalizations.of(context)!.history_then_label}: ${transaction.originalFiatAmount!.toStringAsFixed(2)} ${transaction.originalFiatCurrency}',
                       style: TextStyle(
                         color: t.textPrimary.withValues(alpha: 0.7),
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
+                    Text(
+                      '${AppLocalizations.of(context)!.history_now_label}: ${_getCurrentFiatValue(transaction, transaction.originalFiatCurrency!)?.toStringAsFixed(2) ?? '...'} ${transaction.originalFiatCurrency}',
+                      style: TextStyle(
+                        color: iconColor.withValues(alpha: 0.8),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ] else if (transaction.fiatAmount != null && transaction.fiatCurrency != null) ...[
+                    Text(
+                      '${AppLocalizations.of(context)!.history_then_label}: ${transaction.fiatAmount!.toStringAsFixed(2)} ${transaction.fiatCurrency}',
+                      style: TextStyle(
+                        color: t.textPrimary.withValues(alpha: 0.7),
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      '${AppLocalizations.of(context)!.history_now_label}: ${_getCurrentFiatValue(transaction, transaction.fiatCurrency!)?.toStringAsFixed(2) ?? '...'} ${transaction.fiatCurrency}',
+                      style: TextStyle(
+                        color: iconColor.withValues(alpha: 0.8),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ],
@@ -805,24 +856,41 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                               fontWeight: FontWeight.w700,
                             ),
                           ),
-                          if (transaction.fiatAmount != null && transaction.fiatCurrency != null)
+                          if (transaction.originalFiatAmount != null && transaction.originalFiatCurrency != null) ...[
                             Text(
-                              '${transaction.type == TransactionType.incoming ? '+' : '-'}${transaction.fiatAmount!.toStringAsFixed(2)} ${transaction.fiatCurrency}',
-                              style: TextStyle(
-                                color: iconColor.withValues(alpha: 0.8),
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          if (transaction.originalFiatAmount != null && transaction.originalFiatCurrency != null)
-                            Text(
-                              '${transaction.originalFiatAmount!.toStringAsFixed(2)} ${transaction.originalFiatCurrency}',
+                              '${AppLocalizations.of(context)!.history_then_label}: ${transaction.originalFiatAmount!.toStringAsFixed(2)} ${transaction.originalFiatCurrency}',
                               style: TextStyle(
                                 color: t.textSecondary,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400,
                               ),
                             ),
+                            Text(
+                              '${AppLocalizations.of(context)!.history_now_label}: ${_getCurrentFiatValue(transaction, transaction.originalFiatCurrency!)?.toStringAsFixed(2) ?? '...'} ${transaction.originalFiatCurrency}',
+                              style: TextStyle(
+                                color: iconColor.withValues(alpha: 0.8),
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ] else if (transaction.fiatAmount != null && transaction.fiatCurrency != null) ...[
+                            Text(
+                              '${AppLocalizations.of(context)!.history_then_label}: ${transaction.fiatAmount!.toStringAsFixed(2)} ${transaction.fiatCurrency}',
+                              style: TextStyle(
+                                color: t.textSecondary,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                            Text(
+                              '${AppLocalizations.of(context)!.history_now_label}: ${_getCurrentFiatValue(transaction, transaction.fiatCurrency!)?.toStringAsFixed(2) ?? '...'} ${transaction.fiatCurrency}',
+                              style: TextStyle(
+                                color: iconColor.withValues(alpha: 0.8),
+                                fontSize: 18,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
                         ],
                       ),
                     ],
@@ -838,22 +906,23 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
               const SizedBox(height: 24),
             ],
 
-            _buildDetailRow(t, 'Date', transaction.formattedDate),
-            _buildDetailRow(t, 'Description', transaction.memo.isEmpty ? AppLocalizations.of(context)!.no_description_text : transaction.memo),
+            _buildDetailRow(t, AppLocalizations.of(context)!.history_date_label, transaction.formattedDate),
+            _buildDetailRow(t, AppLocalizations.of(context)!.history_description_label, transaction.memo.isEmpty ? AppLocalizations.of(context)!.no_description_text : transaction.memo),
             if (transaction.originalFiatAmount != null && transaction.originalFiatCurrency != null) ...[
-              _buildDetailRow(t, 'Original Amount', '${transaction.originalFiatAmount!.toStringAsFixed(2)} ${transaction.originalFiatCurrency}'),
+              _buildDetailRow(t, AppLocalizations.of(context)!.history_then_label, '${transaction.originalFiatAmount!.toStringAsFixed(2)} ${transaction.originalFiatCurrency}'),
+              _buildDetailRow(t, AppLocalizations.of(context)!.history_now_label, '${_getCurrentFiatValue(transaction, transaction.originalFiatCurrency!)?.toStringAsFixed(2) ?? '...'} ${transaction.originalFiatCurrency}'),
               if (transaction.originalFiatRate != null)
-                _buildDetailRow(t, 'Original Rate', '${transaction.originalFiatRate!.toStringAsFixed(4)} sats/${transaction.originalFiatCurrency}'),
-            ],
-            if (transaction.fiatAmount != null && transaction.fiatCurrency != null) ...[
-              _buildDetailRow(t, 'Wallet Amount', '${transaction.fiatAmount!.toStringAsFixed(2)} ${transaction.fiatCurrency}'),
+                _buildDetailRow(t, AppLocalizations.of(context)!.history_original_rate_label, '${transaction.originalFiatRate!.toStringAsFixed(4)} sats/${transaction.originalFiatCurrency}'),
+            ] else if (transaction.fiatAmount != null && transaction.fiatCurrency != null) ...[
+              _buildDetailRow(t, AppLocalizations.of(context)!.history_then_label, '${transaction.fiatAmount!.toStringAsFixed(2)} ${transaction.fiatCurrency}'),
+              _buildDetailRow(t, AppLocalizations.of(context)!.history_now_label, '${_getCurrentFiatValue(transaction, transaction.fiatCurrency!)?.toStringAsFixed(2) ?? '...'} ${transaction.fiatCurrency}'),
               if (transaction.fiatRate != null)
-                _buildDetailRow(t, 'Wallet Rate', '${transaction.fiatRate!.toStringAsFixed(2)} sats/${transaction.fiatCurrency}'),
+                _buildDetailRow(t, AppLocalizations.of(context)!.history_wallet_rate_label, '${transaction.fiatRate!.toStringAsFixed(2)} sats/${transaction.fiatCurrency}'),
             ],
             if (transaction.paymentHash != null)
-              _buildDetailRow(t, 'Hash', transaction.paymentHash!, copyable: true),
+              _buildDetailRow(t, AppLocalizations.of(context)!.history_hash_label, transaction.paymentHash!, copyable: true),
             if (transaction.fee != null)
-              _buildDetailRow(t, 'Fee', '${(transaction.fee! / 1000).toStringAsFixed(3)} sats'),
+              _buildDetailRow(t, AppLocalizations.of(context)!.history_fee_label, '${(transaction.fee! / 1000).toStringAsFixed(3)} sats'),
             _buildDetailRow(t, AppLocalizations.of(context)!.invoice_status_label, _getTransactionStatus(transaction)),
                 ],
               ),

@@ -377,5 +377,14 @@
   "share_ready_message": "Prêt à partager",
   "lnurl_copied_message": "LNURL copié dans le presse-papiers",
   "qr_scanner_title": "Scanner QR",
-  "qr_scanner_instructions": "Pointez la caméra vers le code QR\npour scanner la facture ou l'adresse"
+  "qr_scanner_instructions": "Pointez la caméra vers le code QR\npour scanner la facture ou l'adresse",
+  "history_then_label": "Avant",
+  "history_now_label": "Maintenant",
+  "history_date_label": "Date",
+  "history_description_label": "Description",
+  "history_hash_label": "Hash",
+  "history_fee_label": "Frais",
+  "history_original_rate_label": "Taux d'origine",
+  "history_wallet_amount_label": "Montant du portefeuille",
+  "history_wallet_rate_label": "Taux du portefeuille"
 }

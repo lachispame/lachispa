@@ -377,5 +377,14 @@
   "share_ready_message": "Pronto para compartilhar",
   "lnurl_copied_message": "LNURL copiado para a área de transferência",
   "qr_scanner_title": "Escanear QR",
-  "qr_scanner_instructions": "Aponte a câmera para o código QR\npara escanear a fatura ou endereço"
+  "qr_scanner_instructions": "Aponte a câmera para o código QR\npara escanear a fatura ou endereço",
+  "history_then_label": "Então",
+  "history_now_label": "Agora",
+  "history_date_label": "Data",
+  "history_description_label": "Descrição",
+  "history_hash_label": "Hash",
+  "history_fee_label": "Taxa",
+  "history_original_rate_label": "Taxa original",
+  "history_wallet_amount_label": "Valor na carteira",
+  "history_wallet_rate_label": "Taxa da carteira"
 }

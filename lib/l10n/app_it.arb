@@ -377,5 +377,14 @@
   "share_ready_message": "Pronto da condividere",
   "lnurl_copied_message": "LNURL copiato negli appunti",
   "qr_scanner_title": "Scansiona QR",
-  "qr_scanner_instructions": "Punta la fotocamera sul codice QR\nper scansionare la fattura o l'indirizzo"
+  "qr_scanner_instructions": "Punta la fotocamera sul codice QR\nper scansionare la fattura o l'indirizzo",
+  "history_then_label": "Allora",
+  "history_now_label": "Ora",
+  "history_date_label": "Data",
+  "history_description_label": "Descrizione",
+  "history_hash_label": "Hash",
+  "history_fee_label": "Commissione",
+  "history_original_rate_label": "Tasso originale",
+  "history_wallet_amount_label": "Importo nel portafoglio",
+  "history_wallet_rate_label": "Tasso del portafoglio"
 }

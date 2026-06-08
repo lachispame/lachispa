@@ -392,5 +392,14 @@
   "share_ready_message": "Ready to share",
   "lnurl_copied_message": "LNURL copied to clipboard",
   "qr_scanner_title": "Scan QR",
-  "qr_scanner_instructions": "Point the camera at the QR code\nto scan the invoice or address"
+  "qr_scanner_instructions": "Point the camera at the QR code\nto scan the invoice or address",
+  "history_then_label": "Then",
+  "history_now_label": "Now",
+  "history_date_label": "Date",
+  "history_description_label": "Description",
+  "history_hash_label": "Hash",
+  "history_fee_label": "Fee",
+  "history_original_rate_label": "Original Rate",
+  "history_wallet_amount_label": "Wallet Amount",
+  "history_wallet_rate_label": "Wallet Rate"
 }

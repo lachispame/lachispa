@@ -993,4 +993,31 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get qr_scanner_instructions =>
       'Наведите камеру на QR-код\nчтобы сканировать счёт или адрес';
+
+  @override
+  String get history_then_label => 'Тогда';
+
+  @override
+  String get history_now_label => 'Сейчас';
+
+  @override
+  String get history_date_label => 'Дата';
+
+  @override
+  String get history_description_label => 'Описание';
+
+  @override
+  String get history_hash_label => 'Хэш';
+
+  @override
+  String get history_fee_label => 'Комиссия';
+
+  @override
+  String get history_original_rate_label => 'Оригинальный курс';
+
+  @override
+  String get history_wallet_amount_label => 'Сумма в кошельке';
+
+  @override
+  String get history_wallet_rate_label => 'Курс кошелька';
 }

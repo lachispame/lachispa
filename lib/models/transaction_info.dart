@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 /// Lightning transaction information
 class TransactionInfo {
   final String id;
@@ -54,6 +52,11 @@ class TransactionInfo {
   String get displayAmount {
     final satsAmount = type == TransactionType.incoming ? '+$amountFormatted' : '-$amountFormatted';
     
+    if (originalFiatAmount != null && originalFiatCurrency != null) {
+      final fiatSign = type == TransactionType.incoming ? '+' : '-';
+      return '$satsAmount\n$fiatSign${originalFiatAmount!.toStringAsFixed(2)} $originalFiatCurrency';
+    }
+    
     if (fiatAmount != null && fiatCurrency != null) {
       final fiatSign = type == TransactionType.incoming ? '+' : '-';
       return '$satsAmount\n$fiatSign${fiatAmount!.toStringAsFixed(2)} $fiatCurrency';
@@ -91,6 +94,8 @@ class TransactionInfo {
       DateTime timestamp;
       if (json['time'] is int) {
         timestamp = DateTime.fromMillisecondsSinceEpoch(json['time'] * 1000);
+      } else if (json['time'] is double) {
+        timestamp = DateTime.fromMillisecondsSinceEpoch((json['time'] as double).round() * 1000);
       } else if (json['time'] is String) {
         timestamp = DateTime.tryParse(json['time']) ?? DateTime.now();
       } else {
@@ -134,18 +139,18 @@ class TransactionInfo {
       }
       
       // FALLBACK: Parse original fiat info from memo if LNBits doesn't provide it
-      // This handles cases like "25 ZAR", "100 CUP", etc.
+      // Handles "25 CUP", "25 CUP - description", "100.50 ZAR", etc.
       if (originalFiatCurrency == null && originalFiatAmount == null) {
         final memo = json['memo']?.toString() ?? '';
-        final memoMatch = RegExp(r'^(\d+(?:\.\d+)?)\s*([A-Z]{3})$').firstMatch(memo.trim());
+        final memoMatch = RegExp(r'(\d+(?:\.\d+)?)\s*([A-Z]{3})').firstMatch(memo.trim());
         if (memoMatch != null) {
           final fiatAmount = double.tryParse(memoMatch.group(1) ?? '');
           final currency = memoMatch.group(2);
-          if (fiatAmount != null && currency != null && currency != 'USD') {
+          if (fiatAmount != null && currency != null) {
             originalFiatAmount = fiatAmount;
             originalFiatCurrency = currency;
             // Calculate rate based on sats amount (amount is in msat)
-            final satsAmount = amount ~/ 1000; // Convert msat to sats
+            final satsAmount = amount ~/ 1000;
             if (satsAmount > 0 && fiatAmount > 0) {
               originalFiatRate = satsAmount / fiatAmount;
             }

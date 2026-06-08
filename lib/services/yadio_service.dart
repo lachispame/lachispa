@@ -97,24 +97,45 @@ class YadioService {
     }
   }
 
-  /// Gets current exchange rates
-  Future<Map<String, double>> getExchangeRates() async {
+  /// Gets current exchange rates using the convert endpoint (more reliable than /rates)
+  /// [currencies] - set of currency codes to fetch (e.g. {'CUP', 'USD'})
+  Future<Map<String, double>> getExchangeRates({Set<String>? currencies}) async {
     try {
-      final response = await _dio.get('$baseUrl/rates');
-      
-      if (response.statusCode == 200) {
-        return Map<String, double>.from(response.data);
-      } else {
-        throw Exception('Error getting rates: ${response.statusCode}');
+      // Get BTC/USD rate first
+      final btcUsdResponse = await _dio.get('$baseUrl/convert/1/BTC/USD');
+      if (btcUsdResponse.statusCode != 200) throw Exception('BTC/USD failed');
+      final btcUsd = btcUsdResponse.data['result'] as double;
+
+      final rates = <String, double>{
+        'BTC': btcUsd,
+        'USD': 1.0,
+      };
+
+      // Fetch each needed currency via /convert/1/BTC/XXX
+      if (currencies != null) {
+        for (final currency in currencies) {
+          if (currency == 'USD') continue;
+          try {
+            final response = await _dio.get('$baseUrl/convert/1/BTC/$currency');
+            if (response.statusCode == 200) {
+              final btcToCurrency = response.data['result'] as double;
+              rates[currency] = btcToCurrency / btcUsd;
+            }
+          } catch (e) {
+            print('[YADIO_SERVICE] Failed to get rate for $currency: $e');
+          }
+        }
       }
+
+      print('[YADIO_SERVICE] Rates obtained: $rates');
+      return rates;
     } catch (e) {
-      print('[YADIO_SERVICE] Error getting rates: $e');
-      
-      // Fallback with fixed rates
+      print('[YADIO_SERVICE] Error getting rates via convert: $e');
+
       return {
-        'CUP': 120.0,  // CUP por USD
-        'USD': 1.0,    // USD base
-        'BTC': 45000.0 // USD por BTC (ejemplo)
+        'CUP': 120.0,
+        'USD': 1.0,
+        'BTC': 45000.0,
       };
     }
   }

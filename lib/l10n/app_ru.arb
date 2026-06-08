@@ -377,5 +377,14 @@
   "share_ready_message": "Готово к отправке",
   "lnurl_copied_message": "LNURL скопирован в буфер обмена",
   "qr_scanner_title": "Сканировать QR",
-  "qr_scanner_instructions": "Наведите камеру на QR-код\nчтобы сканировать счёт или адрес"
+  "qr_scanner_instructions": "Наведите камеру на QR-код\nчтобы сканировать счёт или адрес",
+  "history_then_label": "Тогда",
+  "history_now_label": "Сейчас",
+  "history_date_label": "Дата",
+  "history_description_label": "Описание",
+  "history_hash_label": "Хэш",
+  "history_fee_label": "Комиссия",
+  "history_original_rate_label": "Оригинальный курс",
+  "history_wallet_amount_label": "Сумма в кошельке",
+  "history_wallet_rate_label": "Курс кошелька"
 }

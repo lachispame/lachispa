@@ -203,52 +203,43 @@ class _AmountScreenState extends State<AmountScreen> {
       return amount.round();
     }
     
-    // Use INVERSE conversion from the working convertSatsToFiat method
-    // This ensures we use exactly the same rates as home_screen
+    // Use YadioService directly as the primary rate source
     try {
-      final currencyProvider = context.read<CurrencySettingsProvider>();
-      
-      print('[AMOUNT_SCREEN] Using inverse conversion method for consistency');
-      
-      // Step 1: Get rate by converting 1 BTC (100M sats) to fiat
-      const oneBtcInSats = 100000000; // 1 BTC = 100M sats
-      final oneBtcInFiat = await currencyProvider.convertSatsToFiat(oneBtcInSats, _selectedCurrency);
-      
-      print('[AMOUNT_SCREEN] Rate check: $oneBtcInSats sats = $oneBtcInFiat $_selectedCurrency');
-      
-      // Step 2: Parse the result to get numeric rate
-      final fiatString = oneBtcInFiat.replaceAll(RegExp(r'[^\d.]'), ''); // Remove non-numeric chars
-      final oneBtcRate = double.tryParse(fiatString);
-      
-      if (oneBtcRate == null || oneBtcRate <= 0) {
-        throw Exception('Invalid rate obtained: $oneBtcInFiat');
-      }
-      
-      print('[AMOUNT_SCREEN] Parsed rate: 1 BTC = $oneBtcRate $_selectedCurrency');
-      
-      // Step 3: Calculate sats using inverse proportion
-      // If 1 BTC = oneBtcRate fiat, then amount fiat = ? sats
-      // sats = (amount / oneBtcRate) * 100000000
-      final btcAmount = amount / oneBtcRate;
-      final satsAmount = (btcAmount * 100000000).round();
-      
-      print('[AMOUNT_SCREEN] Conversion successful: $amount $_selectedCurrency = $satsAmount sats');
-      print('[AMOUNT_SCREEN] Math: ($amount / $oneBtcRate) * 100000000 = $satsAmount');
-      
-      return satsAmount;
-      
-    } catch (e) {
-      print('[AMOUNT_SCREEN] Error with inverse conversion: $e');
-      
-      // Fallback to YadioService as last resort
-      try {
-        print('[AMOUNT_SCREEN] Trying YadioService fallback');
-        final sats = await _yadioService.convertToSats(
-          amount: amount,
-          currency: _selectedCurrency,
-        );
+      print('[AMOUNT_SCREEN] Using YadioService for conversion');
+      final sats = await _yadioService.convertToSats(
+        amount: amount,
+        currency: _selectedCurrency,
+      );
+      if (sats > 0) {
         print('[AMOUNT_SCREEN] YadioService conversion: $amount $_selectedCurrency = $sats sats');
         return sats;
+      }
+      throw Exception('YadioService returned 0 sats');
+    } catch (e) {
+      print('[AMOUNT_SCREEN] YadioService failed: $e');
+      
+      // Fallback to CurrencySettingsProvider (LNBits server conversion)
+      try {
+        final currencyProvider = context.read<CurrencySettingsProvider>();
+        
+        print('[AMOUNT_SCREEN] Using CurrencySettingsProvider fallback');
+        
+        const oneBtcInSats = 100000000;
+        final oneBtcInFiat = await currencyProvider.convertSatsToFiat(oneBtcInSats, _selectedCurrency);
+        
+        final fiatString = oneBtcInFiat.replaceAll(RegExp(r'[^\d.]'), '');
+        final oneBtcRate = double.tryParse(fiatString);
+        
+        if (oneBtcRate == null || oneBtcRate <= 0) {
+          throw Exception('Invalid rate obtained: $oneBtcInFiat');
+        }
+        
+        final btcAmount = amount / oneBtcRate;
+        final satsAmount = (btcAmount * 100000000).round();
+        
+        print('[AMOUNT_SCREEN] Fallback conversion: $amount $_selectedCurrency = $satsAmount sats');
+        
+        return satsAmount;
       } catch (fallbackError) {
         print('[AMOUNT_SCREEN] All conversion methods failed: $fallbackError');
         return 0;
@@ -344,16 +335,36 @@ class _AmountScreenState extends State<AmountScreen> {
       _isProcessingPayment = true;
     });
 
+    // Extract fiat data if user entered amount in fiat currency
+    final bool isFiat = _selectedCurrency != 'sats';
+    final double? fiatAmount = isFiat ? double.tryParse(_amount) : null;
+    final String? fiatCurrency = isFiat ? _selectedCurrency : null;
+    final double? fiatRate = (isFiat && fiatAmount != null && satsAmount > 0)
+        ? satsAmount / fiatAmount
+        : null;
+
     try {
       // Process payment based on destination type (LNURL vs Lightning Address)
       print('[AMOUNT_SCREEN] Processing payment with $satsAmount sats');
+      if (fiatCurrency != null) {
+        print('[AMOUNT_SCREEN] Original fiat: $fiatAmount $fiatCurrency (rate: $fiatRate sats/$fiatCurrency)');
+      }
       
       if (widget.destinationType == 'bolt11') {
-        await _processBolt11Payment(satsAmount);
+        await _processBolt11Payment(satsAmount,
+            originalFiatCurrency: fiatCurrency,
+            originalFiatAmount: fiatAmount,
+            originalFiatRate: fiatRate);
       } else if (widget.destinationType == 'lnurl') {
-        await _processLNURLPayment(satsAmount);
+        await _processLNURLPayment(satsAmount,
+            originalFiatCurrency: fiatCurrency,
+            originalFiatAmount: fiatAmount,
+            originalFiatRate: fiatRate);
       } else if (widget.destinationType == 'lightning_address') {
-        await _processLightningAddressPayment(satsAmount);
+        await _processLightningAddressPayment(satsAmount,
+            originalFiatCurrency: fiatCurrency,
+            originalFiatAmount: fiatAmount,
+            originalFiatRate: fiatRate);
       }
     } catch (e) {
       _showErrorSnackBar('${AppLocalizations.of(context)!.send_error_prefix}$e');
@@ -364,7 +375,11 @@ class _AmountScreenState extends State<AmountScreen> {
     }
   }
 
-  Future<void> _processBolt11Payment(int satsAmount) async {
+  Future<void> _processBolt11Payment(int satsAmount, {
+    String? originalFiatCurrency,
+    double? originalFiatAmount,
+    double? originalFiatRate,
+  }) async {
     if (widget.decodedInvoice == null) {
       throw Exception('Missing decodedInvoice for bolt11 payment');
     }
@@ -376,13 +391,20 @@ class _AmountScreenState extends State<AmountScreen> {
           builder: (context) => InvoiceConfirmScreen(
             decodedInvoice: widget.decodedInvoice!,
             overrideAmountSats: satsAmount,
+            originalFiatCurrency: originalFiatCurrency,
+            originalFiatAmount: originalFiatAmount,
+            originalFiatRate: originalFiatRate,
           ),
         ),
       );
     }
   }
 
-  Future<void> _processLNURLPayment(int satsAmount) async {
+  Future<void> _processLNURLPayment(int satsAmount, {
+    String? originalFiatCurrency,
+    double? originalFiatAmount,
+    double? originalFiatRate,
+  }) async {
     try {
       print('[AMOUNT_SCREEN] Processing LNURL payment: ${widget.destination}');
       print('[AMOUNT_SCREEN] Amount: $satsAmount sats');
@@ -411,6 +433,9 @@ class _AmountScreenState extends State<AmountScreen> {
         lnurl: widget.destination,
         amountSats: satsAmount,
         comment: _commentController.text.trim().isEmpty ? null : _commentController.text.trim(),
+        originalFiatCurrency: originalFiatCurrency,
+        originalFiatAmount: originalFiatAmount,
+        originalFiatRate: originalFiatRate,
       );
       
       print('[AMOUNT_SCREEN] LNURL payment sent successfully: $paymentResult');
@@ -460,7 +485,11 @@ class _AmountScreenState extends State<AmountScreen> {
     }
   }
 
-  Future<void> _processLightningAddressPayment(int satsAmount) async {
+  Future<void> _processLightningAddressPayment(int satsAmount, {
+    String? originalFiatCurrency,
+    double? originalFiatAmount,
+    double? originalFiatRate,
+  }) async {
     try {
       print('[AMOUNT_SCREEN] Processing Lightning Address payment: ${widget.destination}');
       print('[AMOUNT_SCREEN] Amount: $satsAmount sats');
@@ -489,6 +518,9 @@ class _AmountScreenState extends State<AmountScreen> {
         lightningAddress: widget.destination,
         amountSats: satsAmount,
         comment: _commentController.text.trim().isEmpty ? null : _commentController.text.trim(),
+        originalFiatCurrency: originalFiatCurrency,
+        originalFiatAmount: originalFiatAmount,
+        originalFiatRate: originalFiatRate,
       );
       
       print('[AMOUNT_SCREEN] Payment sent successfully: $paymentResult');
