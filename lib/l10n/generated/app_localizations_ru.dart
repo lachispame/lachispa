@@ -993,4 +993,17 @@ class AppLocalizationsRu extends AppLocalizations {
   @override
   String get qr_scanner_instructions =>
       'Наведите камеру на QR-код\nчтобы сканировать счёт или адрес';
+
+  @override
+  String get clear_pending_invoice => 'Удалить из истории';
+
+  @override
+  String get clear_pending_confirm_title => 'Удалить ожидающий счёт?';
+
+  @override
+  String get clear_pending_confirm_message =>
+      'Эта ожидающая транзакция будет удалена из истории. Счёт останется на LNBits до истечения срока.';
+
+  @override
+  String get invoice_cleared_from_history => 'Счёт удалён из истории';
 }

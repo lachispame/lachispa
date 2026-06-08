@@ -377,5 +377,10 @@
   "share_ready_message": "Готово к отправке",
   "lnurl_copied_message": "LNURL скопирован в буфер обмена",
   "qr_scanner_title": "Сканировать QR",
-  "qr_scanner_instructions": "Наведите камеру на QR-код\nчтобы сканировать счёт или адрес"
+  "qr_scanner_instructions": "Наведите камеру на QR-код\nчтобы сканировать счёт или адрес",
+
+  "clear_pending_invoice": "Удалить из истории",
+  "clear_pending_confirm_title": "Удалить ожидающий счёт?",
+  "clear_pending_confirm_message": "Эта ожидающая транзакция будет удалена из истории. Счёт останется на LNBits до истечения срока.",
+  "invoice_cleared_from_history": "Счёт удалён из истории"
 }

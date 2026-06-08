@@ -377,5 +377,10 @@
   "share_ready_message": "Bereit zum Teilen",
   "lnurl_copied_message": "LNURL in die Zwischenablage kopiert",
   "qr_scanner_title": "QR scannen",
-  "qr_scanner_instructions": "Kamera auf den QR-Code richten\num Rechnung oder Adresse zu scannen"
+  "qr_scanner_instructions": "Kamera auf den QR-Code richten\num Rechnung oder Adresse zu scannen",
+
+  "clear_pending_invoice": "Aus Verlauf entfernen",
+  "clear_pending_confirm_title": "Ausstehende Rechnung entfernen?",
+  "clear_pending_confirm_message": "Diese ausstehende Transaktion wird aus dem Verlauf entfernt. Die Rechnung bleibt bis zum Ablauf auf LNBits bestehen.",
+  "invoice_cleared_from_history": "Rechnung aus Verlauf entfernt"
 }

@@ -10,6 +10,8 @@ import '../services/wallet_service.dart';
 import '../models/transaction_info.dart';
 import '../l10n/generated/app_localizations.dart';
 import '../theme/app_tokens.dart';
+import '../services/cleared_invoice_store.dart';
+import '../services/invoice_service.dart';
 
 class HistoryScreen extends StatefulWidget {
   const HistoryScreen({super.key});
@@ -32,6 +34,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
   
   TransactionFilter _currentFilter = TransactionFilter.all;
   final ScrollController _scrollController = ScrollController();
+  final InvoiceService _invoiceService = InvoiceService();
 
   @override
   void initState() {
@@ -165,14 +168,20 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
   }
 
   List<TransactionInfo> get _filteredTransactions {
+    var filtered = _transactions.where((tx) =>
+        !(tx.isPending &&
+          tx.paymentHash != null &&
+          ClearedInvoiceStore.instance.contains(tx.paymentHash))
+    ).toList();
+
     switch (_currentFilter) {
       case TransactionFilter.incoming:
-        return _transactions.where((tx) => tx.isIncoming).toList();
+        return filtered.where((tx) => tx.isIncoming).toList();
       case TransactionFilter.outgoing:
-        return _transactions.where((tx) => tx.isOutgoing).toList();
+        return filtered.where((tx) => tx.isOutgoing).toList();
       case TransactionFilter.all:
       default:
-        return _transactions;
+        return filtered;
     }
   }
 
@@ -617,7 +626,7 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
 
   Widget _buildTransactionCard(TransactionInfo transaction, int index, AppTokens t) {
     final iconColor = _getTransactionIconColor(transaction, t);
-    return Container(
+    final card = Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: t.surface,
@@ -633,7 +642,6 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
           padding: const EdgeInsets.all(16),
           child: Row(
             children: [
-              // Leading icon
               Container(
                 width: 48,
                 height: 48,
@@ -650,7 +658,6 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
 
               const SizedBox(width: 16),
 
-              // Content
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -700,12 +707,11 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
                 ),
               ),
 
-              // Amount column
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    transaction.displayAmount.split('\n').first, // Show sats amount
+                    transaction.displayAmount.split('\n').first,
                     style: TextStyle(
                       color: iconColor,
                       fontSize: 16,
@@ -737,6 +743,60 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
         ),
       ),
     );
+
+    if (transaction.isPending && transaction.paymentHash != null) {
+      return Dismissible(
+        key: ValueKey('pending_${transaction.paymentHash}'),
+        direction: DismissDirection.horizontal,
+        confirmDismiss: (direction) async {
+          final l = AppLocalizations.of(context)!;
+          final confirmed = await showDialog<bool>(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: Text(l.clear_pending_confirm_title),
+              content: Text(l.clear_pending_confirm_message),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context, false),
+                  child: Text(l.cancel_button),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context, true),
+                  child: Text(l.clear_pending_invoice),
+                ),
+              ],
+            ),
+          );
+          if (confirmed == true) {
+            _doClearPendingTransaction(transaction);
+          }
+          return false;
+        },
+        background: Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(
+            color: t.statusWarning.withValues(alpha: 0.2),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          alignment: Alignment.centerRight,
+          padding: const EdgeInsets.only(right: 24),
+          child: Icon(Icons.delete_outline, color: t.statusWarning, size: 28),
+        ),
+        secondaryBackground: Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(
+            color: t.statusWarning.withValues(alpha: 0.2),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.only(left: 24),
+          child: Icon(Icons.delete_outline, color: t.statusWarning, size: 28),
+        ),
+        child: card,
+      );
+    }
+
+    return card;
   }
 
   void _showTransactionDetails(TransactionInfo transaction) {
@@ -855,6 +915,29 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
             if (transaction.fee != null)
               _buildDetailRow(t, 'Fee', '${(transaction.fee! / 1000).toStringAsFixed(3)} sats'),
             _buildDetailRow(t, AppLocalizations.of(context)!.invoice_status_label, _getTransactionStatus(transaction)),
+
+            if (transaction.isPending && transaction.paymentHash != null) ...[
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    _clearPendingTransaction(transaction);
+                  },
+                  icon: const Icon(Icons.delete_outline, size: 18),
+                  label: Text(AppLocalizations.of(context)!.clear_pending_invoice),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: t.statusWarning.withValues(alpha: 0.2),
+                    foregroundColor: t.statusWarning,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+              ),
+            ],
                 ],
               ),
             ),
@@ -862,6 +945,62 @@ class _HistoryScreenState extends State<HistoryScreen> with TickerProviderStateM
         ),
       ),
     );
+  }
+
+  void _doClearPendingTransaction(TransactionInfo transaction) {
+    if (transaction.paymentHash == null) return;
+
+    unawaited(ClearedInvoiceStore.instance.add(transaction.paymentHash!));
+    unawaited(_tryCancelInvoiceOnServer(transaction.paymentHash!));
+
+    if (!mounted) return;
+    setState(() {});
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(AppLocalizations.of(context)!.invoice_cleared_from_history)),
+    );
+  }
+
+  Future<void> _clearPendingTransaction(TransactionInfo transaction) async {
+    if (transaction.paymentHash == null) return;
+
+    final l = AppLocalizations.of(context)!;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l.clear_pending_confirm_title),
+        content: Text(l.clear_pending_confirm_message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text(l.cancel_button),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text(l.clear_pending_invoice),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+    _doClearPendingTransaction(transaction);
+  }
+
+  Future<void> _tryCancelInvoiceOnServer(String paymentHash) async {
+    try {
+      final walletProvider = context.read<WalletProvider>();
+      final authProvider = context.read<AuthProvider>();
+      final serverUrl = authProvider.sessionData?.serverUrl;
+      final wallet = walletProvider.primaryWallet;
+
+      if (serverUrl == null || wallet == null) return;
+
+      await _invoiceService.cancelInvoice(
+        serverUrl: serverUrl,
+        adminKey: wallet.adminKey,
+        paymentHash: paymentHash,
+      );
+    } catch (_) {}
   }
 
   Widget _buildInvoiceQRSection(TransactionInfo transaction, AppTokens t) {

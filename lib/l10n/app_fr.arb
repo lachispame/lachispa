@@ -377,5 +377,10 @@
   "share_ready_message": "Prêt à partager",
   "lnurl_copied_message": "LNURL copié dans le presse-papiers",
   "qr_scanner_title": "Scanner QR",
-  "qr_scanner_instructions": "Pointez la caméra vers le code QR\npour scanner la facture ou l'adresse"
+  "qr_scanner_instructions": "Pointez la caméra vers le code QR\npour scanner la facture ou l'adresse",
+
+  "clear_pending_invoice": "Effacer de l'historique",
+  "clear_pending_confirm_title": "Effacer la facture en attente ?",
+  "clear_pending_confirm_message": "Cette transaction en attente sera supprimée de l'historique. La facture restera sur LNBits jusqu'à son expiration.",
+  "invoice_cleared_from_history": "Facture supprimée de l'historique"
 }

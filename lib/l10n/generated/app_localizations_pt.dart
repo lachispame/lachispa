@@ -1003,4 +1003,17 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get qr_scanner_instructions =>
       'Aponte a câmera para o código QR\npara escanear a fatura ou endereço';
+
+  @override
+  String get clear_pending_invoice => 'Limpar do histórico';
+
+  @override
+  String get clear_pending_confirm_title => 'Limpar fatura pendente?';
+
+  @override
+  String get clear_pending_confirm_message =>
+      'Esta transação pendente será removida do histórico. A fatura continuará existindo no LNBits até expirar.';
+
+  @override
+  String get invoice_cleared_from_history => 'Fatura removida do histórico';
 }

@@ -1757,6 +1757,49 @@ class InvoiceService {
     };
   }
 
+  Future<bool> cancelInvoice({
+    required String serverUrl,
+    required String adminKey,
+    required String paymentHash,
+  }) async {
+    try {
+      String baseUrl = serverUrl;
+      if (!baseUrl.startsWith('http')) {
+        baseUrl = 'https://$baseUrl';
+      }
+
+      final headers = {'X-API-KEY': adminKey};
+
+      final endpoints = [
+        '$baseUrl/api/v1/payments/$paymentHash',
+        '$baseUrl/api/v1/wallet/payment/$paymentHash',
+      ];
+
+      for (final endpoint in endpoints) {
+        try {
+          _debugLog('[INVOICE_SERVICE] Attempting to cancel invoice: $paymentHash');
+          final response = await _dio.delete(
+            endpoint,
+            options: Options(headers: headers),
+          );
+          if (response.statusCode == 200 || response.statusCode == 204) {
+            _debugLog('[INVOICE_SERVICE] Invoice cancelled successfully: $paymentHash');
+            return true;
+          }
+        } catch (e) {
+          _debugLog('[INVOICE_SERVICE] Cancel failed at $endpoint: $e');
+          continue;
+        }
+      }
+
+      _debugLog('[INVOICE_SERVICE] No endpoint succeeded for invoice cancellation: $paymentHash');
+      return false;
+    } catch (e) {
+      _debugLog('[INVOICE_SERVICE] Error cancelling invoice: $e');
+      return false;
+    }
+  }
+
   void dispose() {
     _dio.close();
   }

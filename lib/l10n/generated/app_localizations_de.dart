@@ -1014,4 +1014,17 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get qr_scanner_instructions =>
       'Kamera auf den QR-Code richten\num Rechnung oder Adresse zu scannen';
+
+  @override
+  String get clear_pending_invoice => 'Aus Verlauf entfernen';
+
+  @override
+  String get clear_pending_confirm_title => 'Ausstehende Rechnung entfernen?';
+
+  @override
+  String get clear_pending_confirm_message =>
+      'Diese ausstehende Transaktion wird aus dem Verlauf entfernt. Die Rechnung bleibt bis zum Ablauf auf LNBits bestehen.';
+
+  @override
+  String get invoice_cleared_from_history => 'Rechnung aus Verlauf entfernt';
 }

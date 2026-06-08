@@ -1017,4 +1017,17 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get qr_scanner_instructions =>
       'Punta la fotocamera sul codice QR\nper scansionare la fattura o l\'indirizzo';
+
+  @override
+  String get clear_pending_invoice => 'Cancella dalla cronologia';
+
+  @override
+  String get clear_pending_confirm_title => 'Cancellare fattura in sospeso?';
+
+  @override
+  String get clear_pending_confirm_message =>
+      'Questa transazione in sospeso verrà rimossa dalla cronologia. La fattura rimarrà su LNBits fino alla scadenza.';
+
+  @override
+  String get invoice_cleared_from_history => 'Fattura rimossa dalla cronologia';
 }

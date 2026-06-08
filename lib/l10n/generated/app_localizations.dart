@@ -1925,6 +1925,30 @@ abstract class AppLocalizations {
   /// In es, this message translates to:
   /// **'Apunta la cámara al código QR\npara escanear la factura o dirección'**
   String get qr_scanner_instructions;
+
+  /// No description provided for @clear_pending_invoice.
+  ///
+  /// In es, this message translates to:
+  /// **'Limpiar del historial'**
+  String get clear_pending_invoice;
+
+  /// No description provided for @clear_pending_confirm_title.
+  ///
+  /// In es, this message translates to:
+  /// **'¿Limpiar factura pendiente?'**
+  String get clear_pending_confirm_title;
+
+  /// No description provided for @clear_pending_confirm_message.
+  ///
+  /// In es, this message translates to:
+  /// **'Esta transacción pendiente se eliminará del historial. La factura seguirá existiendo en LNBits hasta su expiración.'**
+  String get clear_pending_confirm_message;
+
+  /// No description provided for @invoice_cleared_from_history.
+  ///
+  /// In es, this message translates to:
+  /// **'Factura eliminada del historial'**
+  String get invoice_cleared_from_history;
 }
 
 class _AppLocalizationsDelegate

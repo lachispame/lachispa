@@ -989,4 +989,17 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get qr_scanner_instructions =>
       'Point the camera at the QR code\nto scan the invoice or address';
+
+  @override
+  String get clear_pending_invoice => 'Clear from history';
+
+  @override
+  String get clear_pending_confirm_title => 'Clear pending invoice?';
+
+  @override
+  String get clear_pending_confirm_message =>
+      'This pending transaction will be removed from history. The invoice will remain on LNBits until it expires.';
+
+  @override
+  String get invoice_cleared_from_history => 'Invoice removed from history';
 }

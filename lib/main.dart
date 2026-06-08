@@ -12,6 +12,7 @@ import 'services/wallet_service.dart';
 import 'services/ln_address_service.dart';
 import 'services/app_info_service.dart';
 import 'services/deep_link_service.dart';
+import 'services/cleared_invoice_store.dart';
 import 'screens/auth_checker.dart';
 import 'screens/10send_screen.dart';
 import 'l10n/generated/app_localizations.dart';
@@ -24,6 +25,9 @@ void main() async {
   
   // Initialize deep link service
   await DeepLinkService().initialize();
+  
+  // Load persisted cleared invoice hashes
+  await ClearedInvoiceStore.instance.load();
   
   runApp(const LaChispaApp());
 }

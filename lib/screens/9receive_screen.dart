@@ -13,6 +13,7 @@ import '../services/invoice_service.dart';
 import '../services/yadio_service.dart';
 import '../services/transaction_detector.dart';
 import '../services/nfc_charge_service.dart';
+import '../services/cleared_invoice_store.dart';
 import '../models/lightning_invoice.dart';
 import '../models/wallet_info.dart';
 import '../l10n/generated/app_localizations.dart';
@@ -28,6 +29,7 @@ class ReceiveScreen extends StatefulWidget {
 }
 
 class _ReceiveScreenState extends State<ReceiveScreen> {
+
   final _amountController = TextEditingController();
   final _noteController = TextEditingController();
   String _selectedCurrency = 'sats';
@@ -45,6 +47,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
 
   bool _nfcAvailable = false;
   bool _nfcChecked = false;
+
+  String? _cachedServerUrl;
+  WalletInfo? _cachedWallet;
 
   @override
   void initState() {
@@ -125,6 +130,11 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     _yadioService.dispose();
     _invoicePaymentTimer?.cancel();
     _invoicePaymentTimeoutTimer?.cancel();
+    if (_generatedInvoice != null) {
+      final hash = _generatedInvoice!.paymentHash;
+      unawaited(ClearedInvoiceStore.instance.add(hash));
+      unawaited(_tryCancelInvoiceOnServer(hash));
+    }
     super.dispose();
   }
 
@@ -781,15 +791,37 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
   }
 
   void _clearInvoice() {
-    _invoicePaymentTimer?.cancel();
-    _invoicePaymentTimeoutTimer?.cancel();
-    setState(() {
-      _generatedInvoice = null;
-    });
+    _discardInvoice();
     _showAccentSnackBar(
       icon: Icons.check_circle,
       message: AppLocalizations.of(context)!.invoice_cleared_message,
     );
+  }
+
+  void _discardInvoice() {
+    _invoicePaymentTimer?.cancel();
+    _invoicePaymentTimeoutTimer?.cancel();
+    if (_generatedInvoice != null) {
+      final hash = _generatedInvoice!.paymentHash;
+      unawaited(ClearedInvoiceStore.instance.add(hash));
+      unawaited(_tryCancelInvoiceOnServer(hash));
+    }
+    setState(() {
+      _generatedInvoice = null;
+    });
+  }
+
+  Future<void> _tryCancelInvoiceOnServer(String paymentHash) async {
+    final serverUrl = _cachedServerUrl;
+    final wallet = _cachedWallet;
+    if (serverUrl == null || wallet == null) return;
+    try {
+      await _invoiceService.cancelInvoice(
+        serverUrl: serverUrl,
+        adminKey: wallet.adminKey,
+        paymentHash: paymentHash,
+      );
+    } catch (_) {}
   }
 
   void _showCopySheet(LNAddress? defaultAddress) {
@@ -1322,6 +1354,9 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
       final wallet = walletProvider.primaryWallet;
       final serverUrl = authProvider.sessionData?.serverUrl;
 
+      _cachedWallet = wallet;
+      _cachedServerUrl = serverUrl;
+
       if (wallet == null || serverUrl == null) {
         throw Exception(AppLocalizations.of(context)!.no_wallet_error);
       }
@@ -1444,9 +1479,7 @@ class _ReceiveScreenState extends State<ReceiveScreen> {
     _invoicePaymentTimeoutTimer = Timer(const Duration(minutes: 10), () {
       _invoicePaymentTimer?.cancel();
       if (!mounted) return;
-      setState(() {
-        _generatedInvoice = null;
-      });
+      _discardInvoice();
       _showInfoSnackBar(
         AppLocalizations.of(context)!.invoice_monitoring_timeout_message,
       );

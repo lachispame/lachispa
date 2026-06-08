@@ -377,5 +377,10 @@
   "share_ready_message": "Pronto para compartilhar",
   "lnurl_copied_message": "LNURL copiado para a área de transferência",
   "qr_scanner_title": "Escanear QR",
-  "qr_scanner_instructions": "Aponte a câmera para o código QR\npara escanear a fatura ou endereço"
+  "qr_scanner_instructions": "Aponte a câmera para o código QR\npara escanear a fatura ou endereço",
+
+  "clear_pending_invoice": "Limpar do histórico",
+  "clear_pending_confirm_title": "Limpar fatura pendente?",
+  "clear_pending_confirm_message": "Esta transação pendente será removida do histórico. A fatura continuará existindo no LNBits até expirar.",
+  "invoice_cleared_from_history": "Fatura removida do histórico"
 }
